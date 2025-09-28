@@ -1,3 +1,4 @@
+// app/lib/.server/chat.ts
 import { type ActionFunctionArgs } from '@vercel/remix';
 import { createScopedLogger } from 'chef-agent/utils/logger';
 import { convexAgent } from '~/lib/.server/llm/convex-agent';
@@ -79,78 +80,47 @@ export async function chatAction({ request }: ActionFunctionArgs) {
     body.modelProvider = 'Anthropic';
   }
 
-  let useUserApiKey = false;
-
-  // Use the user's API key if they're set to always mode or if they manually set a model.
-  // Sonnet 4 can be used with the default API key since it has the same pricing as Sonnet 3.5
-  // GPT-5 can be used with our own API key since it has the same pricing as Gemini 2.5 Pro
-  if (
-    body.userApiKey?.preference === 'always' ||
-    (body.modelChoice && body.modelChoice !== 'claude-sonnet-4-0' && body.modelChoice !== 'gpt-5')
-  ) {
-    useUserApiKey = true;
-  }
-
-  // If they're not set to always mode, check to see if the user has any Convex tokens left.
-  if (body.userApiKey?.preference !== 'always') {
-    const resp = await checkTokenUsage(PROVISION_HOST, token, teamSlug, deploymentName);
-    if (resp.status === 'error') {
-      return new Response(JSON.stringify({ error: 'Failed to check for tokens' }), {
-        status: resp.httpStatus,
-      });
-    }
-    const { centitokensUsed, centitokensQuota, isTeamDisabled, isPaidPlan } = resp;
-    if (isTeamDisabled) {
-      return new Response(JSON.stringify({ error: disabledText(isPaidPlan) }), {
-        status: 402,
-      });
-    }
-    if (centitokensUsed >= centitokensQuota) {
-      if (!isPaidPlan && !hasApiKeySetForProvider(body.userApiKey, body.modelProvider)) {
-        // If they're not on a paid plan and don't have an API key set, return an error.
-        logger.error(`No tokens available for ${deploymentName}: ${centitokensUsed} of ${centitokensQuota}`);
-        return new Response(
-          JSON.stringify({ code: 'no-tokens', error: noTokensText(centitokensUsed, centitokensQuota) }),
-          {
-            status: 402,
-          },
-        );
-      } else if (hasApiKeySetForProvider(body.userApiKey, body.modelProvider)) {
-        // If they have an API key set, use it. Otherwise, they use Convex tokens.
-        useUserApiKey = true;
-      }
-    }
-  }
-
+  // Since all models now require API keys, always use user API key
   let userApiKey: string | undefined;
-  if (useUserApiKey) {
-    if (body.modelProvider === 'Anthropic' || body.modelProvider === 'Bedrock') {
-      userApiKey = body.userApiKey?.value;
-      body.modelProvider = 'Anthropic';
-    } else if (body.modelProvider === 'OpenAI') {
-      userApiKey = body.userApiKey?.openai;
-    } else if (body.modelProvider === 'XAI') {
-      userApiKey = body.userApiKey?.xai;
-    } else {
-      userApiKey = body.userApiKey?.google;
-    }
 
-    if (!userApiKey) {
-      return new Response(
-        JSON.stringify({ code: 'missing-api-key', error: `Tried to use missing ${body.modelProvider} API key.` }),
-        {
-          status: 402,
-        },
-      );
+  // Extract the appropriate API key based on the model provider
+  if (body.modelProvider === 'Anthropic' || body.modelProvider === 'Bedrock') {
+    userApiKey = body.userApiKey?.value;
+    // For Bedrock, we still use Anthropic API key for the user, but the provider handles AWS credentials
+    if (body.modelProvider === 'Bedrock') {
+      body.modelProvider = 'Anthropic'; // Use Anthropic provider for user API key
     }
+  } else if (body.modelProvider === 'OpenAI') {
+    userApiKey = body.userApiKey?.openai;
+  } else if (body.modelProvider === 'XAI') {
+    userApiKey = body.userApiKey?.xai;
+  } else if (body.modelProvider === 'Google') {
+    userApiKey = body.userApiKey?.google;
   }
-  logger.info(`Using model provider: ${body.modelProvider} (user API key: ${useUserApiKey})`);
+
+  // Validate that we have the required API key
+  if (!userApiKey) {
+    const providerName = getProviderDisplayName(body.modelProvider);
+    return new Response(
+      JSON.stringify({
+        code: 'missing-api-key',
+        error: `${providerName} API key is required. Please add your ${providerName} API key in settings to use this model.`,
+      }),
+      {
+        status: 402,
+      },
+    );
+  }
+
+  logger.info(`Using model provider: ${body.modelProvider} with user API key`);
 
   const recordUsageCb = async (
     lastMessage: Message | undefined,
     finalGeneration: { usage: LanguageModelUsage; providerMetadata?: ProviderMetadata },
   ) => {
-    if (!userApiKey && getEnv('DISABLE_USAGE_REPORTING') !== '1') {
+    // Since we're using user API keys, we don't record usage to Convex
+    // Users manage their own usage through their provider accounts
+    if (getEnv('DISABLE_USAGE_REPORTING') !== '1') {
       await recordUsage(
         PROVISION_HOST,
         token,
@@ -165,18 +135,15 @@ export async function chatAction({ request }: ActionFunctionArgs) {
 
   try {
     const totalMessageContent = messages.reduce((acc, message) => acc + message.content, '');
-    logger.debug(`Total message length: ${totalMessageContent.split(' ').length}, words`);
+    logger.debug(`Total message length: ${totalMessageContent.split(' ').length} words`);
+
     const dataStream = await convexAgent({
       chatInitialId,
       firstUserMessage,
       messages,
       tracer,
       modelProvider: body.modelProvider,
-      // Only set the requested model choice if we're using a user API key or Claude 4 Sonnet/GPT-5
-      modelChoice:
-        userApiKey || body.modelChoice === 'claude-sonnet-4-0' || body.modelChoice === 'gpt-5'
-          ? body.modelChoice
-          : undefined,
+      modelChoice: body.modelChoice,
       userApiKey,
       shouldDisableTools: body.shouldDisableTools,
       recordUsageCb,
@@ -214,7 +181,26 @@ export async function chatAction({ request }: ActionFunctionArgs) {
   }
 }
 
-// Returns whether or not the user has an API key set for a given provider
+// Helper function to get display name for providers
+function getProviderDisplayName(provider: ModelProvider): string {
+  switch (provider) {
+    case 'Anthropic':
+      return 'Anthropic';
+    case 'OpenAI':
+      return 'OpenAI';
+    case 'XAI':
+      return 'xAI';
+    case 'Google':
+      return 'Google';
+    case 'Bedrock':
+      return 'Amazon Bedrock';
+    default:
+      return 'API';
+  }
+}
+
+// This function is no longer needed since all models require user API keys
+// But keeping it for backward compatibility
 function hasApiKeySetForProvider(
   userApiKey:
     | { preference: 'always' | 'quotaExhausted'; value?: string; openai?: string; xai?: string; google?: string }
@@ -223,6 +209,7 @@ function hasApiKeySetForProvider(
 ) {
   switch (provider) {
     case 'Anthropic':
+    case 'Bedrock':
       return userApiKey?.value !== undefined;
     case 'OpenAI':
       return userApiKey?.openai !== undefined;

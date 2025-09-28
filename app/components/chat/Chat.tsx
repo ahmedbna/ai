@@ -282,7 +282,7 @@ export const Chat = memo(
       Math.random() < useAnthropicFraction ? ['Anthropic', 'Bedrock'] : ['Bedrock', 'Anthropic'];
 
     const checkTokenUsage = useCallback(async () => {
-      // First, check if we have an API key for the current model
+      // Check if we have an API key for the current model
       const { hasMissingKey, provider, requireKey } = checkApiKeyForCurrentModel(modelSelection);
 
       if (hasMissingKey && provider) {
@@ -290,38 +290,12 @@ export const Chat = memo(
         return;
       }
 
-      // If we have the required API key, clear any messages and return
+      // If we have the required API key, clear any messages
       setDisableChatMessage(null);
 
-      // Note: Since all models now require API keys, we don't need to check
-      // Convex token usage anymore, but keeping this logic for compatibility
-      try {
-        const teamSlug = selectedTeamSlugStore.get();
-        if (!teamSlug) {
-          console.error('No team slug');
-          return;
-        }
-        const token = getConvexAuthToken(convex);
-        if (!token) {
-          console.error('No token');
-          return;
-        }
-
-        const tokenUsage = await getTokenUsage(VITE_PROVISION_HOST, token, teamSlug);
-        if (tokenUsage.status === 'error') {
-          console.error('Failed to check for token usage', tokenUsage.httpStatus, tokenUsage.httpBody);
-        } else {
-          const { isTeamDisabled, isPaidPlan } = tokenUsage;
-          if (isTeamDisabled) {
-            setDisableChatMessage({ type: 'TeamDisabled', isPaidPlan });
-          } else {
-            setDisableChatMessage(null);
-          }
-        }
-      } catch (error) {
-        captureException(error);
-      }
-    }, [apiKey, convex, modelSelection, setDisableChatMessage, checkApiKeyForCurrentModel]);
+      // Note: Since we're now using user API keys exclusively, we don't need to check
+      // Convex token usage, but keeping this for potential future use
+    }, [modelSelection, checkApiKeyForCurrentModel, setDisableChatMessage]);
 
     const { messages, status, stop, append, setMessages, reload, error } = useChat({
       initialMessages,
@@ -556,12 +530,38 @@ export const Chat = memo(
           <>
             Please{' '}
             <a href="/settings" className="text-content-link hover:underline">
-              enter your API key
+              add your {providerInfo.displayName} API key
             </a>{' '}
-            for {providerInfo.displayName} to continue.
+            in settings to use this model.
           </>,
         );
-        captureMessage('User tried to send message without required API key');
+        captureMessage('User tried to send message without required API key', {
+          extra: { model: effectiveModel, provider: providerInfo.providerName },
+        });
+        return;
+      }
+
+      // Continue with rate limiting logic if needed
+      if (retries.numFailures >= MAX_RETRIES || now < retries.nextRetry) {
+        let message: string | ReactNode = 'Chef is too busy cooking right now. ';
+        if (retries.numFailures >= MAX_RETRIES) {
+          message = (
+            <>
+              {message}
+              Please try again later or check your API key configuration.
+            </>
+          );
+        } else {
+          const remaining = formatDistanceStrict(now, retries.nextRetry);
+          message = (
+            <>
+              {message}
+              Please try again in {remaining}.
+            </>
+          );
+        }
+        toast.error(message);
+        captureMessage('User tried to send message but chef is too busy');
         return;
       }
 
@@ -673,13 +673,11 @@ export const Chat = memo(
           // Since all models require keys now, always show the missing key message
           setDisableChatMessage({ type: 'MissingApiKey', provider, requireKey });
         } else {
-          // If we have the key, check other conditions
-          await checkTokenUsage().catch((error) => {
-            console.error('Error checking token usage after model change:', error);
-          });
+          // If we have the required API key, clear any messages immediately
+          setDisableChatMessage(null);
         }
       },
-      [checkApiKeyForCurrentModel, checkTokenUsage, setModelSelection],
+      [checkApiKeyForCurrentModel, setModelSelection],
     );
 
     return (
@@ -727,6 +725,7 @@ export const Chat = memo(
     );
   },
 );
+
 Chat.displayName = 'Chat';
 
 function useCurrentToolStatus() {

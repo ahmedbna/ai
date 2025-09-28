@@ -36,13 +36,10 @@ export function Homepage() {
 const ChatWrapper = ({ initialId }: { initialId: string }) => {
   const { signIn } = useAuth();
   const chefAuthState = useChefAuth();
+  const apiKey = useQuery(api.apiKeys.apiKeyForCurrentMember);
 
   const partCache = useRef<PartCache>(new Map());
   const { storeMessageHistory, initializeChat, initialMessages, subchats } = useConvexChatHomepage(initialId);
-
-  const apiKey = useQuery(api.apiKeys.apiKeyForCurrentMember);
-
-  console.log('API Key in ChatWrapper:', apiKey); // --- IGNORE ---
 
   if (chefAuthState.kind === 'unauthenticated') {
     return (
@@ -63,7 +60,7 @@ const ChatWrapper = ({ initialId }: { initialId: string }) => {
     );
   }
 
-  if (apiKey === undefined) {
+  if (apiKey === undefined || chefAuthState.kind === 'loading') {
     return (
       <div className="h-full w-full flex items-center justify-center">
         <Spinner />
@@ -71,7 +68,7 @@ const ChatWrapper = ({ initialId }: { initialId: string }) => {
     );
   }
 
-  if (apiKey === null) {
+  if (apiKey === null || chefAuthState.kind !== 'fullyLoggedIn') {
     return (
       <div>
         <div className="mx-auto max-w-4xl px-4 py-8">

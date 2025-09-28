@@ -6,7 +6,6 @@ import { Tooltip } from '@ui/Tooltip';
 import { HandThumbUpIcon, KeyIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useQuery } from 'convex/react';
 import { api } from '@convex/_generated/api';
-import type { Doc } from '@convex/_generated/dataModel';
 import { captureMessage } from '@sentry/remix';
 import { useLaunchDarkly } from '~/lib/hooks/useLaunchDarkly';
 import { selectBestAvailableProvider, getAvailableApiKeys, hasApiKeySet } from '~/lib/common/apiKey';
@@ -239,14 +238,3 @@ export const ModelSelector = React.memo(function ModelSelector({
     />
   );
 });
-
-const keyForProvider = (apiKeys: Doc<'convexMembers'>['apiKey'], provider: ModelProvider, useGeminiAuto: boolean) => {
-  if (provider === 'anthropic') {
-    return apiKeys?.value;
-  }
-  if (provider === 'auto') {
-    // For auto, just check if we have any keys
-    return getAvailableApiKeys(apiKeys).length > 0 ? 'available' : undefined;
-  }
-  return apiKeys?.[provider];
-};

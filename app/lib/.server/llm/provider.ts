@@ -1,3 +1,4 @@
+// app/lib/.server/llm/provider.ts
 import type { LanguageModelV1 } from 'ai';
 import { createAmazonBedrock } from '@ai-sdk/amazon-bedrock';
 import { createAnthropic } from '@ai-sdk/anthropic';
@@ -72,32 +73,18 @@ export function getProvider(
   let model: string;
   let provider: Provider;
 
+  // If no user API key is provided, throw an error since all models now require API keys
+  if (!userApiKey) {
+    throw new Error(`API key is required for ${modelProvider}. Please add your API key in settings.`);
+  }
+
   switch (modelProvider) {
     case 'Google': {
       model = modelForProvider(modelProvider, modelChoice);
-      let google;
-      if (userApiKey) {
-        google = createGoogleGenerativeAI({
-          apiKey: userApiKey || getEnv('GOOGLE_API_KEY'),
-          fetch: userApiKey ? userKeyApiFetch('Google') : fetch,
-        });
-      } else {
-        const credentials = JSON.parse(getEnv('GOOGLE_VERTEX_CREDENTIALS_JSON')!);
-        google = createVertex({
-          project: credentials.project_id,
-          // Use global endpoint for higher availability
-          baseURL: `https://aiplatform.googleapis.com/v1/projects/${credentials.project_id}/locations/global/publishers/google`,
-          location: 'global',
-          googleAuthOptions: {
-            credentials: {
-              client_email: credentials.client_email,
-              private_key_id: credentials.private_key_id,
-              private_key: credentials.private_key,
-            },
-          },
-          fetch,
-        });
-      }
+      const google = createGoogleGenerativeAI({
+        apiKey: userApiKey,
+        fetch: userKeyApiFetch('Google'),
+      });
       provider = {
         model: google(model),
         maxTokens: 24576,
@@ -107,8 +94,8 @@ export function getProvider(
     case 'XAI': {
       model = modelForProvider(modelProvider, modelChoice);
       const xai = createXai({
-        apiKey: userApiKey || getEnv('XAI_API_KEY'),
-        fetch: userApiKey ? userKeyApiFetch('XAI') : fetch,
+        apiKey: userApiKey,
+        fetch: userKeyApiFetch('XAI'),
       });
       provider = {
         model: xai(model),
@@ -124,8 +111,8 @@ export function getProvider(
     case 'OpenAI': {
       model = modelForProvider(modelProvider, modelChoice);
       const openai = createOpenAI({
-        apiKey: userApiKey || getEnv('OPENAI_API_KEY'),
-        fetch: userApiKey ? userKeyApiFetch('OpenAI') : fetch,
+        apiKey: userApiKey,
+        fetch: userKeyApiFetch('OpenAI'),
         compatibility: 'strict',
       });
       provider = {
@@ -136,15 +123,23 @@ export function getProvider(
       break;
     }
     case 'Bedrock': {
+      // Bedrock doesn't use user API keys, it uses AWS credentials
       model = modelForProvider(modelProvider, modelChoice);
       let region = getEnv('AWS_REGION');
       if (!region || !ALLOWED_AWS_REGIONS.includes(region)) {
         region = 'us-west-2';
       }
+
+      // Check if AWS credentials are available
+      const roleArn = getEnv('AWS_ROLE_ARN');
+      if (!roleArn) {
+        throw new Error('Bedrock requires AWS credentials to be configured. Please contact support.');
+      }
+
       const bedrock = createAmazonBedrock({
         region,
         credentialProvider: awsCredentialsProvider({
-          roleArn: getEnv('AWS_ROLE_ARN')!,
+          roleArn,
         }),
         fetch,
       });
@@ -157,59 +152,11 @@ export function getProvider(
     }
     case 'Anthropic': {
       model = modelForProvider(modelProvider, modelChoice);
-      // Falls back to the low Quality-of-Service Anthropic API key if the primary key is rate limited
-      const rateLimitAwareFetch = () => {
-        return async (input: RequestInfo | URL, init?: RequestInit) => {
-          const throwIfBad = async (response: Response, isLowQos: boolean) => {
-            if (response.ok) {
-              return response;
-            }
-            const text = await response.text();
-            captureException('Anthropic returned an error', {
-              level: 'error',
-              extra: {
-                response,
-                text,
-              },
-            });
-            logger.error(
-              `Anthropic${isLowQos ? ' (low QoS)' : ''} returned an error (${response.status} ${response.statusText}): ${text}`,
-            );
-            throw new Error(JSON.stringify({ error: 'The model hit an error. Try sending your message again.' }));
-          };
 
-          const response = await fetch(input, init);
-
-          if (response.status !== 429 && response.status !== 529) {
-            return throwIfBad(response, false);
-          }
-
-          const lowQosKey = getEnv('ANTHROPIC_LOW_QOS_API_KEY');
-          if (!lowQosKey) {
-            captureException('Anthropic low qos api key not set', { level: 'error' });
-            console.error('Anthropic low qos api key not set');
-            return throwIfBad(response, false);
-          }
-
-          logger.error(`Falling back to low QoS API key...`);
-          captureException('Rate limited by Anthropic, switching to low QoS API key', {
-            level: 'warning',
-            extra: {
-              response,
-            },
-          });
-          if (init && init.headers) {
-            const headers = new Headers(init.headers);
-            headers.set('x-api-key', lowQosKey);
-            init.headers = headers;
-          }
-          const lowQosResponse = await fetch(input, init);
-          return throwIfBad(lowQosResponse, true);
-        };
-      };
+      // For user API keys, use a simpler fetch without fallback logic
       const anthropic = createAnthropic({
-        apiKey: userApiKey || getEnv('ANTHROPIC_API_KEY'),
-        fetch: userApiKey ? userKeyApiFetch('Anthropic') : rateLimitAwareFetch(),
+        apiKey: userApiKey,
+        fetch: userKeyApiFetch('Anthropic'),
       });
 
       provider = {
@@ -228,7 +175,12 @@ const userKeyApiFetch = (provider: ModelProvider) => {
     const result = await fetch(input, init);
     if (result.status === 401) {
       const text = await result.text();
-      throw new Error(JSON.stringify({ error: 'Invalid API key', details: text }));
+      throw new Error(
+        JSON.stringify({
+          error: `Invalid ${provider} API key. Please check your API key in settings.`,
+          details: text,
+        }),
+      );
     }
     if (result.status === 413) {
       const text = await result.text();
