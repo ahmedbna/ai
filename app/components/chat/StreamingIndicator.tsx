@@ -184,11 +184,11 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
                       <div className="">{icon}</div>
                       {message}
                       <div className="min-h-6 grow" />
-                      <LittleUsage
+                      {/* <LittleUsage
                         teamSlug={teamSlug}
                         streamStatus={streamStatus}
                         modelSelection={props.modelSelection}
-                      />
+                      /> */}
                       {streamStatus === 'error' && (
                         <Button
                           type="button"

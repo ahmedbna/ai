@@ -24,8 +24,9 @@ import { convexProjectStore } from '~/lib/stores/convexProject';
 import { BackupStatusIndicator } from '~/components/BackupStatusIndicator';
 import type { TerminalInitializationOptions } from '~/types/terminal';
 import { getAbsolutePath } from 'chef-agent/utils/workDir';
-import { PlusIcon, Cross2Icon } from '@radix-ui/react-icons';
+import { PlusIcon, Cross2Icon, DownloadIcon } from '@radix-ui/react-icons';
 import { CommandLineIcon } from '@heroicons/react/24/outline';
+import { Button } from '@ui/Button';
 
 interface WorkspaceProps {
   chatStarted?: boolean;
@@ -164,6 +165,13 @@ export const Workbench = memo(function Workbench({
     [showDashboard],
   );
 
+  const handleDownload = async () => {
+    const convexProject = convexProjectStore.get();
+    workbenchStore.downloadZip({
+      convexProject: convexProject ?? null,
+    });
+  };
+
   // TODO get rid of fileHistory since we don't use it
   const fileHistory = useMemo(() => ({}), []);
 
@@ -178,7 +186,7 @@ export const Workbench = memo(function Workbench({
         >
           <div
             className={classNames(
-              'fixed top-[calc(var(--header-height)+1rem)] bottom-four w-[var(--workbench-inner-width)] z-0 transition-[left,width] duration-200 bolt-ease-cubic-bezier',
+              'fixed top-4 bottom-four w-[var(--workbench-inner-width)] z-0 transition-[left,width] duration-200 bolt-ease-cubic-bezier',
               {
                 'w-full': isSmallViewport,
                 'left-0': showWorkbench && isSmallViewport,
@@ -207,7 +215,13 @@ export const Workbench = memo(function Workbench({
                       </PanelHeaderButton>
                     </div>
                   )}
-                  {selectedView === 'preview' && (
+
+                  <PanelHeaderButton className="mr-1 text-sm" onClick={handleDownload}>
+                    <DownloadIcon />
+                    Download Code
+                  </PanelHeaderButton>
+
+                  {/* {selectedView === 'preview' && (
                     <PanelHeaderButton
                       className="mr-1 text-sm"
                       onClick={() => {
@@ -217,15 +231,21 @@ export const Workbench = memo(function Workbench({
                       <PlusIcon />
                       Add Preview
                     </PanelHeaderButton>
-                  )}
-                  <IconButton
+                  )} */}
+
+                  <Button variant="neutral">
+                    <a href="/">
+                      <Cross2Icon />
+                    </a>
+                  </Button>
+                  {/* <IconButton
                     icon={<Cross2Icon />}
                     className="-mr-1"
                     size="xl"
                     onClick={() => {
                       workbenchStore.showWorkbench.set(false);
                     }}
-                  />
+                  /> */}
                 </div>
                 <div className="relative flex-1 overflow-hidden">
                   <View {...slidingPosition({ view: 'code', selectedView, showDashboard })}>
