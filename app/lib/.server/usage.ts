@@ -1,5 +1,5 @@
 import type { LanguageModelUsage, Message, ProviderMetadata } from 'ai';
-import { createScopedLogger } from 'chef-agent/utils/logger';
+import { createScopedLogger } from 'bna-agent/utils/logger';
 import { getTokenUsage } from '@/lib/convexUsage';
 import type { ProviderType, UsageAnnotation } from '@/lib/common/annotations';
 import { modelForProvider, type ModelProvider } from './llm/provider';

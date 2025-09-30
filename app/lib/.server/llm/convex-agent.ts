@@ -10,17 +10,17 @@ import {
   type ProviderMetadata,
   type StepResult,
 } from 'ai';
-import { ROLE_SYSTEM_PROMPT, generalSystemPrompt } from 'chef-agent/prompts/system';
-import { deployTool } from 'chef-agent/tools/deploy';
-import { viewTool } from 'chef-agent/tools/view';
-import type { ConvexToolSet } from 'chef-agent/types';
-import { npmInstallTool } from 'chef-agent/tools/npmInstall';
+import { ROLE_SYSTEM_PROMPT, generalSystemPrompt } from 'bna-agent/prompts/system';
+import { deployTool } from 'bna-agent/tools/deploy';
+import { viewTool } from 'bna-agent/tools/view';
+import type { ConvexToolSet } from 'bna-agent/types';
+import { npmInstallTool } from 'bna-agent/tools/npmInstall';
 import type { Tracer } from '@/lib/.server/chat';
-import { editTool } from 'chef-agent/tools/edit';
+import { editTool } from 'bna-agent/tools/edit';
 import { captureException, captureMessage } from '@sentry/remix';
-import type { SystemPromptOptions } from 'chef-agent/types';
-import { cleanupAssistantMessages } from 'chef-agent/cleanupAssistantMessages';
-import { logger } from 'chef-agent/utils/logger';
+import type { SystemPromptOptions } from 'bna-agent/types';
+import { cleanupAssistantMessages } from 'bna-agent/cleanupAssistantMessages';
+import { logger } from 'bna-agent/utils/logger';
 import { encodeUsageAnnotation, encodeModelAnnotation } from '@/lib/.server/usage';
 import { compressWithLz4Server } from '@/lib/compression.server';
 import { getConvexSiteUrl } from '@/lib/convexSiteUrl';
@@ -32,10 +32,10 @@ import type { UsageRecord } from '@convex/schema';
 import { getProvider, type ModelProvider } from '@/lib/.server/llm/provider';
 import { getEnv } from '@/lib/.server/env';
 import { calculateChefTokens, usageFromGeneration } from '@/lib/common/usage';
-import { lookupDocsTool } from 'chef-agent/tools/lookupDocs';
-import { addEnvironmentVariablesTool } from 'chef-agent/tools/addEnvironmentVariables';
-import { getConvexDeploymentNameTool } from 'chef-agent/tools/getConvexDeploymentName';
-import type { PromptCharacterCounts } from 'chef-agent/ChatContextManager';
+import { lookupDocsTool } from 'bna-agent/tools/lookupDocs';
+import { addEnvironmentVariablesTool } from 'bna-agent/tools/addEnvironmentVariables';
+import { getConvexDeploymentNameTool } from 'bna-agent/tools/getConvexDeploymentName';
+import type { PromptCharacterCounts } from 'bna-agent/ChatContextManager';
 
 type Messages = Message[];
 

@@ -1,5 +1,5 @@
 {
-  "name": "chefshot",
+  "name": "bnashot",
   "version": "1.0.0",
   "description": "Run a prompt through Chef via browser automation",
   "main": "interact.ts",
@@ -9,7 +9,7 @@
     "postinstall": "playwright install chromium"
   },
   "bin": {
-    "chefshot": "./chefshot.js"
+    "bnashot": "./bnashot.js"
   },
   "dependencies": {
     "@playwright/test": "^1.42.1",

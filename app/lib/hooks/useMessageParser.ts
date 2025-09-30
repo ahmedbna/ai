@@ -1,10 +1,10 @@
 import type { Message, UIMessage } from 'ai';
 import { useCallback, useRef, useState } from 'react';
-import { StreamingMessageParser } from 'chef-agent/message-parser';
+import { StreamingMessageParser } from 'bna-agent/message-parser';
 import { workbenchStore } from '@/lib/stores/workbench.client';
-import { makePartId, type PartId } from 'chef-agent/partId';
-import type { BoltAction } from 'chef-agent/types';
-import { EXCLUDED_FILE_PATHS } from 'chef-agent/constants';
+import { makePartId, type PartId } from 'bna-agent/partId';
+import type { BoltAction } from 'bna-agent/types';
+import { EXCLUDED_FILE_PATHS } from 'bna-agent/constants';
 
 export const messageParser = new StreamingMessageParser({
   callbacks: {

@@ -1,12 +1,12 @@
 import type { ToolCallUnion } from 'ai';
-import type { npmInstallToolParameters } from 'chef-agent/tools/npmInstall';
-import type { editToolParameters } from 'chef-agent/tools/edit';
-import type { addEnvironmentVariablesParameters } from 'chef-agent/tools/addEnvironmentVariables';
-import type { viewParameters } from 'chef-agent/tools/view';
+import type { npmInstallToolParameters } from 'bna-agent/tools/npmInstall';
+import type { editToolParameters } from 'bna-agent/tools/edit';
+import type { addEnvironmentVariablesParameters } from 'bna-agent/tools/addEnvironmentVariables';
+import type { viewParameters } from 'bna-agent/tools/view';
 import type { ActionStatus } from '@/lib/runtime/action-runner';
-import type { lookupDocsParameters } from 'chef-agent/tools/lookupDocs';
-import type { ConvexToolSet, EmptyArgs } from 'chef-agent/types';
-import type { getConvexDeploymentNameParameters } from 'chef-agent/tools/getConvexDeploymentName';
+import type { lookupDocsParameters } from 'bna-agent/tools/lookupDocs';
+import type { ConvexToolSet, EmptyArgs } from 'bna-agent/types';
+import type { getConvexDeploymentNameParameters } from 'bna-agent/tools/getConvexDeploymentName';
 
 type ConvexToolCall = ToolCallUnion<ConvexToolSet>;
 

@@ -1,5 +1,5 @@
 import { ArrowUpIcon, VideoIcon } from '@radix-ui/react-icons';
-import { SUGGESTIONS } from 'chef-agent/constants';
+import { SUGGESTIONS } from 'bna-agent/constants';
 import { Button } from '@/components/ui/button';
 
 interface SuggestionButtonsProps {

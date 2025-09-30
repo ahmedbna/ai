@@ -11,7 +11,7 @@ import { useLocalStorage } from '@uidotdev/usehooks';
 import { api } from '@convex/_generated/api';
 import { toast } from 'sonner';
 import { fetchOptIns } from '@/lib/convexOptins';
-import { setChefDebugProperty } from 'chef-agent/utils/chefDebug';
+import { setChefDebugProperty } from 'bna-agent/utils/chefDebug';
 import { useAuth } from '@workos-inc/authkit-react';
 type ChefAuthState =
   | {

@@ -1,6 +1,6 @@
 import { createTwoFilesPatch } from 'diff';
-import type { AbsolutePath } from 'chef-agent/utils/workDir';
-import type { FileMap } from 'chef-agent/types';
+import type { AbsolutePath } from 'bna-agent/utils/workDir';
+import type { FileMap } from 'bna-agent/types';
 
 interface ModifiedFile {
   type: 'diff' | 'file';

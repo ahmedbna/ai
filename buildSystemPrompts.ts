@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import { writeFileSync } from 'fs';
-import { ROLE_SYSTEM_PROMPT, generalSystemPrompt } from './chef-agent/prompts/system.js';
-import type { SystemPromptOptions } from './chef-agent/types.js';
+import { ROLE_SYSTEM_PROMPT, generalSystemPrompt } from './bna-agent/prompts/system.js';
+import type { SystemPromptOptions } from './bna-agent/types.js';
 
-console.log('Building chef system prompts release...');
+console.log('Building bna system prompts release...');
 
 const defaultOptions: SystemPromptOptions = {
   enableBulkEdits: true,
@@ -16,10 +16,10 @@ const defaultOptions: SystemPromptOptions = {
   enableResend: true,
 };
 
-let output: string = `# Chef System Prompts\n`;
+let output: string = `# BNA System Prompts\n`;
 output += `Generated on: ${new Date().toISOString()}\n`;
 output += `========================================\n\n`;
-output += `This file contains the system prompts sent to Chef.\n\n`;
+output += `This file contains the system prompts sent to BNA.\n\n`;
 
 output += `## System Message 1: ROLE_SYSTEM_PROMPT\n\n`;
 output += ROLE_SYSTEM_PROMPT + '\n\n';
@@ -35,5 +35,5 @@ try {
   console.log(`Could not generate general system prompt: ${errorMessage}`);
 }
 
-writeFileSync('chef-system-prompts.txt', output);
-console.log('✅ Built chef-system-prompts.txt');
+writeFileSync('bna-system-prompts.txt', output);
+console.log('✅ Built bna-system-prompts.txt');

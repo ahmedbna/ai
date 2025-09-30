@@ -19,10 +19,10 @@ import { Sheet } from '@ui/Sheet';
 import { useAuth } from '@workos-inc/authkit-react';
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Cooked with Chef' },
+    { title: 'Cooked with BNA AI' },
     {
       name: 'description',
-      content: 'Someone shared with you a project cooked with Chef, the full-stack AI coding agent from Convex',
+      content: 'Someone shared with you a project cooked with BNA AI, the full-stack AI coding agent from Convex',
     },
     {
       property: 'og:image',
@@ -103,9 +103,9 @@ function ShareProjectContent() {
       <div className='flex min-h-screen flex-col items-center justify-center p-4'>
         <div className='w-full max-w-md space-y-6 rounded-xl border bg-white p-8'>
           <div className='space-y-2 text-center'>
-            <h1 className='text-center text-3xl font-bold'>Sign in to Chef</h1>
+            <h1 className='text-center text-3xl font-bold'>Sign in to BNA AI</h1>
             <p className='text-base text-gray-500'>
-              Please sign in to Chef to clone this project
+              Please sign in to BNA AI to clone this project
               {getShareDescription?.description ? (
                 <>
                   : <span className='font-bold'>{getShareDescription.description}</span>

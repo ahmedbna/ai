@@ -8,14 +8,14 @@ import {
   type OnScrollCallback as OnEditorScroll,
   type OnWheelCallback as OnEditorWheel,
 } from '@/components/editor/codemirror/CodeMirrorEditor';
-import type { EditorDocument } from 'chef-agent/types';
+import type { EditorDocument } from 'bna-agent/types';
 import { PanelHeader } from '@/components/ui/PanelHeader';
 import { PanelHeaderButton } from '@/components/ui/PanelHeaderButton';
-import type { FileMap } from 'chef-agent/types';
+import type { FileMap } from 'bna-agent/types';
 import type { FileHistory } from '@/types/actions';
 import { themeStore } from '@/lib/stores/theme';
-import { WORK_DIR } from 'chef-agent/constants';
-import { renderLogger } from 'chef-agent/utils/logger';
+import { WORK_DIR } from 'bna-agent/constants';
+import { renderLogger } from 'bna-agent/utils/logger';
 import { isMobile } from '@/utils/mobile';
 import { FileBreadcrumb } from './FileBreadcrumb';
 import { FileTree } from './FileTree';

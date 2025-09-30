@@ -2,7 +2,7 @@ import { memo, useCallback, useState } from 'react';
 import { toast } from 'sonner';
 import { ConfirmationDialog } from '@ui/ConfirmationDialog';
 import { type ChatHistoryItem } from '@/types/ChatHistoryItem';
-import { logger } from 'chef-agent/utils/logger';
+import { logger } from 'bna-agent/utils/logger';
 import { Menu as MenuComponent, MenuItem as MenuItemComponent } from '@ui/Menu';
 import { useSearchFilter } from '@/lib/hooks/useSearchFilter';
 import { classNames } from '@/utils/classNames';

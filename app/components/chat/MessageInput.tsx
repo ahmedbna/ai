@@ -51,13 +51,13 @@ type Highlight = {
 const HIGHLIGHTS: Highlight[] = [
   {
     text: 'ai chat',
-    tooltip: 'Unless otherwise configured, Chef will prototype with GPT‑4o mini or GPT‑4.1 nano (limits apply).',
+    tooltip: 'Unless otherwise configured, BNA AI will prototype with GPT‑4o mini or GPT‑4.1 nano (limits apply).',
   },
   {
     text: 'collaborative text editor',
     tooltip: (
       <>
-        Chef will use the{' '}
+        BNA AI will use the{' '}
         <TooltipLink href='https://www.convex.dev/components/prosemirror-sync'>Collaborative Text Editor</TooltipLink>{' '}
         Convex <TooltipLink href='https://www.convex.dev/components'>component</TooltipLink>.
       </>
@@ -67,7 +67,7 @@ const HIGHLIGHTS: Highlight[] = [
     text: 'upload',
     tooltip: (
       <>
-        Chef will use Convex’s built-in{' '}
+        BNA AI will use Convex’s built-in{' '}
         <TooltipLink href='https://docs.convex.dev/file-storage'>file upload capabilities</TooltipLink>.
       </>
     ),
@@ -76,7 +76,7 @@ const HIGHLIGHTS: Highlight[] = [
     text: 'full text search',
     tooltip: (
       <>
-        Chef will use Convex’s built-in{' '}
+        BNA AI will use Convex’s built-in{' '}
         <TooltipLink href='https://docs.convex.dev/search/text-search'>full text search</TooltipLink> capabilities.
       </>
     ),
@@ -85,7 +85,7 @@ const HIGHLIGHTS: Highlight[] = [
     text: 'presence',
     tooltip: (
       <>
-        Chef will use the <TooltipLink href='https://www.convex.dev/components/presence'>Presence</TooltipLink>{' '}
+        BNA AI will use the <TooltipLink href='https://www.convex.dev/components/presence'>Presence</TooltipLink>{' '}
         Convex&nbsp;<TooltipLink href='https://www.convex.dev/components'>component</TooltipLink>.
       </>
     ),
@@ -605,7 +605,7 @@ const NewLineShortcut = memo(function NewLineShortcut() {
 const CharacterWarning = memo(function CharacterWarning() {
   return (
     <Tooltip
-      tip='Chef performs better with shorter prompts. Consider making your prompt more concise or breaking it into smaller chunks.'
+      tip='BNA AI performs better with shorter prompts. Consider making your prompt more concise or breaking it into smaller chunks.'
       side='bottom'
     >
       <div className='flex cursor-help items-center text-xs text-content-warning'>

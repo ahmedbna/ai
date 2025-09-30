@@ -35,7 +35,7 @@ export function ReferButton() {
             {referralCode && (
               <div className='space-y-2'>
                 <p className='text-sm text-content-secondary'>
-                  Refer a friend to Chef to earn more tokens. <br />
+                  Refer a friend to BNA AI to earn more tokens. <br />
                   Each referral gets you 85,000 more tokens.
                 </p>
                 <div className='flex items-center gap-2'>

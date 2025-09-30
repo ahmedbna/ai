@@ -1,6 +1,6 @@
 import type { WebContainer } from '@webcontainer/api';
 import { atom } from 'nanostores';
-import { createScopedLogger } from 'chef-agent/utils/logger';
+import { createScopedLogger } from 'bna-agent/utils/logger';
 import { withResolvers } from '@/utils/promises';
 
 export interface PreviewInfo {

@@ -94,7 +94,7 @@ const CodeShow: FC<CodeShowProps> = ({ code, ...props }) => {
 const ShowInner: FC<ShowInnerProps> = ({ share, className }) => {
   const [showIframe, setShowIframe] = useState(false);
   const defaultAuthor = {
-    username: 'Chef User',
+    username: 'BNA AI',
     avatar: '',
   } as const;
 
@@ -155,12 +155,12 @@ const ShowInner: FC<ShowInnerProps> = ({ share, className }) => {
             tip={
               typeof window !== 'undefined' && window.innerWidth < 768
                 ? undefined
-                : `New users: clone this app and get 85,000 bonus Chef tokens, plus some for the author of this app!
+                : `New users: clone this app and get 85,000 bonus BNA AI tokens, plus some for the author of this app!
 ` /* TODO this is buggy */
             }
           >
-            <span className='hidden md:inline'>Clone app in Chef</span>
-            <span className='inline md:hidden'>What&apos;s Chef?</span>
+            <span className='hidden md:inline'>Clone app in BNA AI</span>
+            <span className='inline md:hidden'>What&apos;s BNA AI?</span>
           </Button>
         </div>
       </div>
@@ -177,7 +177,7 @@ const ShowInner: FC<ShowInnerProps> = ({ share, className }) => {
             </Button>
           ) : (
             <Button href='/' variant='primary' className='ml-2'>
-              Try Chef
+              Try BNA AI
             </Button>
           )}
         </div>

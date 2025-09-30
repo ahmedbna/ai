@@ -10,11 +10,11 @@ import { chatStore } from '@/lib/stores/chatId';
 import { workbenchStore } from '@/lib/stores/workbench.client';
 import { MAX_CONSECUTIVE_DEPLOY_ERRORS, type ModelSelection } from '@/utils/constants';
 import { cubicEasingFn } from '@/utils/easings';
-import { createScopedLogger } from 'chef-agent/utils/logger';
+import { createScopedLogger } from 'bna-agent/utils/logger';
 import { BaseChat } from './BaseChat.client';
 import { createSampler } from '@/utils/sampler';
 import { filesToArtifacts } from '@/utils/fileUtils';
-import { ChatContextManager } from 'chef-agent/ChatContextManager';
+import { ChatContextManager } from 'bna-agent/ChatContextManager';
 import { selectedTeamSlugStore, setSelectedTeamSlug, useSelectedTeamSlug } from '@/lib/stores/convexTeams';
 import { convexProjectStore } from '@/lib/stores/convexProject';
 import { toast } from 'sonner';
@@ -36,7 +36,7 @@ import { useConvexSessionIdOrNullOrLoading } from '@/lib/stores/sessionId';
 import type { Id } from 'convex/_generated/dataModel';
 import { VITE_PROVISION_HOST } from '@/lib/convexProvisionHost';
 import type { ProviderType } from '@/lib/common/annotations';
-import { setChefDebugProperty } from 'chef-agent/utils/chefDebug';
+import { setChefDebugProperty } from 'bna-agent/utils/chefDebug';
 import { MissingApiKey } from './MissingApiKey';
 import { displayModelProviderName, models, type ModelProvider } from '@/components/chat/ModelSelector';
 import { useLaunchDarkly } from '@/lib/hooks/useLaunchDarkly';
@@ -561,13 +561,13 @@ export const Chat = memo(
           );
         }
         toast.error(message);
-        captureMessage('User tried to send message but chef is too busy');
+        captureMessage('User tried to send message but BNA AI is too busy');
         return;
       }
 
       // Continue with rate limiting logic if needed
       if (retries.numFailures >= MAX_RETRIES || now < retries.nextRetry) {
-        let message: string | ReactNode = 'Chef is too busy cooking right now. ';
+        let message: string | ReactNode = 'BNA AI is too busy cooking right now. ';
         if (retries.numFailures >= MAX_RETRIES) {
           message = (
             <>
@@ -585,7 +585,7 @@ export const Chat = memo(
           );
         }
         toast.error(message);
-        captureMessage('User tried to send message but chef is too busy');
+        captureMessage('User tried to send message but BNA AI is too busy');
         return;
       }
 

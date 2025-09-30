@@ -2,15 +2,15 @@ import type { WebContainer, PathWatcherEvent } from '@webcontainer/api';
 import { getEncoding } from 'istextorbinary';
 import { map, type MapStore } from 'nanostores';
 import { Buffer } from 'node:buffer';
-import { path } from 'chef-agent/utils/path';
+import { path } from 'bna-agent/utils/path';
 import { bufferWatchEvents } from '@/utils/buffer';
-import { WORK_DIR } from 'chef-agent/constants.js';
+import { WORK_DIR } from 'bna-agent/constants.js';
 import { computeFileModifications } from '@/utils/diff';
-import { createScopedLogger } from 'chef-agent/utils/logger';
-import { unreachable } from 'chef-agent/utils/unreachable';
+import { createScopedLogger } from 'bna-agent/utils/logger';
+import { unreachable } from 'bna-agent/utils/unreachable';
 import { incrementFileUpdateCounter } from './fileUpdateCounter';
-import { getAbsolutePath, type AbsolutePath } from 'chef-agent/utils/workDir';
-import type { File, FileMap } from 'chef-agent/types';
+import { getAbsolutePath, type AbsolutePath } from 'bna-agent/utils/workDir';
+import type { File, FileMap } from 'bna-agent/types';
 
 const logger = createScopedLogger('FilesStore');
 

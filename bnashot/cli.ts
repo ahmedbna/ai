@@ -241,6 +241,6 @@ const downloadCommand = new Command('download')
 
 const program = new Command();
 
-program.name('chefshot').description('Chef AI CLI').addCommand(generateCommand).addCommand(downloadCommand);
+program.name('bnashot').description('Chef AI CLI').addCommand(generateCommand).addCommand(downloadCommand);
 
 program.parse();

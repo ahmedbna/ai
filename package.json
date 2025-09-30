@@ -1,5 +1,5 @@
 {
-  "name": "chef",
+  "name": "bna-ai",
   "description": "An AI Agent",
   "private": true,
   "license": "MIT",
@@ -101,8 +101,8 @@
     "ai": "^4.3.2",
     "allotment": "^1.20.3",
     "chart.js": "^4.4.9",
-    "chef-agent": "workspace:*",
-    "chefshot": "workspace:*",
+    "bna-agent": "workspace:*",
+    "bnashot": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "classnames": "^2.5.1",
     "cloudflare": "^4.2.0",

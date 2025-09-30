@@ -19,7 +19,7 @@ import { decompressWithLz4 } from '@/lib/compression.client';
 import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { getConvexAuthToken } from '@/lib/stores/sessionId';
 import { useConvex } from 'convex/react';
-import { setChefDebugProperty } from 'chef-agent/utils/chefDebug';
+import { setChefDebugProperty } from 'bna-agent/utils/chefDebug';
 // Register Chart.js components - needs to include ALL required elements
 ChartJS.register(ArcElement, Tooltip, Legend);
 

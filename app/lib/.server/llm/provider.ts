@@ -8,7 +8,7 @@ import { createVertex } from '@ai-sdk/google-vertex';
 import { createOpenAI } from '@ai-sdk/openai';
 import { awsCredentialsProvider } from '@vercel/functions/oidc';
 import { captureException } from '@sentry/remix';
-import { logger } from 'chef-agent/utils/logger';
+import { logger } from 'bna-agent/utils/logger';
 import type { ProviderType } from '@/lib/common/annotations';
 import { getEnv } from '@/lib/.server/env';
 // workaround for Vercel environment from

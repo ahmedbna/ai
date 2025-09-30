@@ -1,4 +1,4 @@
-# Chefshot
+# bnashot
 
 Goal is to run evals with this.
 
@@ -11,13 +11,13 @@ Download filesystem to my-app and print all messages
 ```
 npx convex dev --once; pnpm run build; pnpm run start;
 # and then in another terminal
-npx chefshot generate "Let's make a chat app" --messages-file foo.json --prod | jq
+npx bnashot generate "Let's make a chat app" --messages-file foo.json --prod | jq
 ```
 
 Just save the messages you get from a prompt in prod
 
 ```
-npx chefshot "Let's make a chat app!" --messages-file foo.json --prod
+npx bnashot "Let's make a chat app!" --messages-file foo.json --prod
 ```
 
 Debug
@@ -25,7 +25,7 @@ Debug
 ```
 npx convex dev --once; pnpm run dev
 # and then in another terminal
-npx chefshot generate "Let's make a chat app" --dev --no-headless
+npx bnashot generate "Let's make a chat app" --dev --no-headless
 ```
 
 # Credentials

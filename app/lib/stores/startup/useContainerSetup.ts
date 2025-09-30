@@ -8,20 +8,20 @@ import type { ConvexReactClient } from 'convex/react';
 import { useConvex } from 'convex/react';
 import { decompressWithLz4 } from '@/lib/compression';
 import { streamOutput } from '@/utils/process';
-import { cleanTerminalOutput } from 'chef-agent/utils/shell';
+import { cleanTerminalOutput } from 'bna-agent/utils/shell';
 import { toast } from 'sonner';
 import { waitForConvexProjectConnection } from '@/lib/stores/convexProject';
-import type { ConvexProject } from 'chef-agent/types';
+import type { ConvexProject } from 'bna-agent/types';
 import type { WebContainer } from '@webcontainer/api';
-import { queryEnvVariableWithRetries, setEnvVariablesWithRetries } from 'chef-agent/convexEnvVariables';
+import { queryEnvVariableWithRetries, setEnvVariablesWithRetries } from 'bna-agent/convexEnvVariables';
 import { getConvexSiteUrl } from '@/lib/convexSiteUrl';
 import { workbenchStore } from '@/lib/stores/workbench.client';
-import { initializeConvexAuth } from 'chef-agent/convexAuth';
+import { initializeConvexAuth } from 'bna-agent/convexAuth';
 import { appendEnvVarIfNotSet } from '@/utils/envFileUtils';
 import { getFileUpdateCounter } from '@/lib/stores/fileUpdateCounter';
 import { chatSyncState } from './chatSyncState';
 import { FILE_EVENTS_DEBOUNCE_MS } from '@/lib/stores/files';
-import { setChefDebugProperty } from 'chef-agent/utils/chefDebug';
+import { setChefDebugProperty } from 'bna-agent/utils/chefDebug';
 
 const TEMPLATE_URL = '/template-snapshot-63fbe575.bin';
 

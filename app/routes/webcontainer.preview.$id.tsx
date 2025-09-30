@@ -7,7 +7,7 @@ import type { MetaFunction } from '@vercel/remix';
 const PREVIEW_CHANNEL = 'preview-updates';
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Preview | Chef' }];
+  return [{ title: 'Preview | BNA AI' }];
 };
 
 export async function loader({ params }: LoaderFunctionArgs) {

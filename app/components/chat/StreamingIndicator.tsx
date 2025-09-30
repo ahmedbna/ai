@@ -321,8 +321,8 @@ function LittleUsage({
             <UsageDonut tokenUsage={loading ? null : { used, quota }} label={detailedLabel} hidden={false} />
             <p className='mt-1 text-xs text-content-secondary'>
               {isPaidPlan
-                ? `Chef tokens power code generation. Your team's Chef tokens reset to ${displayChefTokenNumber(quota)} on your regular billing cycle. Unused tokens from the previous month are not carried over. Additional Chef tokens cost $10 per 1M tokens.`
-                : 'Chef tokens power code generation. Tokens reset on the first of each month and tokens from the previous month are not carried over.'}
+                ? `BNA AI tokens power code generation. Your team's BNA AI tokens reset to ${displayChefTokenNumber(quota)} on your regular billing cycle. Unused tokens from the previous month are not carried over. Additional BNA AI tokens cost $10 per 1M tokens.`
+                : 'BNA AI tokens power code generation. Tokens reset on the first of each month and tokens from the previous month are not carried over.'}
             </p>
             <ul className='mt-2 space-y-2 text-sm text-content-primary'>
               {isPaidPlan ? null : (
@@ -345,7 +345,7 @@ function LittleUsage({
                       {referralStats.left === 5
                         ? 'Refer a friend '
                         : `Refer up to ${referralStats.left} more new users `}
-                      to get 85K additional Chef tokens per month.
+                      to get 85K additional BNA AI tokens per month.
                     </p>
                     {referralStats.left > 0 && <Referrals referralCode={referralCode} />}
                   </div>
@@ -354,9 +354,9 @@ function LittleUsage({
               <li className='mt-2 border-t pt-2 text-xs text-content-secondary'>
                 {usingApiKey ? (
                   usagePercentage >= 100 ? (
-                    "You're using an API key so can keep building without using Chef tokens."
+                    "You're using an API key so can keep building without using BNA AI tokens."
                   ) : (
-                    "You have an API key set for the model you're using so you'll be able to keep building after running out of Chef tokens."
+                    "You have an API key set for the model you're using so you'll be able to keep building after running out of BNA AI tokens."
                   )
                 ) : (
                   <>
@@ -368,7 +368,7 @@ function LittleUsage({
                     >
                       Add your own API key
                     </Button>{' '}
-                    in settings to avoid spending Chef tokens.
+                    in settings to avoid spending BNA AI tokens.
                   </>
                 )}
               </li>

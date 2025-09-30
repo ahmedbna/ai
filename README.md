@@ -102,9 +102,9 @@ Note: Chef is accessible at http://127.0.0.1:{port}/ and will not work properly 
   - `lib/` contains client-side logic for syncing local state with the server
   - `routes/` defines some client and server routes
 
-- `chef-agent/` handles the agentic loop by injecting system prompts, defining tools, and calling out to model providers.
+- `bna-agent/` handles the agentic loop by injecting system prompts, defining tools, and calling out to model providers.
 
-- `chefshot/` defines a CLI interface for interacting with the Chef webapp.
+- `bnashot/` defines a CLI interface for interacting with the Chef webapp.
 
 - `convex/` contains the database that stores chats and user metadata.
 
