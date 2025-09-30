@@ -153,7 +153,7 @@ export const Workbench = memo(function Workbench({
                 value: 'dashboard' as const,
                 text: (
                   <>
-                    <img className="size-4" height="16" width="16" src="/icons/Convex.svg" alt="Convex" />
+                    <img className='size-4' height='16' width='16' src='/icons/Convex.svg' alt='Convex' />
                     Database
                   </>
                 ),
@@ -179,10 +179,10 @@ export const Workbench = memo(function Workbench({
     chatStarted && (
       <>
         <motion.div
-          initial="closed"
+          initial='closed'
           animate={showWorkbench ? 'open' : 'closed'}
           variants={workbenchVariants}
-          className="z-workbench"
+          className='z-workbench'
         >
           <div
             className={classNames(
@@ -195,28 +195,28 @@ export const Workbench = memo(function Workbench({
               },
             )}
           >
-            <div className="absolute inset-0 px-2 lg:px-6">
-              <div className="flex h-full flex-col overflow-hidden rounded-lg border bg-bolt-elements-background-depth-2 shadow">
-                <div className="flex items-center border-b px-3 py-2">
+            <div className='absolute inset-0 px-2 lg:px-6'>
+              <div className='flex h-full flex-col overflow-hidden rounded-lg border bg-bolt-elements-background-depth-2 shadow'>
+                <div className='flex items-center border-b px-3 py-2'>
                   <Slider selected={selectedView} options={sliderOptions} setSelected={setSelectedView} />
-                  <div className="ml-auto" />
+                  <div className='ml-auto' />
                   {selectedView === 'code' && (
-                    <div className="flex overflow-y-auto">
+                    <div className='flex overflow-y-auto'>
                       <BackupStatusIndicator />
-                      <div className="w-4" />
+                      <div className='w-4' />
                       <PanelHeaderButton
-                        className="mr-1 text-sm"
+                        className='mr-1 text-sm'
                         onClick={() => {
                           workbenchStore.toggleTerminal(!workbenchStore.showTerminal.get());
                         }}
                       >
-                        <CommandLineIcon className="size-4" />
+                        <CommandLineIcon className='size-4' />
                         Toggle Terminal
                       </PanelHeaderButton>
                     </div>
                   )}
 
-                  <PanelHeaderButton className="mr-1 text-sm" onClick={handleDownload}>
+                  <PanelHeaderButton className='mr-1 text-sm' onClick={handleDownload}>
                     <DownloadIcon />
                     Download Code
                   </PanelHeaderButton>
@@ -233,8 +233,8 @@ export const Workbench = memo(function Workbench({
                     </PanelHeaderButton>
                   )} */}
 
-                  <Button variant="neutral">
-                    <a href="/">
+                  <Button variant='neutral'>
+                    <a href='/'>
                       <Cross2Icon />
                     </a>
                   </Button>
@@ -247,7 +247,7 @@ export const Workbench = memo(function Workbench({
                     }}
                   /> */}
                 </div>
-                <div className="relative flex-1 overflow-hidden">
+                <div className='relative flex-1 overflow-hidden'>
                   <View {...slidingPosition({ view: 'code', selectedView, showDashboard })}>
                     <EditorPanel
                       editorDocument={currentDocument}
@@ -301,7 +301,7 @@ interface ViewProps extends HTMLMotionProps<'div'> {
 
 const View = memo(function View({ children, ...props }: ViewProps) {
   return (
-    <motion.div className="absolute inset-0" transition={viewTransition} {...props}>
+    <motion.div className='absolute inset-0' transition={viewTransition} {...props}>
       {children}
     </motion.div>
   );

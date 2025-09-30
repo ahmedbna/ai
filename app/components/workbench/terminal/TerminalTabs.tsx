@@ -66,9 +66,9 @@ export const TerminalTabs = memo(function TerminalTabs(terminalInitializationOpt
         workbenchStore.toggleTerminal(false);
       }}
     >
-      <div className="h-full">
-        <div className="flex h-full flex-col bg-bolt-elements-terminals-background">
-          <div className="flex min-h-[34px] items-center gap-1.5 border-y bg-bolt-elements-background-depth-2 p-2">
+      <div className='h-full'>
+        <div className='flex h-full flex-col bg-bolt-elements-terminals-background'>
+          <div className='flex min-h-[34px] items-center gap-1.5 border-y bg-bolt-elements-background-depth-2 p-2'>
             {Array.from({ length: terminalCount + 1 }, (_, index) => {
               const isActive = activeTerminal === index;
 
@@ -89,7 +89,7 @@ export const TerminalTabs = memo(function TerminalTabs(terminalInitializationOpt
                   )}
                   onClick={() => activeTerminalTabStore.set(index)}
                 >
-                  <CommandLineIcon className="size-4" />
+                  <CommandLineIcon className='size-4' />
                   {index === VITE_TAB_INDEX
                     ? 'Dev Server'
                     : index === CONVEX_DEPLOY_TAB_INDEX
@@ -98,12 +98,12 @@ export const TerminalTabs = memo(function TerminalTabs(terminalInitializationOpt
                 </button>
               );
             })}
-            {terminalCount < MAX_TERMINALS && <IconButton icon={<PlusIcon />} size="md" onClick={addTerminal} />}
+            {terminalCount < MAX_TERMINALS && <IconButton icon={<PlusIcon />} size='md' onClick={addTerminal} />}
             <IconButton
-              className="ml-auto"
+              className='ml-auto'
               icon={<CaretDownIcon />}
-              title="Close"
-              size="md"
+              title='Close'
+              size='md'
               onClick={() => workbenchStore.toggleTerminal(false)}
             />
           </div>

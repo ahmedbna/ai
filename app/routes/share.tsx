@@ -55,8 +55,8 @@ const inlineThemeCode = stripIndents`
 
 export const Head = createHead(() => (
   <>
-    <meta charSet="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charSet='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
     <Meta />
     <Links />
     <script dangerouslySetInnerHTML={{ __html: inlineThemeCode }} />

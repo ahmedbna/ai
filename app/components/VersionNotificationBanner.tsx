@@ -18,12 +18,12 @@ export default function useVersionNotificationBanner() {
 
   if (!error && data?.sha && currentSha && data.sha !== currentSha) {
     toast.info(
-      <div className="flex flex-col">
+      <div className='flex flex-col'>
         A new version of Chef is available! Refresh this page to update.
         <Button
-          className="ml-auto w-fit items-center"
+          className='ml-auto w-fit items-center'
           inline
-          size="xs"
+          size='xs'
           icon={<SymbolIcon />}
           // Make the href the current page so that the page refreshes.
           onClick={() => window.location.reload()}

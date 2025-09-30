@@ -45,31 +45,31 @@ export function CompatibilityWarnings({ setEnabled }: { setEnabled: (enabled: bo
   if (experience === 'mobile-warning') {
     return (
       <>
-        <div className="my-2 text-balance rounded border border-neutral-1 bg-[#F7F3F1] p-4 text-center dark:border-neutral-10 dark:bg-neutral-11">
+        <div className='my-2 text-balance rounded border border-neutral-1 bg-[#F7F3F1] p-4 text-center dark:border-neutral-10 dark:bg-neutral-11'>
           {isDebug && (
-            <div className="absolute left-4 top-4 z-50">
+            <div className='absolute left-4 top-4 z-50'>
               <select
                 value={experience}
                 onChange={(e) => setSelectedExperience(e.target.value as Experience)}
-                className="rounded border bg-white px-2 py-1"
+                className='rounded border bg-white px-2 py-1'
               >
-                <option value="marketing-page-only-for-mobile">marketing-page-only-for-mobile</option>
-                <option value="marketing-page-only-for-desktop">marketing-page-only-for-desktop</option>
-                <option value="marketing-page-only-for-desktop-safari">marketing-page-only-for-desktop-safari</option>
-                <option value="mobile-warning">mobile-warning</option>
-                <option value="the-real-thing">the-real-thing</option>
+                <option value='marketing-page-only-for-mobile'>marketing-page-only-for-mobile</option>
+                <option value='marketing-page-only-for-desktop'>marketing-page-only-for-desktop</option>
+                <option value='marketing-page-only-for-desktop-safari'>marketing-page-only-for-desktop-safari</option>
+                <option value='mobile-warning'>mobile-warning</option>
+                <option value='the-real-thing'>the-real-thing</option>
               </select>
             </div>
           )}
 
-          <div className="text-center">
+          <div className='text-center'>
             <div>
               <h3>Grab your laptop!</h3>
-              <p className="my-2">
+              <p className='my-2'>
                 Chef uses{' '}
                 <a
-                  href="https://webcontainers.io/guides/browser-support#web-platform-requirements"
-                  className="text-bolt-elements-messages-linkColor hover:underline"
+                  href='https://webcontainers.io/guides/browser-support#web-platform-requirements'
+                  className='text-bolt-elements-messages-linkColor hover:underline'
                 >
                   WebContainers
                 </a>{' '}
@@ -79,19 +79,19 @@ export function CompatibilityWarnings({ setEnabled }: { setEnabled: (enabled: bo
             </div>
           </div>
 
-          <div className="flex flex-col items-center gap-6">
+          <div className='flex flex-col items-center gap-6'>
             <video
-              src="/Basic-Screencast.mp4"
+              src='/Basic-Screencast.mp4'
               controls
-              className="max-h-[calc(100vh-24rem)] w-auto max-w-full"
+              className='max-h-[calc(100vh-24rem)] w-auto max-w-full'
               autoPlay
               muted
               playsInline
             />
           </div>
 
-          <div className="mt-2 text-center text-content-secondary">
-            <Button onClick={dismiss} className="mt-8 max-w-full text-wrap">
+          <div className='mt-2 text-center text-content-secondary'>
+            <Button onClick={dismiss} className='mt-8 max-w-full text-wrap'>
               Let me use it even though my device is not supported
             </Button>
           </div>
@@ -101,39 +101,39 @@ export function CompatibilityWarnings({ setEnabled }: { setEnabled: (enabled: bo
   }
 
   return (
-    <div className="my-2 text-balance rounded border border-neutral-1 bg-[#F7F3F1] p-4 text-center dark:border-neutral-10 dark:bg-neutral-11">
+    <div className='my-2 text-balance rounded border border-neutral-1 bg-[#F7F3F1] p-4 text-center dark:border-neutral-10 dark:bg-neutral-11'>
       <div>
         {isDebug && (
-          <div className="absolute left-4 top-4 z-50">
+          <div className='absolute left-4 top-4 z-50'>
             <select
               value={experience}
               onChange={(e) => setSelectedExperience(e.target.value as Experience)}
-              className="rounded border bg-white px-2 py-1"
+              className='rounded border bg-white px-2 py-1'
             >
-              <option value="marketing-page-only-for-mobile">marketing-page-only-for-mobile</option>
-              <option value="marketing-page-only-for-desktop">marketing-page-only-for-desktop</option>
-              <option value="marketing-page-only-for-desktop-safari">marketing-page-only-for-desktop-safari</option>
-              <option value="mobile-warning">mobile-warning</option>
-              <option value="the-real-thing">the-real-thing</option>
+              <option value='marketing-page-only-for-mobile'>marketing-page-only-for-mobile</option>
+              <option value='marketing-page-only-for-desktop'>marketing-page-only-for-desktop</option>
+              <option value='marketing-page-only-for-desktop-safari'>marketing-page-only-for-desktop-safari</option>
+              <option value='mobile-warning'>mobile-warning</option>
+              <option value='the-real-thing'>the-real-thing</option>
             </select>
           </div>
         )}
 
-        <div className="flex flex-col items-center gap-6">
+        <div className='flex flex-col items-center gap-6'>
           <div>
             {experience === 'marketing-page-only-for-mobile' ? (
               <>
-                <h3 className="text-xl font-bold">Grab your laptop!</h3>
-                <p className="my-2">Chef supports desktop Firefox, Chrome, and some other Chromium-based browsers.</p>
+                <h3 className='text-xl font-bold'>Grab your laptop!</h3>
+                <p className='my-2'>Chef supports desktop Firefox, Chrome, and some other Chromium-based browsers.</p>
               </>
             ) : experience === 'marketing-page-only-for-desktop-safari' ? (
               <>
-                <h3 className="text-xl font-bold">You’re a few keystrokes away from cooking with Chef!</h3>
-                <p className="my-2">
+                <h3 className='text-xl font-bold'>You’re a few keystrokes away from cooking with Chef!</h3>
+                <p className='my-2'>
                   Chef uses{' '}
                   <a
-                    href="https://webcontainers.io/guides/browser-support#web-platform-requirements"
-                    className="text-bolt-elements-messages-linkColor hover:underline"
+                    href='https://webcontainers.io/guides/browser-support#web-platform-requirements'
+                    className='text-bolt-elements-messages-linkColor hover:underline'
                   >
                     WebContainers
                   </a>{' '}
@@ -142,12 +142,12 @@ export function CompatibilityWarnings({ setEnabled }: { setEnabled: (enabled: bo
               </>
             ) : (
               <>
-                <h3 className="text-xl font-bold">You’re a few keystrokes away from cooking with Chef!</h3>
-                <p className="my-2">
+                <h3 className='text-xl font-bold'>You’re a few keystrokes away from cooking with Chef!</h3>
+                <p className='my-2'>
                   Chef uses{' '}
                   <a
-                    href="https://webcontainers.io/guides/browser-support#web-platform-requirements"
-                    className="text-bolt-elements-messages-linkColor hover:underline"
+                    href='https://webcontainers.io/guides/browser-support#web-platform-requirements'
+                    className='text-bolt-elements-messages-linkColor hover:underline'
                   >
                     WebContainers
                   </a>{' '}
@@ -158,11 +158,11 @@ export function CompatibilityWarnings({ setEnabled }: { setEnabled: (enabled: bo
             )}
           </div>
 
-          <div className="flex w-full items-center justify-center">
+          <div className='flex w-full items-center justify-center'>
             <video
-              src="/Basic-Screencast.mp4"
+              src='/Basic-Screencast.mp4'
               controls
-              className="max-h-[50vh] w-auto max-w-full rounded-lg"
+              className='max-h-[50vh] w-auto max-w-full rounded-lg'
               autoPlay
               muted
               playsInline

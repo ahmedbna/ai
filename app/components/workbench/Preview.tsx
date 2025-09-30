@@ -245,21 +245,21 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
   );
 
   return (
-    <div ref={containerRef} className="relative flex size-full flex-col">
+    <div ref={containerRef} className='relative flex size-full flex-col'>
       {isPortDropdownOpen && (
-        <div className="z-iframe-overlay absolute size-full" onClick={() => setIsPortDropdownOpen(false)} />
+        <div className='z-iframe-overlay absolute size-full' onClick={() => setIsPortDropdownOpen(false)} />
       )}
-      <div className="flex items-center gap-2 bg-bolt-elements-background-depth-2 p-2">
-        <div className="flex items-center gap-2">
+      <div className='flex items-center gap-2 bg-bolt-elements-background-depth-2 p-2'>
+        <div className='flex items-center gap-2'>
           <IconButton icon={<UpdateIcon />} onClick={reloadPreview} />
         </div>
 
-        <div className="flex grow items-center gap-1 rounded-full border bg-bolt-elements-preview-addressBar-background px-3 py-1 text-sm text-bolt-elements-preview-addressBar-text focus-within:border-border-selected focus-within:bg-bolt-elements-preview-addressBar-backgroundActive focus-within:text-bolt-elements-preview-addressBar-textActive hover:bg-bolt-elements-preview-addressBar-backgroundHover hover:focus-within:bg-bolt-elements-preview-addressBar-backgroundActive">
+        <div className='focus-within:border-border-selected flex grow items-center gap-1 rounded-full border bg-bolt-elements-preview-addressBar-background px-3 py-1 text-sm text-bolt-elements-preview-addressBar-text focus-within:bg-bolt-elements-preview-addressBar-backgroundActive focus-within:text-bolt-elements-preview-addressBar-textActive hover:bg-bolt-elements-preview-addressBar-backgroundHover hover:focus-within:bg-bolt-elements-preview-addressBar-backgroundActive'>
           <input
-            title="URL"
+            title='URL'
             ref={inputRef}
-            className="w-full bg-transparent outline-none focus:outline-none"
-            type="text"
+            className='w-full bg-transparent outline-none focus:outline-none'
+            type='text'
             value={url || ''}
             onChange={(event) => {
               setUrl(event.target.value);
@@ -296,7 +296,7 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
           />
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className='flex items-center gap-2'>
           {previews.length > 1 && (
             <PortDropdown
               activePreviewIndex={activePreviewIndex}
@@ -310,7 +310,7 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
 
           <Dialog.Root open={isThumbnailModalOpen} onOpenChange={setIsModalOpen}>
             <Dialog.Trigger asChild>
-              <IconButton icon={<ImageIcon />} title="View Preview Image" />
+              <IconButton icon={<ImageIcon />} title='View Preview Image' />
             </Dialog.Trigger>
             <ThumbnailChooser
               isOpen={isThumbnailModalOpen}
@@ -325,15 +325,15 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
             title={isDeviceModeOn ? 'Switch to Responsive Mode' : 'Switch to Device Mode'}
           />
 
-          <div className="relative flex items-center">
-            <IconButton icon={<ExternalLinkIcon />} onClick={() => openInNewWindow()} title="Open in New Window" />
+          <div className='relative flex items-center'>
+            <IconButton icon={<ExternalLinkIcon />} onClick={() => openInNewWindow()} title='Open in New Window' />
           </div>
 
-          {showClose && <IconButton icon={<CrossCircledIcon />} onClick={onClose} title="Close" />}
+          {showClose && <IconButton icon={<CrossCircledIcon />} onClick={onClose} title='Close' />}
         </div>
       </div>
 
-      <div className="flex flex-1 items-center justify-center overflow-auto border-t">
+      <div className='flex flex-1 items-center justify-center overflow-auto border-t'>
         <div
           style={{
             width: isDeviceModeOn ? `${widthPercent}%` : '100%',
@@ -348,22 +348,22 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
             proxyBaseUrl ? (
               <iframe
                 ref={setIframeRefCallback}
-                title="preview"
-                className="size-full border-none bg-bolt-elements-background-depth-1"
+                title='preview'
+                className='size-full border-none bg-bolt-elements-background-depth-1'
                 src={iframeUrl}
-                sandbox="allow-downloads allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts"
-                allow="accelerometer; ambient-light-sensor; autoplay; bluetooth; camera; clipboard-write; compute-pressure; display-capture; fullscreen; gamepad; geolocation; gyroscope; hid; identity-credentials-get; idle-detection; local-fonts; magnetometer; microphone; midi; otp-credentials; payment; picture-in-picture; publickey-credentials-create; publickey-credentials-get; screen-wake-lock; serial; speaker-selection; usb; web-share; window-management; xr-spatial-tracking"
+                sandbox='allow-downloads allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-popups-to-escape-sandbox allow-presentation allow-same-origin allow-scripts'
+                allow='accelerometer; ambient-light-sensor; autoplay; bluetooth; camera; clipboard-write; compute-pressure; display-capture; fullscreen; gamepad; geolocation; gyroscope; hid; identity-credentials-get; idle-detection; local-fonts; magnetometer; microphone; midi; otp-credentials; payment; picture-in-picture; publickey-credentials-create; publickey-credentials-get; screen-wake-lock; serial; speaker-selection; usb; web-share; window-management; xr-spatial-tracking'
                 allowFullScreen={true}
               />
             ) : (
-              <div className="flex size-full items-center justify-center bg-bolt-elements-background-depth-1 text-content-primary">
+              <div className='flex size-full items-center justify-center bg-bolt-elements-background-depth-1 text-content-primary'>
                 <div>
                   <Spinner />
                 </div>
               </div>
             )
           ) : (
-            <div className="flex size-full items-center justify-center bg-bolt-elements-background-depth-1 text-content-primary">
+            <div className='flex size-full items-center justify-center bg-bolt-elements-background-depth-1 text-content-primary'>
               No preview available
             </div>
           )}
@@ -389,7 +389,7 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
                 }}
                 onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.5)')}
                 onMouseOut={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.2)')}
-                title="Drag to resize width"
+                title='Drag to resize width'
               >
                 <GripIcon />
               </div>
@@ -413,7 +413,7 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
                 }}
                 onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.5)')}
                 onMouseOut={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,.2)')}
-                title="Drag to resize width"
+                title='Drag to resize width'
               >
                 <GripIcon />
               </div>

@@ -137,14 +137,14 @@ export function UsageBreakdownView({
   }
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-4">
+    <div className='mx-auto flex max-w-4xl flex-col gap-4'>
       <h1>Total Usage</h1>
       <BreakdownView
         rawUsage={usageData.chatTotalRawUsage}
         billedUsage={usageData.chatTotalUsageBilledFor}
         chefTokens={usageData.chatTotalChefTokens}
         chefBreakdown={usageData.chatTotalChefBreakdown}
-        title="Total Usage"
+        title='Total Usage'
         startOpen={true}
       />
       <div>
@@ -154,7 +154,7 @@ export function UsageBreakdownView({
             title={`Message ${usage.messageIdx} -- ${formatNumber(usage.chefTokens)} chef tokens`}
             key={usage.messageIdx.toString()}
           >
-            <div className="ml-4">
+            <div className='ml-4'>
               <p>
                 {usage.messageSummaryInfo.numParts} parts, {usage.messageSummaryInfo.numToolInvocations} tool
                 invocations, {usage.messageSummaryInfo.numFailedToolInvocations} failed tool invocations
@@ -165,17 +165,17 @@ export function UsageBreakdownView({
                 chefTokens={usage.chefTokens}
                 chefBreakdown={usage.chefBreakdown}
               />
-              <CollapsibleView title="Parts" startOpen={false}>
-                <div className="ml-4 flex flex-col gap-4">
+              <CollapsibleView title='Parts' startOpen={false}>
+                <div className='ml-4 flex flex-col gap-4'>
                   {usage.parts.map((part, idx) => (
-                    <div className="flex flex-col gap-4" key={idx}>
+                    <div className='flex flex-col gap-4' key={idx}>
                       <CollapsibleView
                         title={`Part ${idx} -- Chef Tokens: ${formatNumber(part.usageInfo?.chefTokens ?? 0)}`}
                         startOpen={false}
                       >
-                        <div className="ml-4 flex flex-col gap-4">
+                        <div className='ml-4 flex flex-col gap-4'>
                           <CollapsibleView title={`Content`} startOpen={false}>
-                            <p className="whitespace-pre-wrap border-b border-gray-500 pb-4" key={idx}>
+                            <p className='whitespace-pre-wrap border-b border-gray-500 pb-4' key={idx}>
                               {part.partText}
                             </p>
                           </CollapsibleView>
@@ -216,7 +216,7 @@ const renderPieChart = (data: Record<string, number>) => {
   };
 
   return (
-    <div className="relative size-64">
+    <div className='relative size-64'>
       <Pie data={chartData} options={chartOptions} />
     </div>
   );
@@ -255,8 +255,8 @@ function BreakdownView({
     <div>
       {title && <h4>{title}</h4>}
       <div>
-        <CollapsibleView title="Raw Usage" startOpen={startOpen}>
-          <div className="grid grid-cols-2 gap-4">
+        <CollapsibleView title='Raw Usage' startOpen={startOpen}>
+          <div className='grid grid-cols-2 gap-4'>
             <div>
               <p>Completion Tokens: {formatNumber(rawUsage.completionTokens)}</p>
               <p>Prompt Tokens: {formatNumber(rawUsage.promptTokens)}</p>
@@ -267,8 +267,8 @@ function BreakdownView({
             </div>
           </div>
         </CollapsibleView>
-        <CollapsibleView title="Billed Usage" startOpen={startOpen}>
-          <div className="grid grid-cols-2 gap-4">
+        <CollapsibleView title='Billed Usage' startOpen={startOpen}>
+          <div className='grid grid-cols-2 gap-4'>
             <div>
               <p>Completion Tokens: {formatNumber(billedUsage.completionTokens)}</p>
               <p>Prompt Tokens: {formatNumber(billedUsage.promptTokens)}</p>
@@ -280,11 +280,11 @@ function BreakdownView({
           </div>
         </CollapsibleView>
 
-        <CollapsibleView title="Chef Breakdown" startOpen={true}>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col gap-4">
-              <p className="text-2xl font-bold">{formatNumber(chefTokens)}</p>
-              <div className="flex flex-wrap gap-8">{renderPieChart(tokensData)}</div>
+        <CollapsibleView title='Chef Breakdown' startOpen={true}>
+          <div className='grid grid-cols-2 gap-4'>
+            <div className='flex flex-col gap-4'>
+              <p className='text-2xl font-bold'>{formatNumber(chefTokens)}</p>
+              <div className='flex flex-wrap gap-8'>{renderPieChart(tokensData)}</div>
             </div>
             <div>
               <JsonView data={chefBreakdown} shouldExpandNode={(level) => level < 1} />
@@ -546,11 +546,11 @@ function CollapsibleView({
 }) {
   const [isOpen, setIsOpen] = useState(startOpen);
   return (
-    <div className="flex flex-col gap-4">
-      <button onClick={() => setIsOpen(!isOpen)} className="flex items-center gap-2">
-        {isOpen ? <ChevronDownIcon className="size-4" /> : <ChevronRightIcon className="size-4" />} {title}
+    <div className='flex flex-col gap-4'>
+      <button onClick={() => setIsOpen(!isOpen)} className='flex items-center gap-2'>
+        {isOpen ? <ChevronDownIcon className='size-4' /> : <ChevronRightIcon className='size-4' />} {title}
       </button>
-      <div className="ml-4 border-l border-gray-500 pl-4">{isOpen && children}</div>
+      <div className='ml-4 border-l border-gray-500 pl-4'>{isOpen && children}</div>
     </div>
   );
 }

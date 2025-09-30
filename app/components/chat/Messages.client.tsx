@@ -51,21 +51,21 @@ export const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messa
             setIsModalOpen(false);
             setSelectedMessageIndex(null);
           }}
-          title={<div className="sr-only">Rewind to message</div>}
+          title={<div className='sr-only'>Rewind to message</div>}
         >
-          <div className="flex flex-col gap-2">
+          <div className='flex flex-col gap-2'>
             <h2>Rewind to previous version</h2>
-            <p className="text-sm text-content-primary">
+            <p className='text-sm text-content-primary'>
               This will undo all changes after this message. Your current work will be lost and cannot be recovered.
             </p>
-            <p className="text-sm text-content-primary">
+            <p className='text-sm text-content-primary'>
               Your Convex data will be unaffected, so you may need to either clear or migrate your data in order to use
               this previous version.
             </p>
-            <p className="text-sm text-content-primary">Are you sure you want to continue?</p>
-            <div className="flex justify-end gap-2">
+            <p className='text-sm text-content-primary'>Are you sure you want to continue?</p>
+            <div className='flex justify-end gap-2'>
               <Button
-                variant="neutral"
+                variant='neutral'
                 onClick={() => {
                   setIsModalOpen(false);
                   setSelectedMessageIndex(null);
@@ -74,7 +74,7 @@ export const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messa
                 Cancel
               </Button>
               <Button
-                variant="danger"
+                variant='danger'
                 onClick={() => {
                   setIsModalOpen(false);
                   handleRewindToMessage(selectedSubchatIndex, selectedMessageIndex);
@@ -107,17 +107,17 @@ export const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messa
               )}
             >
               {isUserMessage && (
-                <div className="flex size-[40px] shrink-0 items-center justify-center self-start overflow-hidden rounded-full bg-white text-gray-600 dark:bg-gray-800 dark:text-gray-500">
+                <div className='flex size-[40px] shrink-0 items-center justify-center self-start overflow-hidden rounded-full bg-white text-gray-600 dark:bg-gray-800 dark:text-gray-500'>
                   {profile?.avatar ? (
                     <img
                       src={profile.avatar}
                       alt={profile?.username || 'User'}
-                      className="size-full object-cover"
-                      loading="eager"
-                      decoding="sync"
+                      className='size-full object-cover'
+                      loading='eager'
+                      decoding='sync'
                     />
                   ) : (
-                    <PersonIcon className="size-4" />
+                    <PersonIcon className='size-4' />
                   )}
                 </div>
               )}
@@ -141,38 +141,38 @@ export const Messages = forwardRef<HTMLDivElement, MessagesProps>(function Messa
                 lastSubchatIndex !== undefined &&
                 currentSubchatIndex === lastSubchatIndex && (
                   <Button
-                    className="absolute bottom-[-5px] right-[-5px] bg-bolt-elements-background-depth-2 hover:bg-bolt-elements-background-depth-3"
+                    className='absolute bottom-[-5px] right-[-5px] bg-bolt-elements-background-depth-2 hover:bg-bolt-elements-background-depth-3'
                     onClick={() => {
                       setIsModalOpen(true);
                       setSelectedMessageIndex(index);
                       setSelectedSubchatIndex(currentSubchatIndex);
                     }}
-                    variant="neutral"
-                    size="xs"
-                    tip="Rewind to this message"
-                    title="Rewind to here"
+                    variant='neutral'
+                    size='xs'
+                    tip='Rewind to this message'
+                    title='Rewind to here'
                   >
-                    <ResetIcon className="size-4 text-content-primary" />
+                    <ResetIcon className='size-4 text-content-primary' />
                   </Button>
                 )}
             </div>
           );
         })
       ) : (
-        <div className="flex flex-col items-center justify-center px-4 py-16 text-center">
-          <div className="mb-6 flex size-[64px] shrink-0 items-center justify-center rounded-full text-gray-600 dark:text-gray-500">
-            <ChatBubbleIcon className="size-8" />
+        <div className='flex flex-col items-center justify-center px-4 py-16 text-center'>
+          <div className='mb-6 flex size-[64px] shrink-0 items-center justify-center rounded-full text-gray-600 dark:text-gray-500'>
+            <ChatBubbleIcon className='size-8' />
           </div>
-          <h3 className="mb-2 text-xl font-semibold text-content-primary">
+          <h3 className='mb-2 text-xl font-semibold text-content-primary'>
             Ready to cook up a new feature or fix a bug?
           </h3>
-          <p className="max-w-md text-content-secondary">Send a message below to start on your next task!</p>
+          <p className='max-w-md text-content-secondary'>Send a message below to start on your next task!</p>
         </div>
       )}
 
       {isStreaming && (
-        <div className="flex w-full justify-center text-content-secondary">
-          <SpinnerThreeDots className="size-9" />
+        <div className='flex w-full justify-center text-content-secondary'>
+          <SpinnerThreeDots className='size-9' />
         </div>
       )}
     </div>

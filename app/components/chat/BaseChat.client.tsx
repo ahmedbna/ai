@@ -147,8 +147,8 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
         data-chat-visible={showChat}
         data-messages-for-evals={dataForEvals}
       >
-        <div ref={scrollRef} className="relative z-10 flex size-full flex-col overflow-y-auto">
-          <div className="flex w-full grow flex-col lg:flex-row">
+        <div ref={scrollRef} className='relative z-10 flex size-full flex-col overflow-y-auto'>
+          <div className='flex w-full grow flex-col lg:flex-row'>
             <div
               className={classNames(styles.Chat, 'flex flex-col flex-grow lg:min-w-[var(--chat-min-width)] h-full', {
                 'items-center px-4 sm:px-8 lg:px-12': !chatStarted,
@@ -156,12 +156,12 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
               })}
             >
               {!chatStarted && (
-                <div id="intro" className="mx-auto mb-8 pt-36 px-4 text-center md:mt-16 lg:px-0">
-                  <p className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-4xl md:text-6xl font-black leading-none text-transparent dark:from-white dark:to-slate-900/10">
+                <div id='intro' className='mx-auto mb-8 px-4 pt-36 text-center md:mt-16 lg:px-0'>
+                  <p className='pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-4xl font-black leading-none text-transparent dark:from-white dark:to-slate-900/10 md:text-6xl'>
                     BNA AI
                   </p>
 
-                  <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-3xl font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10">
+                  <span className='pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-3xl font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10'>
                     Idea to fullstack mobile app in seconds
                   </span>
                 </div>
@@ -192,16 +192,16 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                     {isSubchatLoaded && (
                       <AnimatePresence>
                         <motion.div
-                          key="messages"
+                          key='messages'
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -20 }}
                           transition={{ duration: 0.3, ease: 'easeInOut' }}
-                          className="mx-auto flex w-full max-w-chat flex-1 flex-col"
+                          className='mx-auto flex w-full max-w-chat flex-1 flex-col'
                         >
                           <Messages
                             ref={messageRef}
-                            className="z-[1] mx-auto flex w-full max-w-chat flex-1 flex-col gap-4 pb-6"
+                            className='z-[1] mx-auto flex w-full max-w-chat flex-1 flex-col gap-4 pb-6'
                             messages={messages}
                             isStreaming={isStreaming}
                             onRewindToMessage={onRewindToMessage}
@@ -219,7 +219,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                   })}
                 >
                   {actionAlert && (
-                    <div className="mb-4">
+                    <div className='mb-4'>
                       <ChatAlert
                         alert={
                           actionAlert ?? {
@@ -241,7 +241,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                   {chatEnabled && (!subchats || (currentSubchatIndex >= subchats.length - 1 && isSubchatLoaded)) && (
                     <>
                       {shouldShowNudge && sessionId && (
-                        <div className="mb-4">
+                        <div className='mb-4'>
                           <SubchatLimitNudge
                             sessionId={sessionId}
                             chatId={chatId}
@@ -284,10 +284,10 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 20 }}
                             transition={{ duration: 0.15 }}
-                            className="absolute top-full mt-2 w-full pb-2"
+                            className='absolute top-full mt-2 w-full pb-2'
                           >
                             <Sheet
-                              className="flex w-full animate-fadeInFromLoading flex-col gap-3 rounded-xl bg-util-accent/10 p-4 shadow backdrop-blur-lg"
+                              className='flex w-full animate-fadeInFromLoading flex-col gap-3 rounded-xl bg-util-accent/10 p-4 shadow backdrop-blur-lg'
                               padding={false}
                             >
                               {disableChatMessage}
@@ -301,10 +301,10 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                 {!chatEnabled && <CompatibilityWarnings setEnabled={setChatEnabled} />}
               </div>
               {maintenanceMode && (
-                <div className="mx-auto my-4 max-w-chat">
-                  <div className="relative rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700 dark:border-red-600 dark:bg-red-900 dark:text-red-200">
-                    <p className="font-bold">Chef is temporarily unavailable</p>
-                    <p className="text-sm">
+                <div className='mx-auto my-4 max-w-chat'>
+                  <div className='relative rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700 dark:border-red-600 dark:bg-red-900 dark:text-red-200'>
+                    <p className='font-bold'>Chef is temporarily unavailable</p>
+                    <p className='text-sm'>
                       We&apos;re experiencing high load and will be back soon. Thank you for your patience.
                     </p>
                   </div>
@@ -332,12 +332,12 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
         </div>
 
         <div
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          className='absolute inset-0 z-0 bg-cover bg-center bg-no-repeat'
           style={{ backgroundImage: 'url(/background.png)' }}
         />
 
         {!chatStarted && (
-          <Particles size={0.2} quantity={80} className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat" />
+          <Particles size={0.2} quantity={80} className='absolute inset-0 z-0 bg-cover bg-center bg-no-repeat' />
         )}
       </div>
     );

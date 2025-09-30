@@ -58,8 +58,8 @@ const HIGHLIGHTS: Highlight[] = [
     tooltip: (
       <>
         Chef will use the{' '}
-        <TooltipLink href="https://www.convex.dev/components/prosemirror-sync">Collaborative Text Editor</TooltipLink>{' '}
-        Convex <TooltipLink href="https://www.convex.dev/components">component</TooltipLink>.
+        <TooltipLink href='https://www.convex.dev/components/prosemirror-sync'>Collaborative Text Editor</TooltipLink>{' '}
+        Convex <TooltipLink href='https://www.convex.dev/components'>component</TooltipLink>.
       </>
     ),
   },
@@ -68,7 +68,7 @@ const HIGHLIGHTS: Highlight[] = [
     tooltip: (
       <>
         Chef will use Convex’s built-in{' '}
-        <TooltipLink href="https://docs.convex.dev/file-storage">file upload capabilities</TooltipLink>.
+        <TooltipLink href='https://docs.convex.dev/file-storage'>file upload capabilities</TooltipLink>.
       </>
     ),
   },
@@ -77,7 +77,7 @@ const HIGHLIGHTS: Highlight[] = [
     tooltip: (
       <>
         Chef will use Convex’s built-in{' '}
-        <TooltipLink href="https://docs.convex.dev/search/text-search">full text search</TooltipLink> capabilities.
+        <TooltipLink href='https://docs.convex.dev/search/text-search'>full text search</TooltipLink> capabilities.
       </>
     ),
   },
@@ -85,8 +85,8 @@ const HIGHLIGHTS: Highlight[] = [
     text: 'presence',
     tooltip: (
       <>
-        Chef will use the <TooltipLink href="https://www.convex.dev/components/presence">Presence</TooltipLink>{' '}
-        Convex&nbsp;<TooltipLink href="https://www.convex.dev/components">component</TooltipLink>.
+        Chef will use the <TooltipLink href='https://www.convex.dev/components/presence'>Presence</TooltipLink>{' '}
+        Convex&nbsp;<TooltipLink href='https://www.convex.dev/components'>component</TooltipLink>.
       </>
     ),
   },
@@ -253,14 +253,14 @@ export const MessageInput = memo(function MessageInput({
   );
 
   return (
-    <div className="relative z-20 mx-auto w-full rounded-2xl shadow transition-all duration-200 ">
+    <div className='relative z-20 mx-auto w-full rounded-2xl shadow transition-all duration-200 '>
       <div
         className={cn(
           'rounded-2xl bg-white/50 dark:bg-black/50 backdrop-blur-lg p-2',
           chatStarted && 'opacity-100 bg-card',
         )}
       >
-        <div className="rounded-t-2xl ">
+        <div className='rounded-t-2xl '>
           <TextareaWithHighlights
             onKeyDown={handleKeyDown}
             onChange={handleChange}
@@ -278,17 +278,17 @@ export const MessageInput = memo(function MessageInput({
             disabled={disabled}
             highlights={HIGHLIGHTS}
           />
-          <div className="flex items-center gap-2 p-1.5 text-sm flex-wrap">
+          <div className='flex flex-wrap items-center gap-2 p-1.5 text-sm'>
             {chefAuthState.kind === 'fullyLoggedIn' && (
-              <ModelSelector modelSelection={modelSelection} setModelSelection={setModelSelection} size="sm" />
+              <ModelSelector modelSelection={modelSelection} setModelSelection={setModelSelection} size='sm' />
             )}
 
             {!chatStarted && sessionId && (
               <TeamSelector
-                description="Your project will be created in this Convex team"
+                description='Your project will be created in this Convex team'
                 selectedTeamSlug={selectedTeamSlug}
                 setSelectedTeamSlug={setSelectedTeamSlug}
-                size="sm"
+                size='sm'
               />
             )}
 
@@ -297,7 +297,7 @@ export const MessageInput = memo(function MessageInput({
             {input.length > 3 && input.length <= PROMPT_LENGTH_WARNING_THRESHOLD && <NewLineShortcut />}
             {input.length > PROMPT_LENGTH_WARNING_THRESHOLD && <CharacterWarning />}
 
-            <div className="ml-auto flex items-center gap-1">
+            <div className='ml-auto flex items-center gap-1'>
               {chefAuthState.kind === 'unauthenticated' && <SignInButton />}
 
               {/* {chefAuthState.kind === 'fullyLoggedIn' && (
@@ -376,15 +376,15 @@ export const MessageInput = memo(function MessageInput({
                 //       : undefined
                 // }
                 onClick={handleClickButton}
-                className="rounded-full size-8 px-0 py-0 mr-2 flex items-center justify-center"
+                className='mr-2 flex size-8 items-center justify-center rounded-full p-0'
                 aria-label={isStreaming ? 'Stop' : 'Send'}
               >
                 {sendMessageInProgress ? (
                   <Spinner />
                 ) : !isStreaming ? (
-                  <ArrowUp className="size-6" />
+                  <ArrowUp className='size-6' />
                 ) : (
-                  <Square fill="#000" className="size-0.5" />
+                  <Square fill='#000' className='size-0.5' />
                 )}
               </Button>
             </div>
@@ -443,7 +443,7 @@ const TextareaWithHighlights = memo(function TextareaWithHighlights({
   }, [highlights, value]);
 
   return (
-    <div className="relative overflow-y-auto" style={{ minHeight, maxHeight }}>
+    <div className='relative overflow-y-auto' style={{ minHeight, maxHeight }}>
       <textarea
         ref={textareaRef}
         className={classNames(
@@ -459,9 +459,9 @@ const TextareaWithHighlights = memo(function TextareaWithHighlights({
         value={value}
         style={{ minHeight }}
         placeholder={placeholder}
-        translate="no"
+        translate='no'
         // Disable Grammarly
-        data-gramm="false"
+        data-gramm='false'
       />
 
       <HighlightBlocks textareaRef={textareaRef} text={value} blocks={blocks} />
@@ -549,7 +549,7 @@ const HighlightBlocks = memo(function HighlightBlocks({
     <div>
       <div
         ref={mirrorRef}
-        className="pointer-events-none absolute inset-0 -z-20 whitespace-pre-wrap break-words p-3 text-sm leading-snug opacity-0"
+        className='pointer-events-none absolute inset-0 -z-20 whitespace-pre-wrap break-words p-3 text-sm leading-snug opacity-0'
         aria-hidden
       >
         {text}
@@ -579,7 +579,7 @@ const HighlightTooltip = memo(function HighlightTooltip({
 }) {
   return (
     <div
-      className="absolute flex overflow-hidden bg-[#f8d077] mix-blend-color"
+      className='absolute flex overflow-hidden bg-[#f8d077] mix-blend-color'
       style={{
         width,
         height,
@@ -587,7 +587,7 @@ const HighlightTooltip = memo(function HighlightTooltip({
         left,
       }}
     >
-      <Tooltip className="absolute inset-0" tip={tip}>
+      <Tooltip className='absolute inset-0' tip={tip}>
         {null}
       </Tooltip>
     </div>
@@ -596,8 +596,8 @@ const HighlightTooltip = memo(function HighlightTooltip({
 
 const NewLineShortcut = memo(function NewLineShortcut() {
   return (
-    <div className="text-xs text-content-tertiary">
-      <KeyboardShortcut value={['Shift', 'Return']} className="mr-0.5 font-semibold" /> for new line
+    <div className='text-xs text-content-tertiary'>
+      <KeyboardShortcut value={['Shift', 'Return']} className='mr-0.5 font-semibold' /> for new line
     </div>
   );
 });
@@ -605,11 +605,11 @@ const NewLineShortcut = memo(function NewLineShortcut() {
 const CharacterWarning = memo(function CharacterWarning() {
   return (
     <Tooltip
-      tip="Chef performs better with shorter prompts. Consider making your prompt more concise or breaking it into smaller chunks."
-      side="bottom"
+      tip='Chef performs better with shorter prompts. Consider making your prompt more concise or breaking it into smaller chunks.'
+      side='bottom'
     >
-      <div className="flex cursor-help items-center text-xs text-content-warning">
-        <ExclamationTriangleIcon className="mr-1 size-4" />
+      <div className='flex cursor-help items-center text-xs text-content-warning'>
+        <ExclamationTriangleIcon className='mr-1 size-4' />
         Prompt exceeds {PROMPT_LENGTH_WARNING_THRESHOLD.toLocaleString()} characters
       </div>
     </Tooltip>
@@ -624,10 +624,10 @@ const SignInButton = memo(function SignInButton() {
       onClick={() => {
         void signIn();
       }}
-      className="text-xs font-normal"
+      className='text-xs font-normal'
     >
-      <div className="flex items-center gap-1">
-        <img className="mr-2 size-4" src="/icons/Convex.svg" alt="Convex" />
+      <div className='flex items-center gap-1'>
+        <img className='mr-2 size-4' src='/icons/Convex.svg' alt='Convex' />
         <span>Sign in</span>
       </div>
     </Button>
@@ -644,7 +644,7 @@ const cachePrompt = debounce(function cachePrompt(prompt: string) {
 
 function TooltipLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-content-link hover:underline">
+    <a href={href} target='_blank' rel='noopener noreferrer' className='text-content-link hover:underline'>
       {children}
     </a>
   );

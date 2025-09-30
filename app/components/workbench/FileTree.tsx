@@ -242,9 +242,9 @@ function ContextMenuItem({ onSelect, children }: { onSelect?: () => void; childr
   return (
     <ContextMenu.Item
       onSelect={onSelect}
-      className="flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-md px-2 py-1.5 text-sm text-bolt-elements-item-contentDefault outline-0 hover:bg-bolt-elements-item-backgroundActive hover:text-bolt-elements-item-contentActive"
+      className='flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-md px-2 py-1.5 text-sm text-bolt-elements-item-contentDefault outline-0 hover:bg-bolt-elements-item-backgroundActive hover:text-bolt-elements-item-contentActive'
     >
-      <span className="size-4 shrink-0"></span>
+      <span className='size-4 shrink-0'></span>
       <span>{children}</span>
     </ContextMenu.Item>
   );
@@ -257,9 +257,9 @@ function FileContextMenu({ onCopyPath, onCopyRelativePath, children }: FolderCon
       <ContextMenu.Portal>
         <ContextMenu.Content
           style={{ zIndex: 998 }}
-          className="z-context-menu w-56 rounded-md border bg-bolt-elements-background-depth-1 dark:bg-bolt-elements-background-depth-2"
+          className='z-context-menu w-56 rounded-md border bg-bolt-elements-background-depth-1 dark:bg-bolt-elements-background-depth-2'
         >
-          <ContextMenu.Group className="border-b p-1">
+          <ContextMenu.Group className='border-b p-1'>
             <ContextMenuItem onSelect={onCopyPath}>Copy path</ContextMenuItem>
             <ContextMenuItem onSelect={onCopyRelativePath}>Copy relative path</ContextMenuItem>
           </ContextMenu.Group>
@@ -373,15 +373,15 @@ function File({
             'group-hover:text-bolt-elements-item-contentActive': !selected,
           })}
         >
-          <div className="flex-1 truncate pr-2">{name}</div>
-          <div className="flex items-center gap-1">
+          <div className='flex-1 truncate pr-2'>{name}</div>
+          <div className='flex items-center gap-1'>
             {showStats && (
-              <div className="flex items-center gap-1 text-xs">
-                {additions > 0 && <span className="text-green-500">+{additions}</span>}
-                {deletions > 0 && <span className="text-red-500">-{deletions}</span>}
+              <div className='flex items-center gap-1 text-xs'>
+                {additions > 0 && <span className='text-green-500'>+{additions}</span>}
+                {deletions > 0 && <span className='text-red-500'>-{deletions}</span>}
               </div>
             )}
-            {unsavedChanges && <div className="size-1.5 rounded-full bg-orange-500" />}
+            {unsavedChanges && <div className='size-1.5 rounded-full bg-orange-500' />}
           </div>
         </div>
       </NodeButton>
@@ -407,8 +407,8 @@ function NodeButton({ depth, icon, onClick, className, children }: ButtonProps) 
       style={{ paddingLeft: `${6 + depth * NODE_PADDING_LEFT}px` }}
       onClick={() => onClick?.()}
     >
-      <div className="shrink-0">{icon}</div>
-      <div className="w-full truncate text-left">{children}</div>
+      <div className='shrink-0'>{icon}</div>
+      <div className='w-full truncate text-left'>{children}</div>
     </button>
   );
 }

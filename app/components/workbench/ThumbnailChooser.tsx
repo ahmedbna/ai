@@ -216,18 +216,18 @@ export function ThumbnailChooser({ isOpen, onOpenChange, onRequestCapture }: Thu
   return isOpen ? (
     <Modal
       onClose={() => onOpenChange(false)}
-      title="Sharing thumbnail"
-      description="This image is used when you share your chat with a link"
-      size="lg"
+      title='Sharing thumbnail'
+      description='This image is used when you share your chat with a link'
+      size='lg'
     >
       <form
         onSubmit={(e) => {
           e.preventDefault();
           handleSubmit();
         }}
-        className="flex flex-col gap-4"
+        className='flex flex-col gap-4'
       >
-        <div className="flex justify-center">
+        <div className='flex justify-center'>
           <div
             onDrop={handleDrop}
             onDragOver={handleDragOver}
@@ -239,27 +239,27 @@ export function ThumbnailChooser({ isOpen, onOpenChange, onRequestCapture }: Thu
             } transition-colors duration-150`}
           >
             {localPreview || lastUploadedPreview || (!recentlyUploaded && currentThumbnail) ? (
-              <div className="relative size-full p-4">
-                <div className="flex size-full items-center justify-center">
+              <div className='relative size-full p-4'>
+                <div className='flex size-full items-center justify-center'>
                   <img
                     src={localPreview || lastUploadedPreview || currentThumbnail || ''}
-                    alt="Preview"
-                    crossOrigin="anonymous"
-                    className="max-h-full max-w-full object-contain shadow-[0_4px_12px_rgba(0,0,0,0.2)]"
+                    alt='Preview'
+                    crossOrigin='anonymous'
+                    className='max-h-full max-w-full object-contain shadow-[0_4px_12px_rgba(0,0,0,0.2)]'
                   />
                 </div>
                 {isDraggingImage && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-blue-500/5 backdrop-blur-[2px]">
-                    <p className="text-lg font-medium text-blue-600">Drop image to replace</p>
+                  <div className='absolute inset-0 flex items-center justify-center bg-blue-500/5 backdrop-blur-[2px]'>
+                    <p className='text-lg font-medium text-blue-600'>Drop image to replace</p>
                   </div>
                 )}
               </div>
             ) : isCapturing ? (
-              <div className="flex flex-col items-center gap-2">
+              <div className='flex flex-col items-center gap-2'>
                 <Spinner />
               </div>
             ) : (
-              <div className="text-center text-content-secondary">
+              <div className='text-center text-content-secondary'>
                 <p>
                   {captureError
                     ? 'Upload an image to use as a thumbnail'
@@ -267,7 +267,7 @@ export function ThumbnailChooser({ isOpen, onOpenChange, onRequestCapture }: Thu
                       ? 'Drop image here'
                       : 'No preview image available'}
                 </p>
-                <p className="mt-2 text-sm">
+                <p className='mt-2 text-sm'>
                   {captureError
                     ? ''
                     : isDraggingImage
@@ -279,14 +279,14 @@ export function ThumbnailChooser({ isOpen, onOpenChange, onRequestCapture }: Thu
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className='flex items-center justify-between'>
+          <div className='flex items-center gap-4'>
             {onRequestCapture && !captureError && (
               <Button
-                variant="neutral"
+                variant='neutral'
                 onClick={captureNewImage}
                 disabled={isCapturing}
-                tip="Take a screenshot of the current preview"
+                tip='Take a screenshot of the current preview'
                 icon={<CameraIcon />}
               >
                 Take New Screenshot
@@ -294,29 +294,29 @@ export function ThumbnailChooser({ isOpen, onOpenChange, onRequestCapture }: Thu
             )}
 
             <Button
-              variant="neutral"
+              variant='neutral'
               onClick={handleFileSelect}
-              tip="Upload an image from your computer"
+              tip='Upload an image from your computer'
               icon={<UploadIcon />}
             >
               Paste, drag, or click to upload an image
             </Button>
 
-            <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+            <input ref={fileInputRef} type='file' accept='image/*' onChange={handleFileChange} className='hidden' />
           </div>
 
-          <div className="flex items-center gap-4">
-            <Button variant="neutral" onClick={handleCancel} tip="Close without saving changes">
+          <div className='flex items-center gap-4'>
+            <Button variant='neutral' onClick={handleCancel} tip='Close without saving changes'>
               Close
             </Button>
 
             {localPreview && (
               <Button
-                type="submit"
-                variant="primary"
+                type='submit'
+                variant='primary'
                 disabled={isUploading}
-                tip="Use this image as the thumbnail"
-                icon={isUploading ? <Spinner className="size-4" /> : <CheckIcon />}
+                tip='Use this image as the thumbnail'
+                icon={isUploading ? <Spinner className='size-4' /> : <CheckIcon />}
               >
                 {isUploading ? 'Uploading...' : 'Use This Image'}
               </Button>

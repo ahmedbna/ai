@@ -12,7 +12,7 @@ export function DownloadButton() {
   };
 
   return (
-    <Button onClick={handleDownload} variant="neutral" size="xs">
+    <Button onClick={handleDownload} variant='neutral' size='xs'>
       <DownloadIcon />
       <span>Download Code</span>
     </Button>

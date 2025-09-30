@@ -39,17 +39,17 @@ export function ConvexConnectButton() {
   const isLoading = credentials === undefined || credentials?.kind === 'connecting';
 
   return (
-    <div className="flex flex-col gap-2">
-      <p className="mb-2 text-sm text-content-secondary">Select a Convex team to connect your Chef app to.</p>
-      <div className="flex items-center gap-2">
+    <div className='flex flex-col gap-2'>
+      <p className='mb-2 text-sm text-content-secondary'>Select a Convex team to connect your Chef app to.</p>
+      <div className='flex items-center gap-2'>
         <TeamSelector
           selectedTeamSlug={selectedTeamSlug}
           setSelectedTeamSlug={setSelectedTeamSlug}
-          description="Your project will be created in this Convex team"
+          description='Your project will be created in this Convex team'
         />
 
         <Button disabled={isLoading || !selectedTeamSlug} onClick={handleClick}>
-          <Link className="size-4" />
+          <Link className='size-4' />
           {isLoading ? 'Connecting…' : 'Connect'}
         </Button>
       </div>

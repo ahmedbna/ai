@@ -168,7 +168,7 @@ export function ShareButton() {
     <>
       <Popover.Root open={isOpen} onOpenChange={handleOpenChange}>
         <Popover.Trigger asChild>
-          <Button disabled={!anyPreviewReady} focused={isOpen} variant="neutral" size="xs">
+          <Button disabled={!anyPreviewReady} focused={isOpen} variant='neutral' size='xs'>
             <Share2Icon />
             <span>Share</span>
           </Button>
@@ -176,54 +176,54 @@ export function ShareButton() {
 
         <Popover.Portal>
           <Popover.Content
-            className="z-50 w-[400px] animate-fadeInFromLoading rounded-md border bg-bolt-elements-background-depth-1 shadow-lg"
+            className='z-50 w-[400px] animate-fadeInFromLoading rounded-md border bg-bolt-elements-background-depth-1 shadow-lg'
             sideOffset={5}
-            align="end"
+            align='end'
           >
-            <div className="flex flex-col gap-4 p-4">
+            <div className='flex flex-col gap-4 p-4'>
               <div>
-                <div className="space-y-4">
-                  <label className="group flex cursor-pointer items-start gap-2">
+                <div className='space-y-4'>
+                  <label className='group flex cursor-pointer items-start gap-2'>
                     <Checkbox
-                      id="isShared"
+                      id='isShared'
                       checked={isSharedDraft}
                       onChange={(e: ChangeEvent<HTMLInputElement>) => setIsSharedDraft(e.target.checked)}
                     />
-                    <span className="block text-sm font-medium group-hover:text-content-primary">Share project</span>
+                    <span className='block text-sm font-medium group-hover:text-content-primary'>Share project</span>
                   </label>
 
                   {/* Share link input and buttons, no label, right below checkbox */}
                   {currentShare && currentShare.shared === 'shared' && (
-                    <div className="flex items-center gap-2">
+                    <div className='flex items-center gap-2'>
                       <input
-                        type="text"
+                        type='text'
                         readOnly
                         value={shareUrl}
-                        className="flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary"
+                        className='flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary'
                       />
                       <Button
-                        variant="neutral"
-                        size="xs"
+                        variant='neutral'
+                        size='xs'
                         onClick={() => copyToClipboard(shareUrl)}
-                        tip="Copy link"
+                        tip='Copy link'
                         icon={<ClipboardIcon />}
                       />
                       <Button
-                        variant="neutral"
-                        size="xs"
+                        variant='neutral'
+                        size='xs'
                         onClick={() => window.open(shareUrl, '_blank', 'noopener,noreferrer')}
-                        tip="Open in new tab"
+                        tip='Open in new tab'
                         icon={<ExternalLinkIcon />}
                       />
                     </div>
                   )}
 
                   {currentShare?.shared === 'shared' && (
-                    <div className="group flex items-start gap-2">
-                      <div className="space-y-1">
+                    <div className='group flex items-start gap-2'>
+                      <div className='space-y-1'>
                         {referralStats?.left !== 0 && (
-                          <div className="space-y-1">
-                            <p className="text-xs text-content-secondary group-hover:text-content-secondary/80">
+                          <div className='space-y-1'>
+                            <p className='text-xs text-content-secondary group-hover:text-content-secondary/80'>
                               Links on this page include your referral code: signups will grant you 85,000 free Chef
                               tokens each
                               {referralStats?.left === 5 || !referralStats
@@ -232,9 +232,9 @@ export function ShareButton() {
                             </p>
                             <a
                               href={`https://dashboard.convex.dev/t/${teamSlug}/settings/referrals`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs text-blue-500 hover:text-blue-600"
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              className='text-xs text-blue-500 hover:text-blue-600'
                             >
                               Show referrals in the Convex dashboard
                             </a>
@@ -244,16 +244,16 @@ export function ShareButton() {
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Button variant="neutral" size="xs" onClick={() => setIsThumbnailModalOpen(true)}>
+                  <div className='flex items-center justify-between'>
+                    <div className='flex items-center gap-2'>
+                      <Button variant='neutral' size='xs' onClick={() => setIsThumbnailModalOpen(true)}>
                         {shareDetails?.thumbnailUrl ? (
-                          <div className="relative size-4 overflow-hidden rounded shadow-[0_2px_4px_rgba(0,0,0,0.4)] ring-1 ring-black/10">
+                          <div className='relative size-4 overflow-hidden rounded shadow-[0_2px_4px_rgba(0,0,0,0.4)] ring-1 ring-black/10'>
                             <img
                               src={shareDetails.thumbnailUrl}
-                              alt="Share thumbnail"
-                              className="absolute inset-0 size-full object-cover"
-                              crossOrigin="anonymous"
+                              alt='Share thumbnail'
+                              className='absolute inset-0 size-full object-cover'
+                              crossOrigin='anonymous'
                             />
                           </div>
                         ) : (
@@ -264,13 +264,13 @@ export function ShareButton() {
                     </div>
 
                     <Button
-                      variant="neutral"
+                      variant='neutral'
                       onClick={() => handleShare()}
                       disabled={shareStatus === 'loading' || !hasChanges}
                     >
                       {shareStatus === 'loading' ? (
                         <>
-                          <Spinner className="size-4" />
+                          <Spinner className='size-4' />
                           <span>Saving...</span>
                         </>
                       ) : hasChanges ? (
@@ -283,66 +283,66 @@ export function ShareButton() {
                 </div>
               </div>
 
-              <div className="space-y-4 border-t pt-4">
-                <details className="group">
-                  <summary className="flex cursor-pointer select-none items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <ChevronRightIcon className="size-4 transition-transform group-open:rotate-90" />
-                      <span className="text-sm text-content-secondary group-hover:text-content-primary">
+              <div className='space-y-4 border-t pt-4'>
+                <details className='group'>
+                  <summary className='flex cursor-pointer select-none items-center justify-between'>
+                    <div className='flex items-center gap-2'>
+                      <ChevronRightIcon className='size-4 transition-transform group-open:rotate-90' />
+                      <span className='text-sm text-content-secondary group-hover:text-content-primary'>
                         More ways to share
                       </span>
                     </div>
                   </summary>
                   {/* Deployed URL if available */}
                   {shareDetails?.hasBeenDeployed && shareDetails.deployedUrl && (
-                    <div className="my-4">
-                      <p className="mb-2 text-sm text-content-secondary">Deployed app link:</p>
-                      <div className="flex items-center gap-2">
+                    <div className='my-4'>
+                      <p className='mb-2 text-sm text-content-secondary'>Deployed app link:</p>
+                      <div className='flex items-center gap-2'>
                         <input
-                          type="text"
+                          type='text'
                           readOnly
                           value={shareDetails.deployedUrl}
-                          className="flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary"
+                          className='flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary'
                         />
                         <Button
-                          variant="neutral"
-                          size="xs"
+                          variant='neutral'
+                          size='xs'
                           onClick={() => copyToClipboard(shareDetails.deployedUrl!)}
-                          tip="Copy link"
+                          tip='Copy link'
                           icon={<ClipboardIcon />}
                         />
                         <Button
-                          variant="neutral"
-                          size="xs"
+                          variant='neutral'
+                          size='xs'
                           onClick={() => {
                             const url = shareDetails.deployedUrl;
                             if (typeof url === 'string') {
                               window.open(url, '_blank', 'noopener,noreferrer');
                             }
                           }}
-                          tip="Open in new tab"
+                          tip='Open in new tab'
                           icon={<ExternalLinkIcon />}
                         />
                       </div>
                     </div>
                   )}
-                  <div className="mt-4 space-y-4">
+                  <div className='mt-4 space-y-4'>
                     {/* Direct Referral Link first */}
                     {referralCode && (
-                      <div className="space-y-2">
-                        <p className="text-sm text-content-secondary">Direct Referral Link:</p>
-                        <div className="flex items-center gap-2">
+                      <div className='space-y-2'>
+                        <p className='text-sm text-content-secondary'>Direct Referral Link:</p>
+                        <div className='flex items-center gap-2'>
                           <input
-                            type="text"
+                            type='text'
                             readOnly
                             value={`https://convex.dev/try-chef/${referralCode}`}
-                            className="flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary"
+                            className='flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary'
                           />
                           <Button
-                            variant="neutral"
-                            size="xs"
+                            variant='neutral'
+                            size='xs'
                             onClick={() => copyToClipboard(`https://convex.dev/try-chef/${referralCode}`)}
-                            tip="Copy link"
+                            tip='Copy link'
                             icon={<ClipboardIcon />}
                           />
                         </div>
@@ -350,44 +350,44 @@ export function ShareButton() {
                     )}
 
                     {/* Then the snapshot button */}
-                    <div className="flex items-center justify-start gap-2">
-                      <Button variant="neutral" onClick={handleCreateSnapshot}>
+                    <div className='flex items-center justify-start gap-2'>
+                      <Button variant='neutral' onClick={handleCreateSnapshot}>
                         Create Point-In-Time Snapshot
                       </Button>
-                      <Tooltip tip="Create a link to a specific version of your project that others can clone, including all chat history but without database contents. This can be useful for support tickets.">
-                        <InfoCircledIcon className="size-4" />
+                      <Tooltip tip='Create a link to a specific version of your project that others can clone, including all chat history but without database contents. This can be useful for support tickets.'>
+                        <InfoCircledIcon className='size-4' />
                       </Tooltip>
                     </div>
 
                     {snapshotStatus === 'loading' && (
-                      <div className="flex flex-col items-center justify-center py-4">
+                      <div className='flex flex-col items-center justify-center py-4'>
                         <Spinner />
-                        <p className="text-sm text-content-secondary">Creating snapshot…</p>
+                        <p className='text-sm text-content-secondary'>Creating snapshot…</p>
                       </div>
                     )}
 
                     {snapshotStatus === 'success' && snapshotUrl && (
-                      <div className="space-y-2">
-                        <p className="text-sm text-content-secondary">Snapshot link:</p>
-                        <div className="flex items-center gap-2">
+                      <div className='space-y-2'>
+                        <p className='text-sm text-content-secondary'>Snapshot link:</p>
+                        <div className='flex items-center gap-2'>
                           <input
-                            type="text"
+                            type='text'
                             readOnly
                             value={snapshotUrl}
-                            className="flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary"
+                            className='flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary'
                           />
                           <Button
-                            variant="neutral"
-                            size="xs"
+                            variant='neutral'
+                            size='xs'
                             onClick={() => copyToClipboard(snapshotUrl)}
-                            tip="Copy link"
+                            tip='Copy link'
                             icon={<ClipboardIcon />}
                           />
                           <Button
-                            variant="neutral"
-                            size="xs"
+                            variant='neutral'
+                            size='xs'
                             onClick={() => window.open(snapshotUrl, '_blank', 'noopener,noreferrer')}
-                            tip="Open in new tab"
+                            tip='Open in new tab'
                             icon={<ExternalLinkIcon />}
                           />
                         </div>
@@ -398,7 +398,7 @@ export function ShareButton() {
               </div>
             </div>
 
-            <Popover.Arrow className="fill-border-transparent" />
+            <Popover.Arrow className='fill-border-transparent' />
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>

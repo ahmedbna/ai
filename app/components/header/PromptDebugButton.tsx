@@ -31,7 +31,7 @@ export function PromptDebugButton() {
 
   return (
     <>
-      <Button onClick={() => setShowDebugView(true)} variant="neutral" size="xs">
+      <Button onClick={() => setShowDebugView(true)} variant='neutral' size='xs'>
         <TextAlignLeftIcon />
       </Button>
       {showDebugView && chatInitialId && (

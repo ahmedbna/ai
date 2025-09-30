@@ -194,20 +194,20 @@ function LlmPromptAndResponseView({ promptAndResponse }: { promptAndResponse: Ll
   const lastAssistantMessage = findLastAssistantMessage(completion);
 
   return (
-    <div className="rounded border p-4 dark:border-gray-700">
+    <div className='rounded border p-4 dark:border-gray-700'>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex w-full items-center gap-2 text-left"
+        className='flex w-full items-center gap-2 text-left'
         aria-expanded={isExpanded}
       >
-        <div className="text-gray-500">
-          {isExpanded ? <ChevronDownIcon className="size-5" /> : <ChevronRightIcon className="size-5" />}
+        <div className='text-gray-500'>
+          {isExpanded ? <ChevronDownIcon className='size-5' /> : <ChevronRightIcon className='size-5' />}
         </div>
-        <div className="flex flex-1 flex-col gap-1">
-          <div className="font-medium text-gray-900 dark:text-gray-100">{lastAssistantMessage}</div>
-          <div className="flex justify-between gap-1 text-xs text-gray-500 dark:text-gray-400">
+        <div className='flex flex-1 flex-col gap-1'>
+          <div className='font-medium text-gray-900 dark:text-gray-100'>{lastAssistantMessage}</div>
+          <div className='flex justify-between gap-1 text-xs text-gray-500 dark:text-gray-400'>
             <div>
-              <span className="font-semibold text-gray-900 dark:text-gray-100">
+              <span className='font-semibold text-gray-900 dark:text-gray-100'>
                 {formatNumber(promptTokensTotal - cachedPromptTokens)}
               </span>{' '}
               uncached prompt tokens
@@ -215,12 +215,12 @@ function LlmPromptAndResponseView({ promptAndResponse }: { promptAndResponse: Ll
               {formatNumber(totalInputChars)} chars total)
             </div>
             <div>
-              <span className="font-semibold text-gray-900 dark:text-gray-100">{formatNumber(outputTokens)}</span>{' '}
+              <span className='font-semibold text-gray-900 dark:text-gray-100'>{formatNumber(outputTokens)}</span>{' '}
               completion tokens ({formatNumber(totalOutputChars)} chars)
             </div>
             {chefTokens > 0 && (
               <div>
-                <span className="font-semibold text-gray-900 dark:text-gray-100">{formatNumber(chefTokens)}</span> chef
+                <span className='font-semibold text-gray-900 dark:text-gray-100'>{formatNumber(chefTokens)}</span> chef
                 tokens (${formatChefTokenPrice(chefTokens)})
               </div>
             )}
@@ -230,8 +230,8 @@ function LlmPromptAndResponseView({ promptAndResponse }: { promptAndResponse: Ll
         </div>
       </button>
       {isExpanded && prompt && (
-        <div className="mt-4">
-          <div className="mt-4 space-y-0 rounded border border-gray-200 p-2 dark:border-gray-700">
+        <div className='mt-4'>
+          <div className='mt-4 space-y-0 rounded border border-gray-200 p-2 dark:border-gray-700'>
             <div>
               {formatNumber(cachedPromptTokens)} cached prompt tokens +{' '}
               {formatNumber(promptTokensTotal - cachedPromptTokens)} uncached prompt tokens (
@@ -247,7 +247,7 @@ function LlmPromptAndResponseView({ promptAndResponse }: { promptAndResponse: Ll
               />
             ))}
           </div>
-          <div className="mt-4 space-y-0 rounded border border-gray-200 p-2 dark:border-gray-700">
+          <div className='mt-4 space-y-0 rounded border border-gray-200 p-2 dark:border-gray-700'>
             <div>
               {formatNumber(outputTokens)} completion tokens ({formatNumber(totalOutputChars)} chars)
             </div>
@@ -296,7 +296,7 @@ function MessageContentView({ content, showRawJson = false }: MessageContentView
   const [isJsonVisible, setIsJsonVisible] = useState(false);
 
   if (typeof content === 'string') {
-    return <div className="whitespace-pre-wrap text-sm">{content}</div>;
+    return <div className='whitespace-pre-wrap text-sm'>{content}</div>;
   }
 
   if (!Array.isArray(content)) {
@@ -304,14 +304,14 @@ function MessageContentView({ content, showRawJson = false }: MessageContentView
   }
 
   return (
-    <div className="space-y-2">
-      <div className="cursor-default space-y-2">
+    <div className='space-y-2'>
+      <div className='cursor-default space-y-2'>
         {content.map((part, idx) => {
           if (isTextPart(part)) {
             return (
-              <div key={idx} className="rounded bg-white/50 p-2 dark:bg-black/5">
-                <div className="text-xs font-medium text-gray-500">text</div>
-                <div className="whitespace-pre-wrap text-sm">{part.text}</div>
+              <div key={idx} className='rounded bg-white/50 p-2 dark:bg-black/5'>
+                <div className='text-xs font-medium text-gray-500'>text</div>
+                <div className='whitespace-pre-wrap text-sm'>{part.text}</div>
               </div>
             );
           }
@@ -319,18 +319,18 @@ function MessageContentView({ content, showRawJson = false }: MessageContentView
           if (isFilePart(part)) {
             const fileData = typeof part.data === 'string' ? part.data : '[Binary Data]';
             return (
-              <div key={idx} className="rounded bg-purple-50 p-2 dark:bg-purple-900/10">
-                <div className="text-xs font-medium text-purple-500">file: {part.filename || part.mimeType}</div>
-                <div className="whitespace-pre-wrap font-mono text-sm">{fileData}</div>
+              <div key={idx} className='rounded bg-purple-50 p-2 dark:bg-purple-900/10'>
+                <div className='text-xs font-medium text-purple-500'>file: {part.filename || part.mimeType}</div>
+                <div className='whitespace-pre-wrap font-mono text-sm'>{fileData}</div>
               </div>
             );
           }
 
           if (isToolCallPart(part)) {
             return (
-              <div key={idx} className="rounded bg-yellow-50 p-2 dark:bg-yellow-900/10">
-                <div className="text-xs font-medium text-yellow-600">tool call: {part.toolName}</div>
-                <div className="mt-1">
+              <div key={idx} className='rounded bg-yellow-50 p-2 dark:bg-yellow-900/10'>
+                <div className='text-xs font-medium text-yellow-600'>tool call: {part.toolName}</div>
+                <div className='mt-1'>
                   <JsonView data={part} />
                 </div>
               </div>
@@ -338,8 +338,8 @@ function MessageContentView({ content, showRawJson = false }: MessageContentView
           }
 
           return (
-            <div key={idx} className="rounded bg-gray-50 p-2 dark:bg-gray-900/10">
-              <div className="text-xs font-medium text-gray-500">{part.type}</div>
+            <div key={idx} className='rounded bg-gray-50 p-2 dark:bg-gray-900/10'>
+              <div className='text-xs font-medium text-gray-500'>{part.type}</div>
               {typeof part === 'object' && part !== null && <JsonView data={part as object} />}
             </div>
           );
@@ -349,12 +349,12 @@ function MessageContentView({ content, showRawJson = false }: MessageContentView
         <>
           <button
             onClick={() => setIsJsonVisible(!isJsonVisible)}
-            className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            className='text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
           >
             {isJsonVisible ? 'Hide' : 'Show'} raw JSON
           </button>
           {isJsonVisible && (
-            <div className="rounded border border-gray-200 p-2 dark:border-gray-700">
+            <div className='rounded border border-gray-200 p-2 dark:border-gray-700'>
               <JsonView data={content} />
             </div>
           )}
@@ -389,15 +389,15 @@ function CoreMessageView({ message, getTokenEstimate, totalCompletionTokens }: C
     <div className={`rounded border px-4 py-1 ${roleColor}`}>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex w-full items-center gap-2 text-left"
+        className='flex w-full items-center gap-2 text-left'
         aria-expanded={isExpanded}
       >
-        <div className="text-gray-500">
-          {isExpanded ? <ChevronDownIcon className="size-5" /> : <ChevronRightIcon className="size-5" />}
+        <div className='text-gray-500'>
+          {isExpanded ? <ChevronDownIcon className='size-5' /> : <ChevronRightIcon className='size-5' />}
         </div>
-        <div className="font-medium capitalize">{message.role}</div>
+        <div className='font-medium capitalize'>{message.role}</div>
         {percentage !== null && tokenEstimate !== null && (
-          <div className="text-xs text-gray-500" title="token estimate is approximate">
+          <div className='text-xs text-gray-500' title='token estimate is approximate'>
             {formatNumber(charCount)} chars (~{formatNumber(tokenEstimate)} tokens, ~{percentage}%)
           </div>
         )}
@@ -413,7 +413,7 @@ function CoreMessageView({ message, getTokenEstimate, totalCompletionTokens }: C
 
       <div>
         {isExpanded && (
-          <div className="mt-2">
+          <div className='mt-2'>
             <div className={'text-sm text-gray-600 dark:text-gray-300'}>
               <div>
                 <MessageContentView content={message.content} />
@@ -510,15 +510,15 @@ function UserPrompt({ group }: { group: AllPromptsForUserInteraction }) {
   }, 0);
 
   return (
-    <div className="space-y-2 rounded-lg border-2 border-gray-200 p-4 dark:border-gray-700">
-      <div className="mb-4 border-b border-gray-200 pb-2 dark:border-gray-700">
-        <div className="text-lg font-medium text-gray-900 dark:text-gray-100">
+    <div className='space-y-2 rounded-lg border-2 border-gray-200 p-4 dark:border-gray-700'>
+      <div className='mb-4 border-b border-gray-200 pb-2 dark:border-gray-700'>
+        <div className='text-lg font-medium text-gray-900 dark:text-gray-100'>
           {userMessageWithoutBoltArtifact(group.summary.triggeringUserMessage)}
         </div>
-        <div className="mt-1 flex gap-4 text-sm text-gray-500 dark:text-gray-400">
+        <div className='mt-1 flex gap-4 text-sm text-gray-500 dark:text-gray-400'>
           <div>Model(s): {group.summary.modelId.join(', ')}</div>
           <div>
-            <span className="font-semibold text-gray-900 dark:text-gray-100">
+            <span className='font-semibold text-gray-900 dark:text-gray-100'>
               {formatNumber(group.summary.totalCompletionTokens - group.summary.cachedCompletionTokens)}
             </span>{' '}
             uncached prompt tokens
@@ -528,13 +528,13 @@ function UserPrompt({ group }: { group: AllPromptsForUserInteraction }) {
             ({formatNumber(totalPromptChars)} chars total)
           </div>
           <div>
-            <span className="font-semibold text-gray-900 dark:text-gray-100">
+            <span className='font-semibold text-gray-900 dark:text-gray-100'>
               {formatNumber(group.summary.totalOutputTokens)}
             </span>{' '}
             completion tokens ({formatNumber(totalCompletionChars)} chars)
           </div>
           <div>
-            <span className="font-semibold text-gray-900 dark:text-gray-100">
+            <span className='font-semibold text-gray-900 dark:text-gray-100'>
               {formatNumber(group.summary.totalChefTokens)}
             </span>{' '}
             chef tokens (${formatChefTokenPrice(group.summary.totalChefTokens)})
@@ -579,9 +579,9 @@ export default function DebugAllPromptsForChat({ chatInitialId, onClose, isDebug
 
   if (error) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-        <div className="relative max-h-[90vh] w-[90vw] overflow-auto rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
-          <div className="text-center text-red-500">{error.toString()}</div>
+      <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'>
+        <div className='relative max-h-[90vh] w-[90vw] overflow-auto rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800'>
+          <div className='text-center text-red-500'>{error.toString()}</div>
         </div>
       </div>
     );
@@ -610,78 +610,78 @@ export default function DebugAllPromptsForChat({ chatInitialId, onClose, isDebug
   const totalPrice = formatChefTokenPrice(totals.chefTokens);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="relative max-h-[90vh] w-[90vw] overflow-auto rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
+    <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50'>
+      <div className='relative max-h-[90vh] w-[90vw] overflow-auto rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800'>
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+          className='absolute right-4 top-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
         >
           ✕
         </button>
-        <div className="mb-4">
-          <h2 className="text-xl font-semibold">
+        <div className='mb-4'>
+          <h2 className='text-xl font-semibold'>
             {promptsAndResponses[0]?._creationTime ? (
               <>Prompt from {new Date(promptsAndResponses[0]._creationTime).toLocaleString()}</>
             ) : (
               'Debug Prompt View'
             )}
           </h2>
-          <div className="mt-1 flex items-center space-x-1">
-            <div className="text-sm text-gray-500 dark:text-gray-400">Chat ID: {chatInitialId}</div>
+          <div className='mt-1 flex items-center space-x-1'>
+            <div className='text-sm text-gray-500 dark:text-gray-400'>Chat ID: {chatInitialId}</div>
             <IconButton
-              icon={<ClipboardIcon className="size-4" />}
+              icon={<ClipboardIcon className='size-4' />}
               onClick={() => {
                 navigator.clipboard.writeText(chatInitialId);
               }}
-              title="Copy Chat ID"
-              size="sm"
+              title='Copy Chat ID'
+              size='sm'
             />
             {isDebugPage ? (
-              <div className="flex items-center space-x-1">
+              <div className='flex items-center space-x-1'>
                 <IconButton
-                  icon={<ClipboardIcon className="size-4" />}
+                  icon={<ClipboardIcon className='size-4' />}
                   onClick={() => {
                     const url = `${window.location.origin}/admin/prompt-debug?id=${encodeURIComponent(chatInitialId)}`;
                     navigator.clipboard.writeText(url);
                   }}
-                  title="Copy Debug Page Link"
-                  size="sm"
+                  title='Copy Debug Page Link'
+                  size='sm'
                 />
-                <span className="text-sm text-gray-500 dark:text-gray-400">(copy link)</span>
+                <span className='text-sm text-gray-500 dark:text-gray-400'>(copy link)</span>
               </div>
             ) : (
               <IconButton
-                icon={<ArrowTopRightOnSquareIcon className="size-4" />}
+                icon={<ArrowTopRightOnSquareIcon className='size-4' />}
                 onClick={() => {
                   const url = `${window.location.origin}/admin/prompt-debug?id=${encodeURIComponent(chatInitialId)}`;
                   window.open(url, '_blank');
                 }}
-                title="Open in Debug Page"
-                size="sm"
+                title='Open in Debug Page'
+                size='sm'
               />
             )}
           </div>
-          <div className="mt-2 flex gap-4 text-sm text-gray-500 dark:text-gray-400">
+          <div className='mt-2 flex gap-4 text-sm text-gray-500 dark:text-gray-400'>
             <div>
-              <span className="font-semibold text-gray-900 dark:text-gray-100">
+              <span className='font-semibold text-gray-900 dark:text-gray-100'>
                 {formatNumber(totals.promptTokens - totals.cachedPromptTokens)}
               </span>{' '}
               total prompt tokens
               {totals.cachedPromptTokens ? ` (+${formatNumber(totals.cachedPromptTokens)} cached)` : ''}
             </div>
             <div>
-              <span className="font-semibold text-gray-900 dark:text-gray-100">
+              <span className='font-semibold text-gray-900 dark:text-gray-100'>
                 {formatNumber(totals.completionTokens)}
               </span>{' '}
               total completion tokens
             </div>
             <div>
-              <span className="font-semibold text-gray-900 dark:text-gray-100">{formatNumber(totals.chefTokens)}</span>{' '}
+              <span className='font-semibold text-gray-900 dark:text-gray-100'>{formatNumber(totals.chefTokens)}</span>{' '}
               total chef tokens (${totalPrice})
             </div>
           </div>
         </div>
-        <div className="space-y-4 overflow-auto">
+        <div className='space-y-4 overflow-auto'>
           {userPromptGroups.map((group, index) => (
             <UserPrompt key={index} group={group} />
           ))}

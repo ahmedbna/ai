@@ -39,67 +39,67 @@ export function ApiKeyStatus({ modelSelection, className = '', showTitle = true 
   return (
     <div className={`space-y-3 ${className}`}>
       {showTitle && (
-        <div className="flex items-center gap-2">
-          <KeyIcon className="size-4 text-content-secondary" />
-          <span className="text-sm font-medium">API Key Status</span>
+        <div className='flex items-center gap-2'>
+          <KeyIcon className='size-4 text-content-secondary' />
+          <span className='text-sm font-medium'>API Key Status</span>
         </div>
       )}
 
       {!hasAnyKeys && (
-        <div className="flex items-center gap-2 rounded-md border border-warning bg-warning/5 p-3">
-          <ExclamationCircleIcon className="size-4 text-warning" />
-          <div className="flex-1">
-            <p className="text-sm text-warning">No API keys configured</p>
-            <p className="text-xs text-warning/80">Add an API key to start using models</p>
+        <div className='border-warning bg-warning/5 flex items-center gap-2 rounded-md border p-3'>
+          <ExclamationCircleIcon className='text-warning size-4' />
+          <div className='flex-1'>
+            <p className='text-warning text-sm'>No API keys configured</p>
+            <p className='text-warning/80 text-xs'>Add an API key to start using models</p>
           </div>
-          <Button href="/settings" size="xs" variant="neutral">
+          <Button href='/settings' size='xs' variant='neutral'>
             Add Key
           </Button>
         </div>
       )}
 
       {hasAnyKeys && (
-        <div className="space-y-2">
+        <div className='space-y-2'>
           {modelSelection === 'auto' && autoSelection && (
-            <div className="flex items-center gap-2 rounded-md border border-success bg-success/5 p-2">
-              <CheckCircleIcon className="size-4 text-success" />
-              <div className="flex-1">
-                <p className="text-sm text-success">
+            <div className='border-success bg-success/5 flex items-center gap-2 rounded-md border p-2'>
+              <CheckCircleIcon className='text-success size-4' />
+              <div className='flex-1'>
+                <p className='text-success text-sm'>
                   Auto mode will use: <strong>{autoSelection.displayName}</strong>
                 </p>
-                <p className="text-xs text-success/80">
+                <p className='text-success/80 text-xs'>
                   Model: {getModelNameForSelection(autoSelection.modelSelection)}
                 </p>
               </div>
             </div>
           )}
 
-          <div className="space-y-1">
+          <div className='space-y-1'>
             {['anthropic', 'openai', 'google', 'xai'].map((provider) => {
               const providerKey = availableKeys.find((key) => key.provider === provider);
               const hasKey = !!providerKey?.hasKey;
 
               return (
-                <div key={provider} className="flex items-center gap-2 text-xs">
-                  <div className="flex items-center gap-1 w-20">
+                <div key={provider} className='flex items-center gap-2 text-xs'>
+                  <div className='flex w-20 items-center gap-1'>
                     {hasKey ? (
-                      <CheckCircleIcon className="size-3 text-success" />
+                      <CheckCircleIcon className='text-success size-3' />
                     ) : (
-                      <div className="size-3 rounded-full border border-content-tertiary" />
+                      <div className='size-3 rounded-full border border-content-tertiary' />
                     )}
                     <span className={hasKey ? 'text-content-primary' : 'text-content-tertiary'}>
                       {providerKey?.displayName || getProviderDisplayName(provider)}
                     </span>
                   </div>
-                  {!hasKey && <span className="text-content-tertiary">No key</span>}
+                  {!hasKey && <span className='text-content-tertiary'>No key</span>}
                 </div>
               );
             })}
           </div>
 
           {availableKeys.length > 0 && (
-            <div className="pt-1">
-              <Button href="/settings" size="xs" className="text-xs">
+            <div className='pt-1'>
+              <Button href='/settings' size='xs' className='text-xs'>
                 Manage API Keys
               </Button>
             </div>

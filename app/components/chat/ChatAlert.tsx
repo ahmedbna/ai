@@ -29,18 +29,18 @@ export default function ChatAlert({ alert, clearAlert, postMessage }: Props) {
         transition={{ duration: 0.3 }}
         className={`rounded-lg bg-card p-4 shadow`}
       >
-        <div className="flex items-start">
+        <div className='flex items-start'>
           {/* Icon */}
           <motion.div
-            className="flex h-6 shrink-0 items-center"
+            className='flex h-6 shrink-0 items-center'
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <ExclamationTriangleIcon className="text-content-error" />
+            <ExclamationTriangleIcon className='text-content-error' />
           </motion.div>
           {/* Content */}
-          <div className="ml-3 flex-1">
+          <div className='ml-3 flex-1'>
             <motion.h3
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -57,7 +57,7 @@ export default function ChatAlert({ alert, clearAlert, postMessage }: Props) {
             >
               <p>{message}</p>
               {description && (
-                <div className="my-4 rounded bg-bolt-elements-background-depth-3 p-2 text-xs text-content-secondary">
+                <div className='my-4 rounded bg-bolt-elements-background-depth-3 p-2 text-xs text-content-secondary'>
                   Error: {description}
                 </div>
               )}
@@ -65,7 +65,7 @@ export default function ChatAlert({ alert, clearAlert, postMessage }: Props) {
 
             {/* Actions */}
             <motion.div
-              className="mt-4"
+              className='mt-4'
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
@@ -82,7 +82,7 @@ export default function ChatAlert({ alert, clearAlert, postMessage }: Props) {
                   Ask BNA
                 </Button>
 
-                <Button variant="secondary" onClick={clearAlert}>
+                <Button variant='secondary' onClick={clearAlert}>
                   Dismiss
                 </Button>
               </div>

@@ -39,8 +39,8 @@ export function ConvexConnection() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-fit justify-between gap-1 h-8 text-sm">
-          <img className="mr-2 size-4" src="/icons/Convex.svg" alt="Convex" />
+        <Button variant='outline' className='h-8 w-fit justify-between gap-1 text-sm'>
+          <img className='mr-2 size-4' src='/icons/Convex.svg' alt='Convex' />
           <ConnectionStatus projectInfo={projectInfo} />
         </Button>
       </DialogTrigger>
@@ -48,7 +48,7 @@ export function ConvexConnection() {
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
         </DialogHeader>
-        <div className="pt-2">
+        <div className='pt-2'>
           {projectInfo?.kind === 'connected' ? (
             <ConnectedDialogContent projectInfo={projectInfo} />
           ) : projectInfo?.kind === 'failed' ? (
@@ -79,28 +79,28 @@ function ConnectedDialogContent({
   const chatId = useChatId();
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1 text-sm">
-        <p className="text-muted-foreground">
-          Current Project: <strong className="font-semibold text-foreground">{projectInfo.projectSlug}</strong>
+    <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-1 text-sm'>
+        <p className='text-muted-foreground'>
+          Current Project: <strong className='font-semibold text-foreground'>{projectInfo.projectSlug}</strong>
         </p>
-        <p className="text-muted-foreground">
-          Team: <strong className="font-semibold text-foreground">{projectInfo.teamSlug}</strong>
+        <p className='text-muted-foreground'>
+          Team: <strong className='font-semibold text-foreground'>{projectInfo.teamSlug}</strong>
         </p>
         <a
-          className="flex items-center gap-1 text-muted-foreground hover:underline"
+          className='flex items-center gap-1 text-muted-foreground hover:underline'
           href={`https://dashboard.convex.dev/d/${projectInfo.deploymentName}`}
-          target="_blank"
-          rel="noreferrer"
+          target='_blank'
+          rel='noreferrer'
         >
           View in Convex Dashboard
-          <ExternalLinkIcon className="size-4" />
+          <ExternalLinkIcon className='size-4' />
         </a>
-        {projectInfo.warningMessage && <p className="text-muted-foreground">{projectInfo.warningMessage}</p>}
+        {projectInfo.warningMessage && <p className='text-muted-foreground'>{projectInfo.warningMessage}</p>}
       </div>
 
-      <div className="border-t pt-4">
-        <p className="mb-3 text-sm font-medium text-foreground">Connect to a new Convex project</p>
+      <div className='border-t pt-4'>
+        <p className='mb-3 text-sm font-medium text-foreground'>Connect to a new Convex project</p>
         {sessionId && chatId && <ConvexConnectButton />}
       </div>
     </div>
@@ -110,9 +110,9 @@ function ConnectedDialogContent({
 function ErrorDialogContent({ errorMessage }: { errorMessage: string }) {
   const sessionId = useConvexSessionIdOrNullOrLoading();
   return (
-    <div className="flex w-full flex-col gap-4">
-      <Alert variant="destructive">
-        <AlertCircle className="h-4 w-4" />
+    <div className='flex w-full flex-col gap-4'>
+      <Alert variant='destructive'>
+        <AlertCircle className='size-4' />
         <AlertDescription>Error: {errorMessage}</AlertDescription>
       </Alert>
       {sessionId && <ConvexConnectButton />}
@@ -130,7 +130,7 @@ function ConnectionStatus({ projectInfo }: { projectInfo: ProjectInfo | undefine
     case 'failed':
       return <span>Failed to connect</span>;
     case 'connected':
-      return <span className="max-w-24 truncate">{`${projectInfo.projectSlug}`}</span>;
+      return <span className='max-w-24 truncate'>{`${projectInfo.projectSlug}`}</span>;
     case 'connecting':
       return <span>Connecting…</span>;
     default: {

@@ -77,14 +77,14 @@ export const EditorPanel = memo(function EditorPanel({
   }, [editorDocument, unsavedFiles]);
 
   return (
-    <PanelGroup direction="vertical">
+    <PanelGroup direction='vertical'>
       <Panel defaultSize={showTerminal ? DEFAULT_EDITOR_SIZE : 100} minSize={20}>
-        <PanelGroup direction="horizontal">
+        <PanelGroup direction='horizontal'>
           <Panel defaultSize={20} minSize={10} collapsible>
-            <div className="flex h-full flex-col border-r">
+            <div className='flex h-full flex-col border-r'>
               <PanelHeader>Files</PanelHeader>
               <FileTree
-                className="h-full"
+                className='h-full'
                 files={files}
                 hideRoot
                 unsavedFiles={unsavedFiles}
@@ -96,13 +96,13 @@ export const EditorPanel = memo(function EditorPanel({
             </div>
           </Panel>
           <PanelResizeHandle />
-          <Panel className="flex flex-col" defaultSize={80} minSize={20}>
-            <PanelHeader className="overflow-x-auto">
+          <Panel className='flex flex-col' defaultSize={80} minSize={20}>
+            <PanelHeader className='overflow-x-auto'>
               {activeFileSegments?.length && (
-                <div className="flex flex-1 items-center text-sm">
+                <div className='flex flex-1 items-center text-sm'>
                   <FileBreadcrumb pathSegments={activeFileSegments} files={files} onFileSelect={onFileSelect} />
                   {activeFileUnsaved && (
-                    <div className="-mr-1.5 ml-auto flex gap-1">
+                    <div className='-mr-1.5 ml-auto flex gap-1'>
                       <PanelHeaderButton onClick={onFileSave}>
                         <CheckIcon />
                         Save
@@ -116,7 +116,7 @@ export const EditorPanel = memo(function EditorPanel({
                 </div>
               )}
             </PanelHeader>
-            <div className="h-full flex-1 overflow-hidden">
+            <div className='h-full flex-1 overflow-hidden'>
               <CodeMirrorEditor
                 theme={theme}
                 editable={!isStreaming && editorDocument !== undefined}

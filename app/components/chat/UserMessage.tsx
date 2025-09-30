@@ -12,15 +12,15 @@ export const UserMessage = memo(function UserMessage({ content }: UserMessagePro
     const images = content.filter((item) => item.type === 'image' && item.image);
 
     return (
-      <div className="overflow-hidden text-sm">
-        <div className="flex flex-col gap-4">
+      <div className='overflow-hidden text-sm'>
+        <div className='flex flex-col gap-4'>
           {textContent && <Markdown html>{textContent}</Markdown>}
           {images.map((item, index) => (
             <img
               key={index}
               src={item.image}
               alt={`Image ${index + 1}`}
-              className="h-auto max-w-full rounded-lg"
+              className='h-auto max-w-full rounded-lg'
               style={{ maxHeight: '512px', objectFit: 'contain' }}
             />
           ))}
@@ -32,7 +32,7 @@ export const UserMessage = memo(function UserMessage({ content }: UserMessagePro
   const textContent = stripMetadata(content);
 
   return (
-    <div className="overflow-hidden text-sm">
+    <div className='overflow-hidden text-sm'>
       <Markdown html>{textContent}</Markdown>
     </div>
   );

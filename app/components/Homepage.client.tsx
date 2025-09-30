@@ -44,11 +44,11 @@ const ChatWrapper = ({ initialId }: { initialId: string }) => {
 
   if (chefAuthState.kind === 'unauthenticated') {
     return (
-      <div className="flex h-full w-full flex-col items-center justify-center gap-4">
+      <div className='flex size-full flex-col items-center justify-center gap-4'>
         <Button
-          variant="neutral"
-          className="text-xs font-normal"
-          icon={<img className="size-4" src="/icons/Convex.svg" alt="Convex" />}
+          variant='neutral'
+          className='text-xs font-normal'
+          icon={<img className='size-4' src='/icons/Convex.svg' alt='Convex' />}
           onClick={() => {
             void signIn();
           }}
@@ -68,7 +68,7 @@ const ChatWrapper = ({ initialId }: { initialId: string }) => {
   if (apiKey === null || chefAuthState.kind !== 'fullyLoggedIn') {
     return (
       <div>
-        <div className="mx-auto max-w-4xl px-4 py-8">
+        <div className='mx-auto max-w-4xl px-4 py-8'>
           <ApiKeyCard />
         </div>
       </div>

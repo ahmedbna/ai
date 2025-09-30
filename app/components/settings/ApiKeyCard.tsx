@@ -62,17 +62,17 @@ export function ApiKeyCard() {
   };
 
   return (
-    <div className="rounded-lg border bg-bolt-elements-background-depth-1 shadow-sm">
-      <div className="p-6">
-        <h2 className="mb-2 text-xl font-semibold text-content-primary">API Keys</h2>
+    <div className='rounded-lg border bg-bolt-elements-background-depth-1 shadow-sm'>
+      <div className='p-6'>
+        <h2 className='mb-2 text-xl font-semibold text-content-primary'>API Keys</h2>
 
-        <p className="mb-1 max-w-prose text-sm text-content-secondary">
+        <p className='mb-1 max-w-prose text-sm text-content-secondary'>
           You can use your own API keys to cook with Chef.
         </p>
-        <p className="mb-4 max-w-prose text-sm text-content-secondary">
+        <p className='mb-4 max-w-prose text-sm text-content-secondary'>
           By default, Chef will use tokens built into your Convex plan.
         </p>
-        <div className="space-y-4">
+        <div className='space-y-4'>
           <AlwaysUseKeyCheckbox
             isLoading={apiKey === undefined}
             disabled={!hasAnyKey}
@@ -80,73 +80,73 @@ export function ApiKeyCard() {
             onChange={handleAlwaysUseKeyChange}
           />
           <ApiKeyItem
-            label="Anthropic API key"
+            label='Anthropic API key'
             description={
               <a
-                href="https://docs.claude.com/en/api/overview#accessing-the-api"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-content-link hover:underline"
+                href='https://docs.claude.com/en/api/overview#accessing-the-api'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='text-content-link hover:underline'
               >
                 See instructions for generating an Anthropic API key
               </a>
             }
             isLoading={apiKey === undefined}
-            keyType="anthropic"
+            keyType='anthropic'
             value={apiKey?.value || ''}
             onValidate={validateAnthropicApiKey}
           />
 
           <ApiKeyItem
-            label="Google API key"
+            label='Google API key'
             description={
               <a
-                href="https://ai.google.dev/gemini-api/docs/api-key"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-content-link hover:underline"
+                href='https://ai.google.dev/gemini-api/docs/api-key'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='text-content-link hover:underline'
               >
                 See instructions for generating a Google API key
               </a>
             }
             isLoading={apiKey === undefined}
-            keyType="google"
+            keyType='google'
             value={apiKey?.google || ''}
             onValidate={validateGoogleApiKey}
           />
 
           <ApiKeyItem
-            label="OpenAI API key"
+            label='OpenAI API key'
             description={
               <a
-                href="https://platform.openai.com/docs/api-reference/introduction"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-content-link hover:underline"
+                href='https://platform.openai.com/docs/api-reference/introduction'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='text-content-link hover:underline'
               >
                 See instructions for generating an OpenAI API key
               </a>
             }
             isLoading={apiKey === undefined}
-            keyType="openai"
+            keyType='openai'
             value={apiKey?.openai || ''}
             onValidate={validateOpenaiApiKey}
           />
 
           <ApiKeyItem
-            label="xAI API key"
+            label='xAI API key'
             description={
               <a
-                href="https://docs.x.ai/docs/overview#welcome"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-content-link hover:underline"
+                href='https://docs.x.ai/docs/overview#welcome'
+                target='_blank'
+                rel='noopener noreferrer'
+                className='text-content-link hover:underline'
               >
                 See instructions for generating an xAI API key
               </a>
             }
             isLoading={apiKey === undefined}
-            keyType="xai"
+            keyType='xai'
             value={apiKey?.xai || ''}
             onValidate={validateXaiApiKey}
           />
@@ -215,7 +215,7 @@ function ApiKeyItem({
   }, [debouncedKeyValue, convex, onValidate]);
 
   if (isLoading) {
-    return <div className="h-[78px] w-full animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700" />;
+    return <div className='h-[78px] w-full animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700' />;
   }
 
   const hasKey = !!value;
@@ -315,29 +315,29 @@ function ApiKeyItem({
 
   return (
     <div>
-      <div className="mb-1.5">
-        <span className="font-medium text-content-primary">{label}</span>
+      <div className='mb-1.5'>
+        <span className='font-medium text-content-primary'>{label}</span>
       </div>
-      <div className="mb-2 text-xs text-content-secondary">{description}</div>
+      <div className='mb-2 text-xs text-content-secondary'>{description}</div>
 
       {hasKey ? (
-        <div className="flex items-center gap-2 py-1.5">
-          <span className="max-w-80 truncate font-mono text-sm" aria-label="API key value">
+        <div className='flex items-center gap-2 py-1.5'>
+          <span className='max-w-80 truncate font-mono text-sm' aria-label='API key value'>
             {showKey ? value : '•'.repeat(value.length)}
           </span>
           <Button
             onClick={() => setShowKey(!showKey)}
             icon={showKey ? <EyeNoneIcon /> : <EyeOpenIcon />}
             aria-label={showKey ? 'Hide API Key' : 'Show API Key'}
-            variant="neutral"
+            variant='neutral'
             inline
           />
-          <Button variant="danger" onClick={handleRemoveKey} disabled={isSaving} icon={<TrashIcon />} inline />
+          <Button variant='danger' onClick={handleRemoveKey} disabled={isSaving} icon={<TrashIcon />} inline />
         </div>
       ) : isAdding ? (
-        <form onSubmit={handleSaveKey} className="flex flex-col gap-1">
-          <div className="flex flex-col items-start gap-2">
-            <div className="-mt-1 w-80">
+        <form onSubmit={handleSaveKey} className='flex flex-col gap-1'>
+          <div className='flex flex-col items-start gap-2'>
+            <div className='-mt-1 w-80'>
               <TextInput
                 autoFocus
                 type={showKey ? 'text' : 'password'}
@@ -355,18 +355,18 @@ function ApiKeyItem({
                 error={newKeyValue.trim() && validationError ? validationError : undefined}
               />
             </div>
-            <div className="flex gap-2">
-              <Button type="submit" disabled={isSaving || !newKeyValue.trim()} icon={isSaving && <Spinner />}>
+            <div className='flex gap-2'>
+              <Button type='submit' disabled={isSaving || !newKeyValue.trim()} icon={isSaving && <Spinner />}>
                 Save
               </Button>
-              <Button type="button" variant="neutral" onClick={handleCancel} disabled={isSaving}>
+              <Button type='button' variant='neutral' onClick={handleCancel} disabled={isSaving}>
                 Cancel
               </Button>
             </div>
           </div>
         </form>
       ) : (
-        <Button variant="neutral" onClick={() => setIsAdding(true)} icon={<PlusIcon />}>
+        <Button variant='neutral' onClick={() => setIsAdding(true)} icon={<PlusIcon />}>
           Add {label}
         </Button>
       )}
@@ -382,10 +382,10 @@ function AlwaysUseKeyCheckbox(props: {
 }) {
   if (props.isLoading) {
     return (
-      <div className="mt-4 flex items-center gap-2">
-        <div className="size-4 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
-        <div className="h-5 w-32 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
-        <div className="size-4 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
+      <div className='mt-4 flex items-center gap-2'>
+        <div className='size-4 animate-pulse rounded bg-gray-200 dark:bg-gray-700' />
+        <div className='h-5 w-32 animate-pulse rounded bg-gray-200 dark:bg-gray-700' />
+        <div className='size-4 animate-pulse rounded bg-gray-200 dark:bg-gray-700' />
       </div>
     );
   }
@@ -393,16 +393,16 @@ function AlwaysUseKeyCheckbox(props: {
     <Tooltip
       tip={props.disabled ? "You cannot use this setting when you don't have any API keys configured." : undefined}
     >
-      <div className="flex items-center gap-2">
+      <div className='flex items-center gap-2'>
         <Checkbox
           checked={props.value}
           onChange={() => {
             props.onChange(!props.value);
           }}
           disabled={props.disabled}
-          id="always-use-key"
+          id='always-use-key'
         />
-        <label htmlFor="always-use-key" className="text-sm text-content-secondary">
+        <label htmlFor='always-use-key' className='text-sm text-content-secondary'>
           Always use my API keys
         </label>
         <Tooltip tip="When unchecked, your API key will only be used if you've run out of tokens built into your Convex plan">

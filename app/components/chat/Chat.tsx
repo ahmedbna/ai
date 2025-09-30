@@ -513,7 +513,7 @@ export const Chat = memo(
           toast.error(
             <>
               No API keys available. Please{' '}
-              <a href="/settings" className="text-content-link hover:underline">
+              <a href='/settings' className='text-content-link hover:underline'>
                 add an API key
               </a>{' '}
               to continue.
@@ -529,7 +529,7 @@ export const Chat = memo(
         toast.error(
           <>
             Please{' '}
-            <a href="/settings" className="text-content-link hover:underline">
+            <a href='/settings' className='text-content-link hover:underline'>
               add your {providerInfo.displayName} API key
             </a>{' '}
             in settings to use this model.
@@ -803,9 +803,9 @@ export function NoTokensText({ resetDisableChatMessage }: { resetDisableChatMess
   };
 
   return (
-    <div className="flex w-full flex-col gap-4">
+    <div className='flex w-full flex-col gap-4'>
       <h4>You&apos;ve used all the tokens included with your free plan.</h4>
-      <div className="flex flex-wrap items-center gap-2">
+      <div className='flex flex-wrap items-center gap-2'>
         <TeamSelector
           selectedTeamSlug={selectedTeamSlug}
           setSelectedTeamSlug={(slug) => {
@@ -813,7 +813,7 @@ export function NoTokensText({ resetDisableChatMessage }: { resetDisableChatMess
             resetDisableChatMessage();
           }}
         />
-        <Button href="/settings" icon={<KeyIcon className="size-4" />} variant="neutral">
+        <Button href='/settings' icon={<KeyIcon className='size-4' />} variant='neutral'>
           Add your own API key
         </Button>
         <Button
@@ -822,29 +822,29 @@ export function NoTokensText({ resetDisableChatMessage }: { resetDisableChatMess
               ? `https://dashboard.convex.dev/t/${selectedTeamSlug}/settings/billing?source=chef`
               : 'https://dashboard.convex.dev/team/settings/billing?source=chef'
           }
-          className="w-fit"
+          className='w-fit'
           icon={<ExternalLinkIcon />}
         >
           Upgrade to a paid plan
         </Button>
         {referralCode && referralStats?.left !== 0 && (
-          <div className="w-full space-y-2">
-            <p className="text-sm text-content-secondary">
+          <div className='w-full space-y-2'>
+            <p className='text-sm text-content-secondary'>
               Refer a friend and Get 85,000 free Chef tokens for each
               {referralStats?.left === 5 || !referralStats ? ' (limit 5)' : ` (${referralStats.left} / 5)`}
             </p>
-            <div className="flex items-center gap-2">
+            <div className='flex items-center gap-2'>
               <input
-                type="text"
+                type='text'
                 readOnly
                 value={`https://convex.dev/try-chef/${referralCode}`}
-                className="flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary"
+                className='flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary'
               />
               <Button
-                variant="neutral"
-                size="xs"
+                variant='neutral'
+                size='xs'
                 onClick={() => copyToClipboard(`https://convex.dev/try-chef/${referralCode}`)}
-                tip="Copy link"
+                tip='Copy link'
                 icon={<ClipboardIcon />}
               />
             </div>
@@ -864,13 +864,13 @@ export function DisabledText({
 }) {
   const selectedTeamSlug = useSelectedTeamSlug();
   return (
-    <div className="flex w-full flex-col gap-4">
+    <div className='flex w-full flex-col gap-4'>
       <h3>
         {isPaidPlan
           ? "You've exceeded your spending limits, so your deployments have been disabled."
           : "You've exceeded the free plan limits, so your deployments have been disabled."}
       </h3>
-      <div className="flex flex-wrap items-center gap-2">
+      <div className='flex flex-wrap items-center gap-2'>
         <TeamSelector
           selectedTeamSlug={selectedTeamSlug}
           setSelectedTeamSlug={(slug) => {
@@ -884,7 +884,7 @@ export function DisabledText({
               ? `https://dashboard.convex.dev/t/${selectedTeamSlug}/settings/billing?source=chef`
               : 'https://dashboard.convex.dev/team/settings/billing?source=chef'
           }
-          className="w-fit"
+          className='w-fit'
           icon={<ExternalLinkIcon />}
         >
           {isPaidPlan ? 'Increase spending limit' : 'Upgrade your plan'}

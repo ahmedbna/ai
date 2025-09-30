@@ -18,15 +18,15 @@ export const AssistantMessage = memo(function AssistantMessage({ message }: Assi
   const parsedAnnotations = useMemo(() => parseAnnotations(message.annotations), [message.annotations]);
   if (!message.parts) {
     return (
-      <div className="w-full overflow-hidden">
+      <div className='w-full overflow-hidden'>
         <Markdown html>{message.content}</Markdown>
       </div>
     );
   }
 
   return (
-    <div className="w-full overflow-hidden text-sm">
-      <div className="flex flex-col gap-2">
+    <div className='w-full overflow-hidden text-sm'>
+      <div className='flex flex-col gap-2'>
         {message.parts.map((part, index) => (
           <AssistantMessagePart
             key={index}
@@ -45,10 +45,10 @@ export const AssistantMessage = memo(function AssistantMessage({ message }: Assi
           })}
 
         {parsedAnnotations.failedDueToRepeatedErrors && (
-          <div className="flex items-center gap-2 text-content-primary">
-            <ExclamationTriangleIcon className="size-6" />
-            <div className="inline">
-              <span className="font-bold">Note:</span> The chat stopped because of repeated errors. You can send a
+          <div className='flex items-center gap-2 text-content-primary'>
+            <ExclamationTriangleIcon className='size-6' />
+            <div className='inline'>
+              <span className='font-bold'>Note:</span> The chat stopped because of repeated errors. You can send a
               message to try again, give more information, or fix the problem yourself.
             </div>
           </div>
@@ -116,9 +116,9 @@ function displayModelAndUsage({
     : null;
   if (modelDisplay && usageDisplay) {
     return (
-      <div className="flex items-center gap-1">
+      <div className='flex items-center gap-1'>
         {modelDisplay}
-        <DotFilledIcon className="size-2" />
+        <DotFilledIcon className='size-2' />
         {usageDisplay}
       </div>
     );
@@ -142,7 +142,7 @@ function displayUsage(usageAnnotation: UsageAnnotation, provider: ProviderType, 
   });
   const { chefTokens, breakdown } = calculateChefTokens(usage, provider);
   return (
-    <div className="text-xs text-content-secondary">
+    <div className='text-xs text-content-secondary'>
       Chef Tokens: {displayChefTokenNumber(chefTokens)}
       {showUsageAnnotations ? `, ${displayBreakdownForSingleAnnotation(breakdown)}` : ''}
     </div>
@@ -178,13 +178,13 @@ function displayModel(modelInfo: { provider: ProviderType; model: string | undef
       return null;
     case 'Anthropic':
     case 'Bedrock':
-      return <div className="text-xs text-content-secondary">Generated with Anthropic</div>;
+      return <div className='text-xs text-content-secondary'>Generated with Anthropic</div>;
     case 'OpenAI':
-      return <div className="text-xs text-content-secondary">Generated with OpenAI</div>;
+      return <div className='text-xs text-content-secondary'>Generated with OpenAI</div>;
     case 'XAI':
-      return <div className="text-xs text-content-secondary">Generated with xAI</div>;
+      return <div className='text-xs text-content-secondary'>Generated with xAI</div>;
     case 'Google':
-      return <div className="text-xs text-content-secondary">Generated with Google</div>;
+      return <div className='text-xs text-content-secondary'>Generated with Google</div>;
     default: {
       const _exhaustiveCheck: never = modelInfo.provider;
       return null;

@@ -11,16 +11,16 @@ export function DiscordButton({ showInMenu }: { showInMenu: boolean }) {
     return (
       <MenuItem action={handleDiscordClick}>
         {/* Margin top is needed to visually align the icon with the text */}
-        <DiscordLogoIcon className="text-content-secondary" style={{ marginTop: '3px' }} />
+        <DiscordLogoIcon className='text-content-secondary' style={{ marginTop: '3px' }} />
         <span>Community Support</span>
       </MenuItem>
     );
   }
   return (
     <Button
-      variant="neutral"
-      size="xs"
-      className="hidden sm:flex"
+      variant='neutral'
+      size='xs'
+      className='hidden sm:flex'
       onClick={handleDiscordClick}
       icon={<DiscordLogoIcon />}
     >

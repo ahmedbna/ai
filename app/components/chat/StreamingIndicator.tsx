@@ -33,9 +33,9 @@ interface StreamingIndicatorProps {
 }
 
 // Icon components
-const WarningIcon = () => <CircleAlert className="size-4" />;
+const WarningIcon = () => <CircleAlert className='size-4' />;
 const LoadingIcon = () => <Spinner />;
-const CheckIcon = () => <CheckCircle2 className="size-4" />;
+const CheckIcon = () => <CheckCircle2 className='size-4' />;
 
 // Status messages
 export const STATUS_MESSAGES = {
@@ -125,7 +125,7 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
               message = (
                 <div>
                   {error}{' '}
-                  <a href="/settings" className="text-content-link hover:underline">
+                  <a href='/settings' className='text-content-link hover:underline'>
                     Set an API key
                   </a>{' '}
                   or switch to a different model provider.
@@ -135,7 +135,7 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
               message = (
                 <div>
                   You&apos;ve used all the tokens included with your free plan.{' '}
-                  <a href="/settings" className="text-content-link hover:underline">
+                  <a href='/settings' className='text-content-link hover:underline'>
                     Upgrade to a paid plan or add your own API key.
                   </a>
                 </div>
@@ -163,7 +163,7 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
   return (
     <AnimatePresence>
       <motion.div
-        className="my-1 px-1 w-full max-w-chat rounded-2xl bg-white/50 dark:bg-black/50 backdrop-blur-lg"
+        className='my-1 w-full max-w-chat rounded-2xl bg-white/50 px-1 backdrop-blur-lg dark:bg-black/50'
         initial={{ translateY: '100%' }}
         animate={{ translateY: '0%' }}
         exit={{ translateY: '100%' }}
@@ -174,14 +174,14 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
           className={classNames('border-none shadow-none rounded-2xl relative w-full max-w-chat mx-auto z-prompt')}
         >
           <div className={classNames('rounded-2xl', 'p-1.5 text-content-primary', 'flex')}>
-            <div className="flex-1">
+            <div className='flex-1'>
               <AnimatePresence>
-                <div className="actions">
+                <div className='actions'>
                   <div className={classNames('flex text-sm gap-3')}>
-                    <div className="flex w-full items-center gap-1.5">
-                      <div className="">{icon}</div>
+                    <div className='flex w-full items-center gap-1.5'>
+                      <div className=''>{icon}</div>
                       {message}
-                      <div className="min-h-6 grow" />
+                      <div className='min-h-6 grow' />
                       {/* <LittleUsage
                         teamSlug={teamSlug}
                         streamStatus={streamStatus}
@@ -189,10 +189,10 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
                       /> */}
                       {streamStatus === 'error' && (
                         <Button
-                          type="button"
-                          className="ml-2 h-auto"
+                          type='button'
+                          className='ml-2 h-auto'
                           onClick={props.resendMessage}
-                          icon={<MessageSquareReply className="size-4" />}
+                          icon={<MessageSquareReply className='size-4' />}
                         >
                           Resend
                         </Button>
@@ -219,11 +219,11 @@ function UsageDonut({
   hidden: boolean;
 }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className='flex items-center gap-2'>
       <div className={classNames('h-6', { invisible: hidden })}>
-        {tokenUsage ? <Donut current={tokenUsage.used} max={tokenUsage.quota} /> : <Loading className="size-4" />}
+        {tokenUsage ? <Donut current={tokenUsage.used} max={tokenUsage.quota} /> : <Loading className='size-4' />}
       </div>
-      <div className="text-sm">{label}</div>
+      <div className='text-sm'>{label}</div>
     </div>
   );
 }
@@ -300,38 +300,38 @@ function LittleUsage({
     <div className={classNames('flex flex-col items-center', needsMore ? 'h-auto' : 'h-6')}>
       <Popover
         button={
-          <button className="hover:text-content-primary">
-            <div className="flex flex-col items-end gap-1 text-sm text-content-secondary">
+          <button className='hover:text-content-primary'>
+            <div className='flex flex-col items-end gap-1 text-sm text-content-secondary'>
               <UsageDonut tokenUsage={loading ? null : { used, quota }} label={label} hidden={hideDonut} />
               {needsMore && (
-                <div className="border-b border-dotted border-content-secondary text-xs text-content-secondary hover:border-content-primary ">
+                <div className='border-b border-dotted border-content-secondary text-xs text-content-secondary hover:border-content-primary '>
                   Upgrade or refer a friend to get more tokens
                 </div>
               )}
             </div>
           </button>
         }
-        placement="top-end"
+        placement='top-end'
         offset={[6, 8]}
         portal={true}
-        className="w-96"
+        className='w-96'
       >
         {loading ? null : (
           <div>
             <UsageDonut tokenUsage={loading ? null : { used, quota }} label={detailedLabel} hidden={false} />
-            <p className="mt-1 text-xs text-content-secondary">
+            <p className='mt-1 text-xs text-content-secondary'>
               {isPaidPlan
                 ? `Chef tokens power code generation. Your team's Chef tokens reset to ${displayChefTokenNumber(quota)} on your regular billing cycle. Unused tokens from the previous month are not carried over. Additional Chef tokens cost $10 per 1M tokens.`
                 : 'Chef tokens power code generation. Tokens reset on the first of each month and tokens from the previous month are not carried over.'}
             </p>
-            <ul className="mt-2 space-y-2 text-sm text-content-primary">
+            <ul className='mt-2 space-y-2 text-sm text-content-primary'>
               {isPaidPlan ? null : (
-                <li className="mt-2 border-t pt-2">
+                <li className='mt-2 border-t pt-2'>
                   <Button
                     href={`https://dashboard.convex.dev/t/${teamSlug}/settings/billing?source=chef`}
-                    target="_blank"
-                    variant="unstyled"
-                    className="underline hover:text-content-link"
+                    target='_blank'
+                    variant='unstyled'
+                    className='underline hover:text-content-link'
                   >
                     Upgrade your plan
                   </Button>{' '}
@@ -339,8 +339,8 @@ function LittleUsage({
                 </li>
               )}
               {!isPaidPlan && (
-                <li className="border-t pt-2">
-                  <div className="flex flex-col items-center gap-2">
+                <li className='border-t pt-2'>
+                  <div className='flex flex-col items-center gap-2'>
                     <p>
                       {referralStats.left === 5
                         ? 'Refer a friend '
@@ -351,7 +351,7 @@ function LittleUsage({
                   </div>
                 </li>
               )}
-              <li className="mt-2 border-t pt-2 text-xs text-content-secondary">
+              <li className='mt-2 border-t pt-2 text-xs text-content-secondary'>
                 {usingApiKey ? (
                   usagePercentage >= 100 ? (
                     "You're using an API key so can keep building without using Chef tokens."
@@ -361,10 +361,10 @@ function LittleUsage({
                 ) : (
                   <>
                     <Button
-                      href="/settings"
-                      target="_blank"
-                      variant="unstyled"
-                      className="underline hover:text-content-link"
+                      href='/settings'
+                      target='_blank'
+                      variant='unstyled'
+                      className='underline hover:text-content-link'
                     >
                       Add your own API key
                     </Button>{' '}
@@ -387,20 +387,20 @@ function Referrals({ referralCode }: { referralCode: string }) {
   };
 
   return (
-    <div className="-mx-2 w-full flex-1 rounded-md text-content-primary">
-      <div className="relative flex w-full items-center gap-2">
+    <div className='-mx-2 w-full flex-1 rounded-md text-content-primary'>
+      <div className='relative flex w-full items-center gap-2'>
         <input
-          type="text"
+          type='text'
           readOnly
           value={`https://convex.dev/try-chef/${referralCode}`}
-          className="w-full flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary"
+          className='w-full flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary'
         />
         <Button
-          variant="neutral"
-          size="xs"
+          variant='neutral'
+          size='xs'
           onClick={() => copyToClipboard(`https://convex.dev/try-chef/${referralCode}`)}
-          tip="Copy link"
-          icon={<Clipboard className="size-4" />}
+          tip='Copy link'
+          icon={<Clipboard className='size-4' />}
         />
       </div>
     </div>

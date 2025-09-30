@@ -66,10 +66,10 @@ export const Artifact = memo(function Artifact({ partId }: ArtifactProps) {
   }, [actions]);
 
   return (
-    <div className="artifact flex w-full flex-col overflow-hidden rounded-lg border">
-      <div className="flex">
+    <div className='artifact flex w-full flex-col overflow-hidden rounded-lg border'>
+      <div className='flex'>
         <button
-          className="flex w-full items-stretch overflow-hidden bg-bolt-elements-artifacts-background hover:bg-bolt-elements-artifacts-backgroundHover"
+          className='flex w-full items-stretch overflow-hidden bg-bolt-elements-artifacts-background hover:bg-bolt-elements-artifacts-backgroundHover'
           onClick={() => {
             const showWorkbench = workbenchStore.showWorkbench.get();
             workbenchStore.showWorkbench.set(!showWorkbench);
@@ -77,16 +77,16 @@ export const Artifact = memo(function Artifact({ partId }: ArtifactProps) {
         >
           {artifact.type == 'bundled' && (
             <>
-              <div className="p-4">{allActionFinished ? <FileIcon /> : <Spinner />}</div>
-              <div className="w-px bg-bolt-elements-artifacts-borderColor" />
+              <div className='p-4'>{allActionFinished ? <FileIcon /> : <Spinner />}</div>
+              <div className='w-px bg-bolt-elements-artifacts-borderColor' />
             </>
           )}
-          <div className="w-full p-3.5 px-5 text-left">
-            <div className="w-full text-sm font-medium leading-5 text-content-primary">{artifact?.title}</div>
-            <div className="mt-0.5 w-full text-xs text-content-secondary">Click to open Workbench</div>
+          <div className='w-full p-3.5 px-5 text-left'>
+            <div className='w-full text-sm font-medium leading-5 text-content-primary'>{artifact?.title}</div>
+            <div className='mt-0.5 w-full text-xs text-content-secondary'>Click to open Workbench</div>
           </div>
         </button>
-        <div className="w-px bg-bolt-elements-artifacts-borderColor" />
+        <div className='w-px bg-bolt-elements-artifacts-borderColor' />
         <AnimatePresence>
           {actions.length && artifact.type !== 'bundled' && (
             <motion.button
@@ -94,10 +94,10 @@ export const Artifact = memo(function Artifact({ partId }: ArtifactProps) {
               animate={{ width: 'auto' }}
               exit={{ width: 0 }}
               transition={{ duration: 0.15, ease: cubicEasingFn }}
-              className="bg-bolt-elements-artifacts-background hover:bg-bolt-elements-artifacts-backgroundHover"
+              className='bg-bolt-elements-artifacts-background hover:bg-bolt-elements-artifacts-backgroundHover'
               onClick={toggleActions}
             >
-              <div className="p-4">{showActions ? <CaretUpIcon /> : <CaretDownIcon />}</div>
+              <div className='p-4'>{showActions ? <CaretUpIcon /> : <CaretDownIcon />}</div>
             </motion.button>
           )}
         </AnimatePresence>
@@ -105,15 +105,15 @@ export const Artifact = memo(function Artifact({ partId }: ArtifactProps) {
       <AnimatePresence>
         {artifact.type !== 'bundled' && showActions && actions.length > 0 && (
           <motion.div
-            className="actions"
+            className='actions'
             initial={{ height: 0 }}
             animate={{ height: 'auto' }}
             exit={{ height: '0px' }}
             transition={{ duration: 0.15 }}
           >
-            <div className="h-px bg-bolt-elements-artifacts-borderColor" />
+            <div className='h-px bg-bolt-elements-artifacts-borderColor' />
 
-            <div className="bg-bolt-elements-actions-background p-5 text-left">
+            <div className='bg-bolt-elements-actions-background p-5 text-left'>
               <ActionList actions={actions} />
             </div>
           </motion.div>
@@ -143,7 +143,7 @@ function openArtifactInWorkbench(filePath: RelativePath) {
 const ActionList = memo(function ActionList({ actions }: ActionListProps) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.15 }}>
-      <ul className="list-none space-y-2.5">
+      <ul className='list-none space-y-2.5'>
         {actions.map((action, index) => {
           const { status, type } = action;
           if (type !== 'file') {
@@ -161,14 +161,14 @@ const ActionList = memo(function ActionList({ actions }: ActionListProps) {
             <motion.li
               key={index}
               variants={actionVariants}
-              initial="hidden"
-              animate="visible"
+              initial='hidden'
+              animate='visible'
               transition={{
                 duration: 0.2,
                 ease: cubicEasingFn,
               }}
             >
-              <div className="flex items-center gap-1.5 text-sm">
+              <div className='flex items-center gap-1.5 text-sm'>
                 <div className={classNames('text-lg', getIconColor(action.status))}>
                   {status === 'running' ? (
                     <Spinner />
@@ -183,7 +183,7 @@ const ActionList = memo(function ActionList({ actions }: ActionListProps) {
                 <div>
                   {message}{' '}
                   <code
-                    className="cursor-pointer rounded-md bg-bolt-elements-artifacts-inlineCode-background px-1.5 py-1 text-bolt-elements-artifacts-inlineCode-text text-bolt-elements-item-contentAccent hover:underline"
+                    className='cursor-pointer rounded-md bg-bolt-elements-artifacts-inlineCode-background px-1.5 py-1 text-bolt-elements-artifacts-inlineCode-text text-bolt-elements-item-contentAccent hover:underline'
                     onClick={() => openArtifactInWorkbench(action.filePath)}
                   >
                     {action.filePath}

@@ -73,23 +73,23 @@ export const ToolCall = memo(function ToolCall({ partId, toolCallId }: { partId:
     return null;
   }
   return (
-    <div className="artifact flex w-full flex-col overflow-hidden rounded-lg border duration-150">
-      <div className="flex">
+    <div className='artifact flex w-full flex-col overflow-hidden rounded-lg border duration-150'>
+      <div className='flex'>
         <button
-          className="flex w-full items-stretch overflow-hidden bg-bolt-elements-artifacts-background hover:bg-bolt-elements-artifacts-backgroundHover"
+          className='flex w-full items-stretch overflow-hidden bg-bolt-elements-artifacts-background hover:bg-bolt-elements-artifacts-backgroundHover'
           onClick={() => {
             const showWorkbench = workbenchStore.showWorkbench.get();
             workbenchStore.showWorkbench.set(!showWorkbench);
           }}
         >
-          <div className="w-full p-3.5 px-5 text-left">
-            <div className="flex items-center gap-1.5">
-              <div className="w-full text-sm font-medium leading-5 text-content-primary">{title}</div>
+          <div className='w-full p-3.5 px-5 text-left'>
+            <div className='flex items-center gap-1.5'>
+              <div className='w-full text-sm font-medium leading-5 text-content-primary'>{title}</div>
               {icon}
             </div>
           </div>
         </button>
-        <div className="w-px bg-bolt-elements-artifacts-borderColor" />
+        <div className='w-px bg-bolt-elements-artifacts-borderColor' />
         <AnimatePresence>
           {artifact.type !== 'bundled' && parsed.toolName !== 'getConvexDeploymentName' && (
             <motion.button
@@ -97,11 +97,11 @@ export const ToolCall = memo(function ToolCall({ partId, toolCallId }: { partId:
               animate={{ width: 'auto' }}
               exit={{ width: 0 }}
               transition={{ duration: 0.15, ease: cubicEasingFn }}
-              className="bg-bolt-elements-artifacts-background hover:bg-bolt-elements-artifacts-backgroundHover"
+              className='bg-bolt-elements-artifacts-background hover:bg-bolt-elements-artifacts-backgroundHover'
               disabled={parsed.state === 'partial-call'}
               onClick={toggleAction}
             >
-              <div className="p-4 text-content-primary">{showAction ? <CaretUpIcon /> : <CaretDownIcon />}</div>
+              <div className='p-4 text-content-primary'>{showAction ? <CaretUpIcon /> : <CaretDownIcon />}</div>
             </motion.button>
           )}
         </AnimatePresence>
@@ -109,21 +109,21 @@ export const ToolCall = memo(function ToolCall({ partId, toolCallId }: { partId:
       <AnimatePresence>
         {showAction && (
           <motion.div
-            className="actions"
+            className='actions'
             initial={{ height: 0 }}
             animate={{ height: 'auto' }}
             exit={{ height: '0px' }}
             transition={{ duration: 0.15 }}
           >
-            <div className="h-px bg-bolt-elements-artifacts-borderColor" />
-            <div className="bg-bolt-elements-actions-background p-5 text-left">
+            <div className='h-px bg-bolt-elements-artifacts-borderColor' />
+            <div className='bg-bolt-elements-actions-background p-5 text-left'>
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
               >
-                <ul className="list-none space-y-2.5">
+                <ul className='list-none space-y-2.5'>
                   <ToolUseContents artifact={artifact} invocation={parsed} />
                 </ul>
               </motion.div>
@@ -166,7 +166,7 @@ const ToolUseContents = memo(function ToolUseContents({
     }
     default: {
       // Fallback for other tool types
-      return <pre className="overflow-x-auto whitespace-pre-wrap">{JSON.stringify(invocation, null, 2)}</pre>;
+      return <pre className='overflow-x-auto whitespace-pre-wrap'>{JSON.stringify(invocation, null, 2)}</pre>;
     }
   }
 });
@@ -249,8 +249,8 @@ const Terminal = memo(
     }, []);
 
     return (
-      <div className="overflow-hidden rounded-lg border bg-bolt-elements-terminals-background font-mono text-sm text-content-primary">
-        <div className="h-40" ref={terminalElementRef} />
+      <div className='overflow-hidden rounded-lg border bg-bolt-elements-terminals-background font-mono text-sm text-content-primary'>
+        <div className='h-40' ref={terminalElementRef} />
       </div>
     );
   }),
@@ -382,7 +382,7 @@ function toolTitle(invocation: ConvexToolInvocation): React.ReactNode {
       let renderedPath = 'a file';
       if (invocation.state === 'result' && invocation.result.startsWith('Directory:')) {
         verb = 'List';
-        icon = <FolderIcon className="size-4" />;
+        icon = <FolderIcon className='size-4' />;
         renderedPath = 'a directory';
       }
       let extra = '';
@@ -395,8 +395,8 @@ function toolTitle(invocation: ConvexToolInvocation): React.ReactNode {
         renderedPath = getRelativePath(args.data.path) || '/home/project';
       }
       return (
-        <div className="flex items-center gap-2">
-          <div className="text-content-secondary">{icon}</div>
+        <div className='flex items-center gap-2'>
+          <div className='text-content-secondary'>{icon}</div>
           <span>
             {verb} {renderedPath}
             {extra}
@@ -414,14 +414,14 @@ function toolTitle(invocation: ConvexToolInvocation): React.ReactNode {
         if (!args.success) {
           return `Failed to install dependencies`;
         }
-        return <span className="font-mono text-sm">{`npm i ${args.data.packages}`}</span>;
+        return <span className='font-mono text-sm'>{`npm i ${args.data.packages}`}</span>;
       }
     }
     case 'deploy': {
       if (invocation.state === 'partial-call' || invocation.state === 'call') {
         return (
-          <div className="flex items-center gap-2">
-            <img className="mr-1 size-4" height="16" width="16" src="/icons/TypeScript.svg" alt="TypeScript" />
+          <div className='flex items-center gap-2'>
+            <img className='mr-1 size-4' height='16' width='16' src='/icons/TypeScript.svg' alt='TypeScript' />
             <span>Running TypeScript checks...</span>
           </div>
         );
@@ -431,14 +431,14 @@ function toolTitle(invocation: ConvexToolInvocation): React.ReactNode {
           invocation.result.includes(`[${outputLabels.frontendTypecheck}]`)
         ) {
           return (
-            <div className="flex items-center gap-2">
-              <img className="mr-1 size-4" height="16" width="16" src="/icons/TypeScript.svg" alt="TypeScript" />
+            <div className='flex items-center gap-2'>
+              <img className='mr-1 size-4' height='16' width='16' src='/icons/TypeScript.svg' alt='TypeScript' />
               <span>Typecheck failed</span>
             </div>
           );
         } else {
           return (
-            <div className="flex items-center gap-2">
+            <div className='flex items-center gap-2'>
               <span>Failed to push to Convex</span>
             </div>
           );
@@ -446,8 +446,8 @@ function toolTitle(invocation: ConvexToolInvocation): React.ReactNode {
       }
 
       return (
-        <div className="flex items-center gap-2">
-          <img className="mr-1 size-4" height="16" width="16" src="/icons/Convex.svg" alt="Convex" />
+        <div className='flex items-center gap-2'>
+          <img className='mr-1 size-4' height='16' width='16' src='/icons/Convex.svg' alt='Convex' />
           <span>Pushed functions to Convex</span>
         </div>
       );
@@ -459,8 +459,8 @@ function toolTitle(invocation: ConvexToolInvocation): React.ReactNode {
         renderedPath = args.data.path;
       }
       return (
-        <div className="flex items-center gap-2">
-          <Pencil1Icon className="text-content-secondary" />
+        <div className='flex items-center gap-2'>
+          <Pencil1Icon className='text-content-secondary' />
           <span>Edited {renderedPath}</span>
         </div>
       );
@@ -471,8 +471,8 @@ function toolTitle(invocation: ConvexToolInvocation): React.ReactNode {
         return 'Looking up documentation...';
       }
       return (
-        <div className="flex items-center gap-2">
-          <FileIcon className="text-content-secondary" />
+        <div className='flex items-center gap-2'>
+          <FileIcon className='text-content-secondary' />
           <span>Looked up documentation for: {args.data.docs.join(', ')}</span>
         </div>
       );
@@ -483,9 +483,9 @@ function toolTitle(invocation: ConvexToolInvocation): React.ReactNode {
         return 'Adding environment variables...';
       }
       return (
-        <div className="flex items-center gap-2">
-          <ExclamationTriangleIcon className="text-content-warning" />
-          <span className="font-medium text-content-warning">Action Required: Add Environment Variables</span>
+        <div className='flex items-center gap-2'>
+          <ExclamationTriangleIcon className='text-content-warning' />
+          <span className='font-medium text-content-warning'>Action Required: Add Environment Variables</span>
         </div>
       );
     }
@@ -496,8 +496,8 @@ function toolTitle(invocation: ConvexToolInvocation): React.ReactNode {
         return 'Failed to get Convex deployment name';
       } else {
         return (
-          <div className="flex items-center gap-2">
-            <img className="mr-1 size-4" height="16" width="16" src="/icons/Convex.svg" alt="Convex" />
+          <div className='flex items-center gap-2'>
+            <img className='mr-1 size-4' height='16' width='16' src='/icons/Convex.svg' alt='Convex' />
             <span>Got Convex deployment name: {invocation.result}</span>
           </div>
         );
@@ -518,7 +518,7 @@ function ViewTool({ invocation }: { invocation: ConvexToolInvocation }) {
   }
   if (invocation.result.startsWith('Error:')) {
     return (
-      <div className="overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary">
+      <div className='overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary'>
         <pre>{invocation.result}</pre>
       </div>
     );
@@ -528,13 +528,13 @@ function ViewTool({ invocation }: { invocation: ConvexToolInvocation }) {
   if (invocation.result.startsWith('Directory:')) {
     const items = invocation.result.split('\n').slice(1);
     return (
-      <div className="space-y-1 rounded-lg border p-4 font-mono text-sm text-content-primary">
+      <div className='space-y-1 rounded-lg border p-4 font-mono text-sm text-content-primary'>
         {items.map((item: string, i: number) => {
           const isDir = item.includes('(dir)');
           const trimmed = item.replace('(dir)', '').replace('(file)', '').replace('- ', '').trim();
           return (
-            <div key={i} className="flex items-center gap-2">
-              {isDir ? <FolderIcon className="size-4" /> : <FileIcon />}
+            <div key={i} className='flex items-center gap-2'>
+              {isDir ? <FolderIcon className='size-4' /> : <FileIcon />}
               {trimmed}
             </div>
           );
@@ -601,16 +601,16 @@ const LineNumberViewer = memo(function LineNumberViewer({
   }, []);
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary">
-      <div className="max-h-[400px] overflow-auto">
-        <table className="w-full border-collapse">
+    <div className='overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary'>
+      <div className='max-h-[400px] overflow-auto'>
+        <table className='w-full border-collapse'>
           <tbody>
             {lines.map((line: string, i: number) => (
-              <tr key={i} className="group">
-                <td className="w-12 select-none border-r bg-bolt-elements-background-depth-1 px-4 py-1 text-right text-content-tertiary">
+              <tr key={i} className='group'>
+                <td className='w-12 select-none border-r bg-bolt-elements-background-depth-1 px-4 py-1 text-right text-content-tertiary'>
                   {i + startLineNumber}
                 </td>
-                <td className="whitespace-pre py-1 group-hover:bg-bolt-elements-background-depth-2">
+                <td className='whitespace-pre py-1 group-hover:bg-bolt-elements-background-depth-2'>
                   <span
                     dangerouslySetInnerHTML={{
                       __html: highlighter
@@ -646,14 +646,14 @@ function EditTool({ invocation }: { invocation: ConvexToolInvocation }) {
     return null;
   }
   return (
-    <div className="overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary">
-      <div className="space-y-4 p-4">
-        <div className="space-y-2 overflow-x-auto">
-          <div className="flex items-center gap-2">
-            <pre className="text-bolt-elements-icon-error">{args.data.old}</pre>
+    <div className='overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary'>
+      <div className='space-y-4 p-4'>
+        <div className='space-y-2 overflow-x-auto'>
+          <div className='flex items-center gap-2'>
+            <pre className='text-bolt-elements-icon-error'>{args.data.old}</pre>
           </div>
-          <div className="flex items-center gap-2">
-            <pre className="text-bolt-elements-icon-success">{args.data.new}</pre>
+          <div className='flex items-center gap-2'>
+            <pre className='text-bolt-elements-icon-success'>{args.data.new}</pre>
           </div>
         </div>
       </div>
@@ -670,15 +670,15 @@ function LookupDocsTool({ invocation }: { invocation: ConvexToolInvocation }) {
   }
   if (invocation.result.startsWith('Error:')) {
     return (
-      <div className="overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary">
+      <div className='overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary'>
         <pre>{invocation.result}</pre>
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary">
-      <div className="max-h-[400px] overflow-auto p-4">
+    <div className='overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary'>
+      <div className='max-h-[400px] overflow-auto p-4'>
         <Markdown html>{invocation.result}</Markdown>
       </div>
     </div>
@@ -698,20 +698,20 @@ function AddEnvironmentVariablesTool({ invocation }: { invocation: ConvexToolInv
   }
   if (invocation.result.startsWith('Error:') || !args.success) {
     return (
-      <div className="overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary">
+      <div className='overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary'>
         <pre>{invocation.result}</pre>
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary">
-      <div className="space-y-2 p-4">
-        <div className="flex  gap-2">
+    <div className='overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary'>
+      <div className='space-y-2 p-4'>
+        <div className='flex  gap-2'>
           <span>Configure these environment variables in the Convex dashboard:</span>
           <button
-            className="flex items-center rounded-md bg-transparent p-1 text-content-primary hover:bg-bolt-elements-item-backgroundActive hover:text-bolt-elements-item-contentActive"
-            title="Open dashboard to add environment variables"
+            className='flex items-center rounded-md bg-transparent p-1 text-content-primary hover:bg-bolt-elements-item-backgroundActive hover:text-bolt-elements-item-contentActive'
+            title='Open dashboard to add environment variables'
             onClick={() => {
               openDashboardToPath('settings/environment-variables');
             }}
@@ -719,7 +719,7 @@ function AddEnvironmentVariablesTool({ invocation }: { invocation: ConvexToolInv
             <ExternalLinkIcon />
           </button>
         </div>
-        <ul className="list-disc pl-4">
+        <ul className='list-disc pl-4'>
           {args.data.envVarNames.map((name: string) => (
             <li key={name}>{name}</li>
           ))}
@@ -738,18 +738,18 @@ function GetConvexDeploymentNameTool({ invocation }: { invocation: ConvexToolInv
   }
   if (invocation.result.startsWith('Error:')) {
     return (
-      <div className="overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary">
+      <div className='overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary'>
         <pre>{invocation.result}</pre>
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary">
-      <div className="space-y-2 p-4">
-        <div className="flex items-center gap-2">
+    <div className='overflow-hidden rounded-lg border bg-bolt-elements-background-depth-1 font-mono text-sm text-content-primary'>
+      <div className='space-y-2 p-4'>
+        <div className='flex items-center gap-2'>
           <span>Convex Deployment Name:</span>
-          <code className="rounded bg-bolt-elements-background-depth-2 px-2 py-1 font-mono">{invocation.result}</code>
+          <code className='rounded bg-bolt-elements-background-depth-2 px-2 py-1 font-mono'>{invocation.result}</code>
         </div>
       </div>
     </div>

@@ -2,13 +2,13 @@ import { Loader, LoaderCircle } from 'lucide-react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-const spinnerVariants = cva('text-muted-foreground animate-spin', {
+const spinnerVariants = cva('animate-spin text-muted-foreground', {
   variants: {
     size: {
-      sm: 'h-4 w-4',
-      md: 'h-6 w-6',
-      lg: 'h-8 w-8',
-      xl: 'h-10 w-10',
+      sm: 'size-4',
+      md: 'size-6',
+      lg: 'size-8',
+      xl: 'size-10',
     },
   },
   defaultVariants: {

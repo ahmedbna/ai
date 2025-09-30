@@ -129,7 +129,7 @@ export function DeployButton() {
     case 'success': {
       if (status.updateCounter === currentCounter) {
         buttonText = 'Deployed';
-        icon = <CheckIcon className="text-bolt-elements-icon-success" />;
+        icon = <CheckIcon className='text-bolt-elements-icon-success' />;
       } else {
         buttonText = 'Redeploy';
         icon = <UpdateIcon />;
@@ -139,13 +139,13 @@ export function DeployButton() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className='flex items-center gap-2'>
       <Button
         disabled={isDisabled}
         onClick={handleDeploy}
         title={status.type === 'error' ? status.message : undefined}
-        variant="neutral"
-        size="xs"
+        variant='neutral'
+        size='xs'
         icon={icon}
         tip={(() => {
           switch (status.type) {
@@ -163,8 +163,8 @@ export function DeployButton() {
       {status.type === 'success' && convex && (
         <Button
           href={`https://${convex.deploymentName}.convex.app`}
-          target="_blank"
-          size="xs"
+          target='_blank'
+          size='xs'
           icon={<ExternalLinkIcon />}
         >
           View site

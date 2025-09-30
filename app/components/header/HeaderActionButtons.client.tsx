@@ -14,8 +14,8 @@ export function HeaderActionButtons({}: HeaderActionButtonsProps) {
   const canHideChat = showWorkbench || !showChat;
 
   return (
-    <div className="flex">
-      <div className="flex overflow-hidden">
+    <div className='flex'>
+      <div className='flex overflow-hidden'>
         <Button
           disabled={!canHideChat || isSmallViewport} // expand button is disabled on mobile as it's not needed
           tip={!canHideChat ? 'Cannot hide chat while code is closed' : showChat ? 'Hide chat' : 'Show chat'}
@@ -24,9 +24,9 @@ export function HeaderActionButtons({}: HeaderActionButtonsProps) {
               chatStore.setKey('showChat', !showChat);
             }
           }}
-          variant="neutral"
-          className="rounded-r-none border-r-0"
-          icon={<ChatBubbleIcon className="my-px" />}
+          variant='neutral'
+          className='rounded-r-none border-r-0'
+          icon={<ChatBubbleIcon className='my-px' />}
         />
         <Button
           onClick={() => {
@@ -36,9 +36,9 @@ export function HeaderActionButtons({}: HeaderActionButtonsProps) {
 
             workbenchStore.showWorkbench.set(!showWorkbench);
           }}
-          variant="neutral"
-          className="rounded-l-none"
-          icon={<CodeIcon className="my-px" />}
+          variant='neutral'
+          className='rounded-l-none'
+          icon={<CodeIcon className='my-px' />}
           tip={showWorkbench ? 'Hide workbench' : 'Show workbench'}
         />
       </div>

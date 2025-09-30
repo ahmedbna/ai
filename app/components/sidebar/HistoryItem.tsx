@@ -34,22 +34,22 @@ export function HistoryItem({ item, handleDeleteClick }: HistoryItemProps) {
       )}
     >
       {editing ? (
-        <form onSubmit={handleSubmit} className="flex flex-1 items-center gap-2">
+        <form onSubmit={handleSubmit} className='flex flex-1 items-center gap-2'>
           <TextInput
             labelHidden
-            id="description"
-            className="-ml-1.5 -mt-1.5"
+            id='description'
+            className='-ml-1.5 -mt-1.5'
             autoFocus
             value={currentDescription}
             onChange={handleChange}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
           />
-          <Button type="submit" variant="neutral" icon={<CheckIcon />} size="xs" inline onClick={handleSubmit} />
+          <Button type='submit' variant='neutral' icon={<CheckIcon />} size='xs' inline onClick={handleSubmit} />
         </form>
       ) : (
-        <a href={`/chat/${item.urlId ?? item.initialId}`} className="relative flex w-full truncate">
-          <span className="truncate pr-24">{description}</span>
+        <a href={`/chat/${item.urlId ?? item.initialId}`} className='relative flex w-full truncate'>
+          <span className='truncate pr-24'>{description}</span>
           <div
             className={classNames(
               {
@@ -59,9 +59,9 @@ export function HistoryItem({ item, handleDeleteClick }: HistoryItemProps) {
               'absolute right-0 top-0 bottom-0 flex items-center group-hover:bg-[var(--bolt-elements-sidebar-active-item-background)] px-2 transition-colors',
             )}
           >
-            <div className="flex items-center gap-2.5 text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 dark:text-gray-500">
+            <div className='flex items-center gap-2.5 text-gray-400 opacity-0 transition-opacity group-hover:opacity-100 dark:text-gray-500'>
               <ChatActionButton
-                toolTipContent="Rename"
+                toolTipContent='Rename'
                 icon={<Pencil1Icon />}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -70,7 +70,7 @@ export function HistoryItem({ item, handleDeleteClick }: HistoryItemProps) {
                 }}
               />
               <ChatActionButton
-                toolTipContent="Delete"
+                toolTipContent='Delete'
                 icon={<TrashIcon />}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -99,10 +99,10 @@ const ChatActionButton = ({
 }) => {
   return (
     <Button
-      variant="neutral"
+      variant='neutral'
       icon={icon}
       inline
-      size="xs"
+      size='xs'
       tip={toolTipContent}
       className={className}
       onClick={onClick}

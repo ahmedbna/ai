@@ -78,27 +78,27 @@ export function SubchatBar({
     })) ?? [];
 
   return (
-    <div className="sticky top-0 z-[2] mx-auto mb-4 w-full max-w-chat pt-4">
+    <div className='sticky top-0 z-[2] mx-auto mb-4 w-full max-w-chat pt-4'>
       {isRewindModalOpen && (
         <Modal
           onClose={() => {
             setIsRewindModalOpen(false);
           }}
-          title={<div className="sr-only">Rewind to previous chat</div>}
+          title={<div className='sr-only'>Rewind to previous chat</div>}
         >
-          <div className="flex flex-col gap-2">
+          <div className='flex flex-col gap-2'>
             <h2>Rewind to previous chat</h2>
-            <p className="text-sm text-content-primary">
+            <p className='text-sm text-content-primary'>
               This will undo all changes after this chat. Your current work will be lost and cannot be recovered.
             </p>
-            <p className="text-sm text-content-primary">
+            <p className='text-sm text-content-primary'>
               Your Convex data will be unaffected, so you may need to either clear or migrate your data in order to use
               this previous version.
             </p>
-            <p className="text-sm text-content-primary">Are you sure you want to continue?</p>
-            <div className="flex justify-end gap-2">
+            <p className='text-sm text-content-primary'>Are you sure you want to continue?</p>
+            <div className='flex justify-end gap-2'>
               <Button
-                variant="neutral"
+                variant='neutral'
                 onClick={() => {
                   setIsRewindModalOpen(false);
                 }}
@@ -106,7 +106,7 @@ export function SubchatBar({
                 Cancel
               </Button>
               <Button
-                variant="danger"
+                variant='danger'
                 onClick={() => {
                   setIsRewindModalOpen(false);
                   handleRewind(currentSubchatIndex);
@@ -123,21 +123,21 @@ export function SubchatBar({
           onClose={() => {
             setIsAddChatModalOpen(false);
           }}
-          title="Create new chat"
+          title='Create new chat'
         >
-          <div className="flex flex-col gap-2">
-            <p className="text-sm text-content-primary">
+          <div className='flex flex-col gap-2'>
+            <p className='text-sm text-content-primary'>
               This will create a new chat with fresh context. This can be useful for starting work on a new feature of
               your app, or fixing a bug unrelated to your recent changes. You can always navigate back to previous chats
               using{' '}
-              <ArrowLeftIcon className="inline size-5 rounded border border-content-secondary/20 bg-background-secondary p-0.5" />{' '}
-              <ArrowRightIcon className="inline size-5 rounded border border-content-secondary/20 bg-background-secondary p-0.5" />{' '}
+              <ArrowLeftIcon className='inline size-5 rounded border border-content-secondary/20 bg-background-secondary p-0.5' />{' '}
+              <ArrowRightIcon className='inline size-5 rounded border border-content-secondary/20 bg-background-secondary p-0.5' />{' '}
               to view your chat history, but you won&apos;t be able to send more messages in previous chats.
             </p>
-            <p className="text-sm text-content-primary">Are you sure you want to continue?</p>
-            <div className="flex justify-end gap-2">
+            <p className='text-sm text-content-primary'>Are you sure you want to continue?</p>
+            <div className='flex justify-end gap-2'>
               <Button
-                variant="neutral"
+                variant='neutral'
                 onClick={() => {
                   setIsAddChatModalOpen(false);
                 }}
@@ -145,7 +145,7 @@ export function SubchatBar({
                 Cancel
               </Button>
               <Button
-                variant="primary"
+                variant='primary'
                 onClick={() => {
                   setIsAddChatModalOpen(false);
                   handleCreateSubchat();
@@ -158,14 +158,14 @@ export function SubchatBar({
         </Modal>
       )}
 
-      <div className="flex items-center justify-between gap-2 rounded-lg border border-content-secondary/20 bg-background-secondary/90 px-4 py-2 backdrop-blur-sm">
-        <div className="flex min-w-0 grow items-center gap-2">
+      <div className='bg-background-secondary/90 flex items-center justify-between gap-2 rounded-lg border border-content-secondary/20 px-4 py-2 backdrop-blur-sm'>
+        <div className='flex min-w-0 grow items-center gap-2'>
           <div className={classNames('flex rounded-lg bg-background-secondary border')}>
             <Button
-              size="xs"
-              variant="neutral"
+              size='xs'
+              variant='neutral'
               className={classNames('rounded-r-none border-0 border-border-transparent dark:border-border-transparent')}
-              icon={<ArrowLeftIcon className="my-px" />}
+              icon={<ArrowLeftIcon className='my-px' />}
               inline
               tip={
                 isStreaming
@@ -182,10 +182,10 @@ export function SubchatBar({
               }}
             />
             <Button
-              size="xs"
-              variant="neutral"
+              size='xs'
+              variant='neutral'
               className={classNames('rounded-l-none border-0 border-border-transparent dark:border-border-transparent')}
-              icon={<ArrowRightIcon className="my-px" />}
+              icon={<ArrowRightIcon className='my-px' />}
               inline
               tip={
                 isStreaming
@@ -203,16 +203,16 @@ export function SubchatBar({
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className='flex items-center gap-2'>
             <Combobox
-              searchPlaceholder="Search chats..."
-              label="Select chat"
+              searchPlaceholder='Search chats...'
+              label='Select chat'
               labelHidden
-              className="max-w-full"
-              buttonClasses="w-full"
-              innerButtonClasses="border-none bg-transparent"
+              className='max-w-full'
+              buttonClasses='w-full'
+              innerButtonClasses='border-none bg-transparent'
               disabled={isStreaming || !isSubchatLoaded}
-              optionsWidth="fit"
+              optionsWidth='fit'
               options={subchatOptions.reverse()}
               selectedOption={currentSubchatIndex}
               setSelectedOption={(subchatIndex) => {
@@ -241,10 +241,10 @@ export function SubchatBar({
                 const { subchat } = option;
 
                 return (
-                  <div className="flex max-w-96 flex-col gap-1 truncate">
-                    <div className="truncate text-sm">{option.label}</div>
+                  <div className='flex max-w-96 flex-col gap-1 truncate'>
+                    <div className='truncate text-sm'>{option.label}</div>
                     {!inButton && (
-                      <div className="text-left">
+                      <div className='text-left'>
                         <TimestampDistance date={new Date(subchat.updatedAt)} />
                       </div>
                     )}
@@ -255,13 +255,13 @@ export function SubchatBar({
             {!isSubchatLoaded && <Spinner />}
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className='flex items-center gap-2'>
           {currentSubchatIndex >= (subchats?.length ?? 1) - 1 && sessionId ? (
             <Button
-              size="xs"
-              variant="neutral"
+              size='xs'
+              variant='neutral'
               className={classNames('flex rounded-lg bg-background-secondary border')}
-              icon={<PlusIcon className="my-px" />}
+              icon={<PlusIcon className='my-px' />}
               disabled={disableChatMessage || isStreaming || !isSubchatLoaded || areFilesSaving}
               inline
               tip={
@@ -279,10 +279,10 @@ export function SubchatBar({
             />
           ) : (
             <Button
-              size="xs"
-              variant="neutral"
+              size='xs'
+              variant='neutral'
               className={classNames('flex rounded-lg bg-background-secondary border')}
-              icon={<ResetIcon className="my-px" />}
+              icon={<ResetIcon className='my-px' />}
               inline
               tip={!isSubchatLoaded ? 'Loading...' : 'Rewind to this chat'}
               disabled={currentSubchatIndex < 0 || !isSubchatLoaded}

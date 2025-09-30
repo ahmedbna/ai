@@ -70,7 +70,7 @@ export default function ShowRoute() {
   };
 
   return (
-    <div className="flex size-full flex-col bg-bolt-elements-background-depth-1">
+    <div className='flex size-full flex-col bg-bolt-elements-background-depth-1'>
       <Show preloadedShareQuery={shareQuery} />
     </div>
   );

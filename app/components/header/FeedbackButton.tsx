@@ -16,14 +16,14 @@ export function FeedbackButton({ showInMenu }: { showInMenu: boolean }) {
   if (showInMenu) {
     return (
       <MenuItem action={handleFeedback}>
-        <ChatBubbleIcon className="text-content-secondary" />
+        <ChatBubbleIcon className='text-content-secondary' />
         <span>Submit Feedback</span>
       </MenuItem>
     );
   }
 
   return (
-    <Button variant="neutral" size="xs" className="hidden sm:flex" onClick={handleFeedback} icon={<ChatBubbleIcon />}>
+    <Button variant='neutral' size='xs' className='hidden sm:flex' onClick={handleFeedback} icon={<ChatBubbleIcon />}>
       Submit Feedback
     </Button>
   );

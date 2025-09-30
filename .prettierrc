@@ -1,18 +1,12 @@
 {
   "printWidth": 120,
   "singleQuote": true,
+  "jsxSingleQuote": true,
   "overrides": [
     {
       "files": "template/**/*",
       "options": {
-        "printWidth": 80,
-        "singleQuote": false
-      }
-    },
-    {
-      "files": "convex/**/*",
-      "options": {
-        "singleQuote": false
+        "printWidth": 80
       }
     }
   ]

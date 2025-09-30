@@ -75,7 +75,7 @@ export const FileBreadcrumb = memo<FileBreadcrumbProps>(function FileBreadcrumb(
   }
 
   return (
-    <div className="flex">
+    <div className='flex'>
       {pathSegments.map((segment, index) => {
         const isLast = index === pathSegments.length - 1;
 
@@ -88,7 +88,7 @@ export const FileBreadcrumb = memo<FileBreadcrumbProps>(function FileBreadcrumb(
         const isActive = activeIndex === index;
 
         return (
-          <div key={index} className="relative flex items-center">
+          <div key={index} className='relative flex items-center'>
             <DropdownMenu.Root open={isActive} modal={false}>
               <DropdownMenu.Trigger asChild>
                 <span
@@ -106,26 +106,26 @@ export const FileBreadcrumb = memo<FileBreadcrumbProps>(function FileBreadcrumb(
                   {segment}
                 </span>
               </DropdownMenu.Trigger>
-              {index > 0 && !isLast && <ChevronRightIcon className="mx-1 inline-block" />}
+              {index > 0 && !isLast && <ChevronRightIcon className='mx-1 inline-block' />}
               <AnimatePresence>
                 {isActive && (
                   <DropdownMenu.Portal>
                     <DropdownMenu.Content
-                      className="z-file-tree-breadcrumb"
+                      className='z-file-tree-breadcrumb'
                       asChild
-                      align="start"
-                      side="bottom"
+                      align='start'
+                      side='bottom'
                       avoidCollisions={false}
                     >
                       <motion.div
                         ref={contextMenuRef}
-                        initial="close"
-                        animate="open"
-                        exit="close"
+                        initial='close'
+                        animate='open'
+                        exit='close'
                         variants={contextMenuVariants}
                       >
-                        <div className="overflow-hidden rounded-lg">
-                          <div className="max-h-[50vh] min-w-[300px] overflow-scroll rounded-lg border bg-bolt-elements-background-depth-1 shadow-sm">
+                        <div className='overflow-hidden rounded-lg'>
+                          <div className='max-h-[50vh] min-w-[300px] overflow-scroll rounded-lg border bg-bolt-elements-background-depth-1 shadow-sm'>
                             <FileTree
                               files={files}
                               hideRoot
@@ -140,7 +140,7 @@ export const FileBreadcrumb = memo<FileBreadcrumbProps>(function FileBreadcrumb(
                             />
                           </div>
                         </div>
-                        <DropdownMenu.Arrow className="fill-border-transparent" />
+                        <DropdownMenu.Arrow className='fill-border-transparent' />
                       </motion.div>
                     </DropdownMenu.Content>
                   </DropdownMenu.Portal>

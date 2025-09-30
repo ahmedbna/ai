@@ -149,7 +149,7 @@ export const Menu = memo(({ isOpen, onClose }: MenuProps) => {
     <>
       <motion.div
         ref={menuRef}
-        initial="closed"
+        initial='closed'
         animate={isOpen ? 'open' : 'closed'}
         variants={menuVariants}
         style={{ width: '340px' }}
@@ -160,36 +160,36 @@ export const Menu = memo(({ isOpen, onClose }: MenuProps) => {
           'z-30',
         )}
       >
-        <div className="flex h-[var(--header-height)] items-center justify-between border-b px-4"></div>
+        <div className='flex h-[var(--header-height)] items-center justify-between border-b px-4'></div>
 
-        <div className="flex size-full flex-1 flex-col overflow-hidden">
-          <div className="space-y-3 p-4">
-            <Button className="w-fit" href="/" icon={<PlusIcon />}>
+        <div className='flex size-full flex-1 flex-col overflow-hidden'>
+          <div className='space-y-3 p-4'>
+            <Button className='w-fit' href='/' icon={<PlusIcon />}>
               Start new project
             </Button>
-            <div className="relative w-full">
+            <div className='relative w-full'>
               <TextInput
-                id="search-projects"
-                type="search"
-                placeholder="Search projects..."
+                id='search-projects'
+                type='search'
+                placeholder='Search projects...'
                 onChange={handleSearchChange}
-                aria-label="Search projects"
+                aria-label='Search projects'
               />
             </div>
           </div>
-          <div className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400">Your Projects</div>
-          <div className="flex-1 overflow-auto px-3 pb-3">
+          <div className='px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400'>Your Projects</div>
+          <div className='flex-1 overflow-auto px-3 pb-3'>
             {filteredList.length === 0 && (
-              <div className="px-4 text-sm text-gray-500 dark:text-gray-400">
+              <div className='px-4 text-sm text-gray-500 dark:text-gray-400'>
                 {list.length === 0 ? 'No previous projects' : 'No matches found'}
               </div>
             )}
             {binDates(filteredList).map(({ category, items }) => (
-              <div key={category} className="mt-2 space-y-1 first:mt-0">
-                <div className="sticky top-0 z-10 bg-[var(--bolt-elements-sidebar-background)] px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400">
+              <div key={category} className='mt-2 space-y-1 first:mt-0'>
+                <div className='sticky top-0 z-10 bg-[var(--bolt-elements-sidebar-background)] px-3 py-1 text-xs font-medium text-gray-500 dark:text-gray-400'>
                   {category}
                 </div>
-                <div className="space-y-0.5 pr-1">
+                <div className='space-y-0.5 pr-1'>
                   {items.map((item) => (
                     <HistoryItem key={item.initialId} item={item} handleDeleteClick={handleDeleteClick} />
                   ))}
@@ -207,31 +207,31 @@ export const Menu = memo(({ isOpen, onClose }: MenuProps) => {
                   closeDialog();
                   return Promise.resolve();
                 }}
-                dialogTitle="Delete Chat"
+                dialogTitle='Delete Chat'
                 validationText={dialogContent?.item.description || 'New chat...'}
                 dialogBody={
                   <>
                     <p>
                       You are about to delete{' '}
-                      <span className="font-medium text-content-primary">
+                      <span className='font-medium text-content-primary'>
                         {dialogContent?.item.description || 'New chat...'}
                       </span>
                     </p>
                     {convexProjectInfo?.kind === 'connected' && (
-                      <div className="mt-4 flex items-center gap-2">
+                      <div className='mt-4 flex items-center gap-2'>
                         <Checkbox
-                          id="delete-convex-project"
+                          id='delete-convex-project'
                           checked={shouldDeleteConvexProject}
                           onChange={() => setShouldDeleteConvexProject(!shouldDeleteConvexProject)}
                         />
 
-                        <label htmlFor="delete-convex-project" className="text-pretty text-content-secondary">
+                        <label htmlFor='delete-convex-project' className='text-pretty text-content-secondary'>
                           Also delete the associated Convex project (
                           <a
                             href={`https://dashboard.convex.dev/p/${convexProjectInfo.projectSlug}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-content-link hover:underline"
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='text-content-link hover:underline'
                           >
                             {convexProjectInfo.projectSlug}
                           </a>
@@ -244,7 +244,7 @@ export const Menu = memo(({ isOpen, onClose }: MenuProps) => {
               />
             )}
           </div>
-          <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 dark:border-gray-800">
+          <div className='flex items-center justify-between border-t border-gray-200 px-4 py-3 dark:border-gray-800'>
             <ThemeSwitch />
           </div>
         </div>

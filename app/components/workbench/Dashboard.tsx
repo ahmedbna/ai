@@ -54,16 +54,16 @@ export const Dashboard = memo(function Dashboard() {
   }, [deploymentUrl, token, deploymentName]);
 
   return (
-    <div className="flex size-full flex-col">
-      <div className="flex items-center gap-1.5 bg-bolt-elements-background-depth-2 p-2">
+    <div className='flex size-full flex-col'>
+      <div className='flex items-center gap-1.5 bg-bolt-elements-background-depth-2 p-2'>
         <div
-          className="flex grow items-center gap-1 rounded-full border bg-bolt-elements-preview-addressBar-background px-3 py-1 text-sm text-bolt-elements-preview-addressBar-text focus-within:border-border-selected focus-within:bg-bolt-elements-preview-addressBar-backgroundActive focus-within:text-bolt-elements-preview-addressBar-textActive
-          hover:bg-bolt-elements-preview-addressBar-backgroundHover hover:focus-within:bg-bolt-elements-preview-addressBar-backgroundActive"
+          className='focus-within:border-border-selected flex grow items-center gap-1 rounded-full border bg-bolt-elements-preview-addressBar-background px-3 py-1 text-sm text-bolt-elements-preview-addressBar-text focus-within:bg-bolt-elements-preview-addressBar-backgroundActive focus-within:text-bolt-elements-preview-addressBar-textActive
+          hover:bg-bolt-elements-preview-addressBar-backgroundHover hover:focus-within:bg-bolt-elements-preview-addressBar-backgroundActive'
         >
-          <input ref={inputRef} className="w-full bg-transparent outline-none" type="text" value={shownUrl} disabled />
+          <input ref={inputRef} className='w-full bg-transparent outline-none' type='text' value={shownUrl} disabled />
         </div>
         <Button
-          variant="neutral"
+          variant='neutral'
           inline
           icon={<ExternalLinkIcon />}
           onClick={() => {
@@ -72,12 +72,12 @@ export const Dashboard = memo(function Dashboard() {
           aria-label={`Open dashboard in new tab`}
         />
       </div>
-      <div className="flex-1 border-t">
+      <div className='flex-1 border-t'>
         <iframe
           ref={iframeRef}
-          className="sentry-mask size-full border-none bg-white"
+          className='sentry-mask size-full border-none bg-white'
           src={actualUrl}
-          allow="clipboard-write"
+          allow='clipboard-write'
         />
       </div>
     </div>

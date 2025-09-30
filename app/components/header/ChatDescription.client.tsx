@@ -20,31 +20,31 @@ export function ChatDescription() {
   }
 
   return (
-    <div className="flex items-center justify-center">
+    <div className='flex items-center justify-center'>
       {editing ? (
-        <form onSubmit={handleSubmit} className="flex items-center justify-center">
+        <form onSubmit={handleSubmit} className='flex items-center justify-center'>
           <TextInput
             labelHidden
             autoFocus
-            className="mr-2"
-            id="chat-description"
+            className='mr-2'
+            id='chat-description'
             value={currentDescription}
             onChange={handleChange}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
           />
-          <Button variant="neutral" onClick={handleSubmit} icon={<CheckIcon />} inline size="xs" tip="Save title" />
+          <Button variant='neutral' onClick={handleSubmit} icon={<CheckIcon />} inline size='xs' tip='Save title' />
         </form>
       ) : (
         <>
-          <span className="mr-1 max-w-64 truncate">{currentDescription}</span>
+          <span className='mr-1 max-w-64 truncate'>{currentDescription}</span>
           <Button
-            variant="neutral"
+            variant='neutral'
             onClick={toggleEditMode}
             icon={<Pencil1Icon />}
             inline
-            size="xs"
-            tip="Rename chat"
+            size='xs'
+            tip='Rename chat'
           />
         </>
       )}

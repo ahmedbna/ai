@@ -19,13 +19,13 @@ export const ThemeSwitch = memo(function ThemeSwitch({ className }: ThemeSwitchP
   return (
     domLoaded && (
       <Button
-        variant="neutral"
+        variant='neutral'
         inline
-        aria-label="Toggle Theme"
+        aria-label='Toggle Theme'
         className={className}
         onClick={toggleTheme}
         tip={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-        tipSide="right"
+        tipSide='right'
         icon={theme === 'dark' ? <SunIcon /> : <MoonIcon />}
       />
     )

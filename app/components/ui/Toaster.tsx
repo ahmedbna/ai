@@ -5,5 +5,5 @@ import { themeStore } from '@/lib/stores/theme';
 
 export function Toaster() {
   const theme = useStore(themeStore);
-  return <SonnerToaster position="bottom-right" closeButton richColors theme={theme} />;
+  return <SonnerToaster position='bottom-right' closeButton richColors theme={theme} />;
 }

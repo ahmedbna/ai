@@ -62,11 +62,11 @@ export const CodeBlock = memo(function CodeBlock({
       >
         {!disableCopy && (
           <Button
-            variant="neutral"
-            icon={copied ? <CheckIcon className="text-util-success" /> : <ClipboardIcon />}
+            variant='neutral'
+            icon={copied ? <CheckIcon className='text-util-success' /> : <ClipboardIcon />}
             onClick={() => copyToClipboard()}
-            tip="Copy Code"
-            tipSide="top"
+            tip='Copy Code'
+            tipSide='top'
           />
         )}
       </div>

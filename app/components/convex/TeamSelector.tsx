@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 // Reusable icon for the team selector, similar to the original implementation
 function TeamIcon() {
-  return <img className="size-4" height="16" width="16" src="/icons/Convex.svg" alt="Team" />;
+  return <img className='size-4' height='16' width='16' src='/icons/Convex.svg' alt='Team' />;
 }
 
 export interface TeamSelectorProps {
@@ -35,28 +35,28 @@ export const TeamSelector = React.memo(function TeamSelector({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
-          role="combobox"
+          variant='outline'
+          role='combobox'
           aria-expanded={open}
-          className="w-fit justify-between gap-2 h-8 text-sm"
+          className='h-8 w-fit justify-between gap-2 text-sm'
           disabled={!teams}
         >
-          <div className="flex items-center gap-2">
+          <div className='flex items-center gap-2'>
             {selectedTeam && <TeamIcon />}
-            <span className="truncate max-w-[150px]">{selectedTeam?.name || 'Select a team...'}</span>
+            <span className='max-w-[150px] truncate'>{selectedTeam?.name || 'Select a team...'}</span>
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[250px] p-0" align="start">
+      <PopoverContent className='w-[250px] p-0' align='start'>
         <Command>
-          <CommandInput placeholder="Search teams..." />
+          <CommandInput placeholder='Search teams...' />
           <CommandList>
             <CommandEmpty>No team found.</CommandEmpty>
             <CommandGroup>
               {/* Header section to display title and description, as in the original component */}
-              <div className="flex flex-col gap-0.5 p-2 text-sm">
-                <h5 className="font-medium">Select Team</h5>
-                {description && <p className="text-xs text-muted-foreground">{description}</p>}
+              <div className='flex flex-col gap-0.5 p-2 text-sm'>
+                <h5 className='font-medium'>Select Team</h5>
+                {description && <p className='text-xs text-muted-foreground'>{description}</p>}
               </div>
               {teams?.map((team) => (
                 <CommandItem
@@ -68,7 +68,7 @@ export const TeamSelector = React.memo(function TeamSelector({
                   }}
                 >
                   <Check className={cn('mr-2 h-4 w-4', selectedTeamSlug === team.slug ? 'opacity-100' : 'opacity-0')} />
-                  <div className="truncate">{team.name}</div>
+                  <div className='truncate'>{team.name}</div>
                 </CommandItem>
               ))}
             </CommandGroup>

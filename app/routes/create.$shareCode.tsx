@@ -100,15 +100,15 @@ function ShareProjectContent() {
 
   if (chefAuthState.kind !== 'fullyLoggedIn') {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center p-4">
-        <div className="w-full max-w-md space-y-6 rounded-xl border bg-white p-8">
-          <div className="space-y-2 text-center">
-            <h1 className="text-center text-3xl font-bold">Sign in to Chef</h1>
-            <p className="text-base text-gray-500">
+      <div className='flex min-h-screen flex-col items-center justify-center p-4'>
+        <div className='w-full max-w-md space-y-6 rounded-xl border bg-white p-8'>
+          <div className='space-y-2 text-center'>
+            <h1 className='text-center text-3xl font-bold'>Sign in to Chef</h1>
+            <p className='text-base text-gray-500'>
               Please sign in to Chef to clone this project
               {getShareDescription?.description ? (
                 <>
-                  : <span className="font-bold">{getShareDescription.description}</span>
+                  : <span className='font-bold'>{getShareDescription.description}</span>
                 </>
               ) : (
                 ''
@@ -129,17 +129,17 @@ function ShareProjectContent() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <Sheet className="w-full max-w-md space-y-6 border p-8">
-        <div className="space-y-2 text-center">
-          <h1 className="text-center font-semibold">Clone Project</h1>
-          {getShareDescription?.description && <p className="text-base">{getShareDescription.description}</p>}
+    <div className='flex min-h-screen flex-col items-center justify-center p-4'>
+      <Sheet className='w-full max-w-md space-y-6 border p-8'>
+        <div className='space-y-2 text-center'>
+          <h1 className='text-center font-semibold'>Clone Project</h1>
+          {getShareDescription?.description && <p className='text-base'>{getShareDescription.description}</p>}
         </div>
 
-        <div className="flex flex-col items-center space-y-4">
-          <div className="space-y-2">
-            <h2 className="text-center">Select Team</h2>
-            <p className="text-center text-sm text-content-secondary">Choose where to clone this project</p>
+        <div className='flex flex-col items-center space-y-4'>
+          <div className='space-y-2'>
+            <h2 className='text-center'>Select Team</h2>
+            <p className='text-center text-sm text-content-secondary'>Choose where to clone this project</p>
           </div>
 
           {chefAuthState.kind === 'fullyLoggedIn' && (
@@ -148,7 +148,7 @@ function ShareProjectContent() {
         </div>
 
         <Button
-          className="flex w-full items-center justify-center gap-2 px-6 py-3"
+          className='flex w-full items-center justify-center gap-2 px-6 py-3'
           onClick={handleCloneChat}
           disabled={!selectedTeamSlug}
         >

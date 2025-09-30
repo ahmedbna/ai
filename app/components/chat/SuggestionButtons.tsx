@@ -14,8 +14,8 @@ export const SuggestionButtons = ({ chatStarted, onSuggestionClick, disabled }: 
   }
 
   return (
-    <div id="suggestions">
-      <div className="mt-6 flex flex-wrap justify-center gap-4">
+    <div id='suggestions'>
+      <div className='mt-6 flex flex-wrap justify-center gap-4'>
         {SUGGESTIONS.map((suggestion) => (
           <Button key={suggestion.title} onClick={() => onSuggestionClick?.(suggestion.prompt)} disabled={disabled}>
             {suggestion.title}

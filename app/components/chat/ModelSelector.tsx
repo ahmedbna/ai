@@ -35,7 +35,7 @@ export function displayModelProviderName(provider: ModelProvider) {
 }
 
 function svgIcon(url: string) {
-  return <img className="size-4" height="16" width="16" src={url} alt="" />;
+  return <img className='size-4' height='16' width='16' src={url} alt='' />;
 }
 
 export interface ModelSelectorProps {
@@ -50,14 +50,14 @@ const providerToIcon: Record<string, React.ReactNode> = {
   anthropic: svgIcon('/icons/claude.svg'),
   google: svgIcon('/icons/gemini.svg'),
   xai: (
-    <svg width="16" height="16" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width='16' height='16' viewBox='0 0 1024 1024' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
-        d="M395.479 633.828L735.91 381.105C752.599 368.715 776.454 373.548 784.406 392.792C826.26 494.285 807.561 616.253 724.288 699.996C641.016 783.739 525.151 802.104 419.247 760.277L303.556 814.143C469.49 928.202 670.987 899.995 796.901 773.282C896.776 672.843 927.708 535.937 898.785 412.476L899.047 412.739C857.105 231.37 909.358 158.874 1016.4 10.6326C1018.93 7.11771 1021.47 3.60279 1024 0L883.144 141.651V141.212L395.392 633.916"
-        fill="currentColor"
+        d='M395.479 633.828L735.91 381.105C752.599 368.715 776.454 373.548 784.406 392.792C826.26 494.285 807.561 616.253 724.288 699.996C641.016 783.739 525.151 802.104 419.247 760.277L303.556 814.143C469.49 928.202 670.987 899.995 796.901 773.282C896.776 672.843 927.708 535.937 898.785 412.476L899.047 412.739C857.105 231.37 909.358 158.874 1016.4 10.6326C1018.93 7.11771 1021.47 3.60279 1024 0L883.144 141.651V141.212L395.392 633.916'
+        fill='currentColor'
       />
       <path
-        d="M325.226 695.251C206.128 580.84 226.662 403.776 328.285 301.668C403.431 226.097 526.549 195.254 634.026 240.596L749.454 186.994C728.657 171.88 702.007 155.623 671.424 144.2C533.19 86.9942 367.693 115.465 255.323 228.382C147.234 337.081 113.244 504.215 171.613 646.833C215.216 753.423 143.739 828.818 71.7385 904.916C46.2237 931.893 20.6216 958.87 0 987.429L325.139 695.339"
-        fill="currentColor"
+        d='M325.226 695.251C206.128 580.84 226.662 403.776 328.285 301.668C403.431 226.097 526.549 195.254 634.026 240.596L749.454 186.994C728.657 171.88 702.007 155.623 671.424 144.2C533.19 86.9942 367.693 115.465 255.323 228.382C147.234 337.081 113.244 504.215 171.613 646.833C215.216 753.423 143.739 828.818 71.7385 904.916C46.2237 931.893 20.6216 958.87 0 987.429L325.139 695.339'
+        fill='currentColor'
       />
     </svg>
   ),
@@ -147,7 +147,9 @@ export const ModelSelector = React.memo(function ModelSelector({
   });
 
   const autoSelectionInfo = React.useMemo(() => {
-    if (!apiKey) return null;
+    if (!apiKey) {
+      return null;
+    }
     return selectBestAvailableProvider(apiKey, useGeminiAuto);
   }, [apiKey, useGeminiAuto]);
 
@@ -159,20 +161,20 @@ export const ModelSelector = React.memo(function ModelSelector({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="outline"
-          role="combobox"
+          variant='outline'
+          role='combobox'
           aria-expanded={open}
-          className="w-fit justify-between gap-2 h-8 text-sm"
+          className='h-8 w-fit justify-between gap-2 text-sm'
         >
-          <div className="flex items-center gap-2">
+          <div className='flex items-center gap-2'>
             {selectedModel && providerToIcon[selectedModel.provider]}
-            <span className="truncate">{selectedModel?.name || 'Select model...'}</span>
+            <span className='truncate'>{selectedModel?.name || 'Select model...'}</span>
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] p-0" align="start">
+      <PopoverContent className='w-[400px] p-0' align='start'>
         <Command>
-          <CommandInput placeholder="Search models..." className="h-9" />
+          <CommandInput placeholder='Search models...' className='h-9' />
           <CommandList>
             <CommandEmpty>No model found.</CommandEmpty>
             <CommandGroup>
@@ -197,7 +199,7 @@ export const ModelSelector = React.memo(function ModelSelector({
                     )}
                   >
                     {providerToIcon[model.provider]}
-                    <div className="flex-1 truncate">
+                    <div className='flex-1 truncate'>
                       {model.name}
                       {isAuto && autoSelectionInfo && (
                         <span className={cn('ml-1 text-xs text-muted-foreground')}>
@@ -206,7 +208,7 @@ export const ModelSelector = React.memo(function ModelSelector({
                       )}
                     </div>
 
-                    <div className="flex items-center gap-1">
+                    <div className='flex items-center gap-1'>
                       {/* {model.recommended && (
                         <Tooltip
                           tip="This model is recommended for most use cases. It will automatically select the best available provider based on your API keys."
@@ -219,9 +221,9 @@ export const ModelSelector = React.memo(function ModelSelector({
                       {isAuto && autoWillWork && (
                         <Tooltip
                           tip={`Auto mode will use: ${autoSelectionInfo?.displayName || 'Available provider'}`}
-                          side="right"
+                          side='right'
                         >
-                          <KeyRound className="size-4 text-green-500" />
+                          <KeyRound className='size-4 text-green-500' />
                         </Tooltip>
                       )}
 
@@ -232,15 +234,15 @@ export const ModelSelector = React.memo(function ModelSelector({
                               ? 'Auto mode requires at least one API key to be set.'
                               : 'You must set an API key for the relevant provider to use this model.'
                           }
-                          side="right"
+                          side='right'
                         >
-                          <Lock className="size-4 text-red-500" />
+                          <Lock className='size-4 text-red-500' />
                         </Tooltip>
                       )}
 
                       {canUseModel && !isAuto && (
-                        <Tooltip tip="API key configured for this provider" side="right">
-                          <KeyRound className="size-4 text-green-500" />
+                        <Tooltip tip='API key configured for this provider' side='right'>
+                          <KeyRound className='size-4 text-green-500' />
                         </Tooltip>
                       )}
 

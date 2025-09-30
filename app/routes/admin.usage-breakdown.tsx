@@ -46,15 +46,15 @@ function UsageBreakdownContent() {
   // If not admin, show unauthorized message
   if (isAdmin === false) {
     return (
-      <div className="min-h-screen bg-bolt-elements-background-depth-2">
-        <div className="mx-auto max-w-4xl px-4 py-8">
-          <div className="mb-8 flex items-center gap-4">
-            <a href="/" className="inline-flex" title="Back to Chat">
+      <div className='min-h-screen bg-bolt-elements-background-depth-2'>
+        <div className='mx-auto max-w-4xl px-4 py-8'>
+          <div className='mb-8 flex items-center gap-4'>
+            <a href='/' className='inline-flex' title='Back to Chat'>
               <ArrowLeftIcon />
             </a>
-            <h1 className="text-3xl font-bold text-content-primary">Usage Breakdown</h1>
+            <h1 className='text-3xl font-bold text-content-primary'>Usage Breakdown</h1>
           </div>
-          <div className="rounded-lg bg-red-50 p-4 text-red-700 dark:bg-red-900/20 dark:text-red-400">
+          <div className='rounded-lg bg-red-50 p-4 text-red-700 dark:bg-red-900/20 dark:text-red-400'>
             You must be a Convex admin to access this page.
           </div>
         </div>
@@ -68,21 +68,21 @@ function UsageBreakdownContent() {
   }
 
   return (
-    <div className="min-h-screen bg-bolt-elements-background-depth-2">
-      <div className="mx-auto max-w-4xl px-4 py-8">
-        <div className="mb-8 flex items-center gap-4">
-          <a href="/" className="inline-flex" title="Back to Chat">
+    <div className='min-h-screen bg-bolt-elements-background-depth-2'>
+      <div className='mx-auto max-w-4xl px-4 py-8'>
+        <div className='mb-8 flex items-center gap-4'>
+          <a href='/' className='inline-flex' title='Back to Chat'>
             <ArrowLeftIcon />
           </a>
-          <h1 className="text-3xl font-bold text-content-primary">Usage Breakdown</h1>
+          <h1 className='text-3xl font-bold text-content-primary'>Usage Breakdown</h1>
         </div>
 
-        <div className="space-y-6">
-          <div className="flex flex-col gap-2 rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <div className='space-y-6'>
+          <div className='flex flex-col gap-2 rounded-lg bg-white p-6 shadow-sm dark:bg-gray-800'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>
               Chat Initial ID
               <input
-                type="text"
+                type='text'
                 value={chatId}
                 onChange={(e) => setChatId(e.target.value)}
                 onKeyDown={(e) => {
@@ -90,34 +90,34 @@ function UsageBreakdownContent() {
                     setShowDebug(true);
                   }
                 }}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                placeholder="Enter chat initial ID"
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                placeholder='Enter chat initial ID'
               />
             </label>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>
               Convex Site URL
               <input
-                type="text"
+                type='text'
                 value={convexSiteUrl}
                 onChange={(e) => setConvexSiteUrl(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                placeholder="Enter convex site URL"
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                placeholder='Enter convex site URL'
               />
             </label>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>
               File Upload
               <input
-                type="file"
+                type='file'
                 onChange={(e) => {
                   setFileContent(e.target.files?.[0] || null);
                 }}
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+                className='mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
               />
             </label>
             <button
               onClick={() => setShowDebug(true)}
               disabled={!chatId && !fileContent}
-              className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:bg-gray-400"
+              className='mt-4 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:bg-gray-400'
             >
               Show Debug View
             </button>
