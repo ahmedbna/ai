@@ -123,15 +123,13 @@ export const Projects = memo(() => {
   return (
     <footer
       id="footer"
-      className="w-full flex h-full flex-col bg-white dark:bg-gray-900 min-h-[800px] mt-16 rounded-t-3xl"
+      className="w-full flex h-full flex-col bg-white/75 dark:bg-black/75 backdrop-blur-lg min-h-[800px] mt-44 rounded-t-3xl "
     >
-      <div className="border-b border-gray-200 bg-white px-6 py-4 dark:border-gray-800 dark:bg-gray-900 rounded-t-3xl">
+      <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800 rounded-t-3xl">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Projects</h1>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              Manage and organize your development projects
-            </p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Your Apps</h1>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">Manage and organize your apps</p>
           </div>
 
           <div className="flex items-center gap-3">

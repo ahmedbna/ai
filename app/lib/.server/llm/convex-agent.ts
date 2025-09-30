@@ -138,7 +138,7 @@ export async function convexAgent(args: {
     execute(dataStream) {
       const result = streamText({
         model: provider.model,
-        maxTokens: provider.maxTokens,
+        // maxTokens: provider.maxTokens,
         providerOptions: provider.options,
         messages: messagesForDataStream,
         tools,

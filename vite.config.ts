@@ -1,3 +1,5 @@
+import path from 'path';
+import tailwindcss from '@tailwindcss/vite';
 import { vitePlugin as remix } from '@remix-run/dev';
 import { defineConfig } from 'vite';
 import { vercelPreset } from '@vercel/remix/vite';
@@ -7,6 +9,7 @@ import { optimizeCssModules } from 'vite-plugin-optimize-css-modules';
 import wasm from 'vite-plugin-wasm';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { sentryVitePlugin } from '@sentry/vite-plugin';
+import react from '@vitejs/plugin-react';
 
 dotenv.config();
 
@@ -85,6 +88,7 @@ export default defineConfig((config) => {
     },
     resolve: {
       alias: {
+        '@': path.resolve(__dirname, './app'),
         buffer: 'vite-plugin-node-polyfills/polyfills/buffer',
         ...(config.mode === 'test' ? { 'lz4-wasm': 'lz4-wasm/dist/index.js' } : {}),
       },
@@ -95,6 +99,8 @@ export default defineConfig((config) => {
       strictPort: true,
     },
     plugins: [
+      // react(),
+      // tailwindcss(),
       // This is complicated: we're polyfilling the browser (!) for some things
       // and were previously polyfilling Cloudflare worker functions for some things.
       // Now we could probably remove some since we're using Node.js in Vercel

@@ -5,7 +5,6 @@ import { classNames } from '~/utils/classNames';
 import { useStore } from '@nanostores/react';
 import { chatStore } from '~/lib/stores/chatId';
 import { Spinner } from '@ui/Spinner';
-import { ExclamationTriangleIcon, CheckCircledIcon, ResetIcon, ClipboardIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 import { Button } from '@ui/Button';
 import { useUsage } from '~/lib/stores/usage';
@@ -19,6 +18,7 @@ import type { ModelSelection } from '~/utils/constants';
 import { useLaunchDarkly } from '~/lib/hooks/useLaunchDarkly';
 import { useQuery } from 'convex/react';
 import { api } from '@convex/_generated/api';
+import { CheckCircle2, CircleAlert, Clipboard, MessageSquareReply } from 'lucide-react';
 
 type StreamStatus = 'streaming' | 'submitted' | 'ready' | 'error';
 
@@ -33,9 +33,9 @@ interface StreamingIndicatorProps {
 }
 
 // Icon components
-const WarningIcon = () => <ExclamationTriangleIcon className="text-[var(--cvx-content-warning)]" />;
+const WarningIcon = () => <CircleAlert className="size-4" />;
 const LoadingIcon = () => <Spinner />;
-const CheckIcon = () => <CheckCircledIcon />;
+const CheckIcon = () => <CheckCircle2 className="size-4" />;
 
 // Status messages
 export const STATUS_MESSAGES = {
@@ -163,7 +163,7 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
   return (
     <AnimatePresence>
       <motion.div
-        className="-mb-2 mt-2 w-full max-w-chat rounded-t-xl border bg-background-secondary pb-2 shadow"
+        className="my-1 px-1 w-full max-w-chat rounded-2xl bg-white/50 dark:bg-black/50 backdrop-blur-lg"
         initial={{ translateY: '100%' }}
         animate={{ translateY: '0%' }}
         exit={{ translateY: '100%' }}
@@ -171,11 +171,9 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
       >
         <div
           data-streaming-indicator-stream-status={streamStatus}
-          className={classNames('border-none shadow-none rounded-t-xl relative w-full max-w-chat mx-auto z-prompt')}
+          className={classNames('border-none shadow-none rounded-2xl relative w-full max-w-chat mx-auto z-prompt')}
         >
-          <div
-            className={classNames('bg-background-secondary/75', 'p-1.5 text-content-primary rounded-t-xl', '', 'flex')}
-          >
+          <div className={classNames('rounded-2xl', 'p-1.5 text-content-primary', 'flex')}>
             <div className="flex-1">
               <AnimatePresence>
                 <div className="actions">
@@ -194,7 +192,7 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
                           type="button"
                           className="ml-2 h-auto"
                           onClick={props.resendMessage}
-                          icon={<ResetIcon />}
+                          icon={<MessageSquareReply className="size-4" />}
                         >
                           Resend
                         </Button>
@@ -402,7 +400,7 @@ function Referrals({ referralCode }: { referralCode: string }) {
           size="xs"
           onClick={() => copyToClipboard(`https://convex.dev/try-chef/${referralCode}`)}
           tip="Copy link"
-          icon={<ClipboardIcon />}
+          icon={<Clipboard className="size-4" />}
         />
       </div>
     </div>

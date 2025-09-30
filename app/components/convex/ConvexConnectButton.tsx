@@ -4,8 +4,8 @@ import { useConvex, useQuery } from 'convex/react';
 import { api } from '@convex/_generated/api';
 import { useChatId } from '~/lib/stores/chatId';
 import { TeamSelector } from './TeamSelector';
-import { Link1Icon } from '@radix-ui/react-icons';
-import { Button } from '@ui/Button';
+import { Button } from '../ui/button';
+import { Link } from 'lucide-react';
 
 export function ConvexConnectButton() {
   const convexClient = useConvex();
@@ -48,12 +48,8 @@ export function ConvexConnectButton() {
           description="Your project will be created in this Convex team"
         />
 
-        <Button
-          icon={<Link1Icon />}
-          loading={isLoading}
-          disabled={isLoading || !selectedTeamSlug}
-          onClick={handleClick}
-        >
+        <Button disabled={isLoading || !selectedTeamSlug} onClick={handleClick}>
+          <Link className="size-4" />
           {isLoading ? 'Connecting…' : 'Connect'}
         </Button>
       </div>

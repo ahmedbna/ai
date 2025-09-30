@@ -2,6 +2,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import type { ActionAlert } from '~/types/actions';
 import { classNames } from '~/utils/classNames';
 import { ExclamationTriangleIcon, ChatBubbleIcon } from '@radix-ui/react-icons';
+import { Button } from '../ui/button';
+import { MessageSquareCode } from 'lucide-react';
 
 interface Props {
   alert: ActionAlert;
@@ -25,7 +27,7 @@ export default function ChatAlert({ alert, clearAlert, postMessage }: Props) {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.3 }}
-        className={`rounded-lg border bg-background-secondary p-4 shadow`}
+        className={`rounded-lg bg-card p-4 shadow`}
       >
         <div className="flex items-start">
           {/* Icon */}
@@ -69,36 +71,20 @@ export default function ChatAlert({ alert, clearAlert, postMessage }: Props) {
               transition={{ delay: 0.3 }}
             >
               <div className={classNames(' flex gap-2')}>
-                <button
+                <Button
                   onClick={() =>
                     postMessage(
                       `*Fix this ${isPreview ? 'preview' : 'terminal'} error* \n\`\`\`${isPreview ? 'js' : 'sh'}\n${description}\n${content}\n\`\`\`\n`,
                     )
                   }
-                  className={classNames(
-                    `px-2 py-1.5 rounded-md text-sm font-medium`,
-                    'bg-bolt-elements-button-primary-background',
-                    'hover:bg-bolt-elements-button-primary-backgroundHover',
-                    'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bolt-elements-button-danger-background',
-                    'text-bolt-elements-button-primary-text',
-                    'flex items-center gap-1.5',
-                  )}
                 >
-                  <ChatBubbleIcon />
-                  Ask Chef
-                </button>
-                <button
-                  onClick={clearAlert}
-                  className={classNames(
-                    `px-2 py-1.5 rounded-md text-sm font-medium`,
-                    'bg-bolt-elements-button-secondary-background',
-                    'hover:bg-bolt-elements-button-secondary-backgroundHover',
-                    'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bolt-elements-button-secondary-background',
-                    'text-bolt-elements-button-secondary-text',
-                  )}
-                >
+                  <MessageSquareCode />
+                  Ask BNA
+                </Button>
+
+                <Button variant="secondary" onClick={clearAlert}>
                   Dismiss
-                </button>
+                </Button>
               </div>
             </motion.div>
           </div>

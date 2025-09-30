@@ -1,4 +1,76 @@
-/* Convex Tokens */
+/* variables.css */
+
+/* Shadcn UI Color System */
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.141 0.005 285.823);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.141 0.005 285.823);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.141 0.005 285.823);
+  --primary: oklch(0.21 0.006 285.885);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.967 0.001 286.375);
+  --muted-foreground: oklch(0.552 0.016 285.938);
+  --accent: oklch(0.967 0.001 286.375);
+  --accent-foreground: oklch(0.21 0.006 285.885);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.92 0.004 286.32);
+  --input: oklch(0.92 0.004 286.32);
+  --ring: oklch(0.705 0.015 286.067);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.141 0.005 285.823);
+  --sidebar-primary: oklch(0.21 0.006 285.885);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.967 0.001 286.375);
+  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
+  --sidebar-border: oklch(0.92 0.004 286.32);
+  --sidebar-ring: oklch(0.705 0.015 286.067);
+}
+
+.dark {
+  --background: oklch(0.141 0.005 285.823);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.21 0.006 285.885);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.21 0.006 285.885);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.92 0.004 286.32);
+  --primary-foreground: oklch(0.21 0.006 285.885);
+  --secondary: oklch(0.274 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.274 0.006 286.033);
+  --muted-foreground: oklch(0.705 0.015 286.067);
+  --accent: oklch(0.274 0.006 286.033);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.552 0.016 285.938);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.21 0.006 285.885);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.274 0.006 286.033);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.552 0.016 285.938);
+}
+
+/* Convex Tokens (Original palette - now mostly overridden by semantic tokens below) */
 :root {
   --cvx-red-100: rgb(252, 215, 203);
   --cvx-red-200: rgb(255, 202, 193);
@@ -35,7 +107,7 @@
   --cvx-neutral-1: rgb(222, 226, 234);
   --cvx-neutral-2: rgb(204, 206, 211);
   --cvx-neutral-3: rgb(174, 177, 184);
-  --cvx-neutral-4: rgb(151, 154, 164);
+  --cvx-neutral-4: rgb(151, 154, 164); /* Mapped to shadcn --muted */
   --cvx-neutral-5: rgb(133, 136, 147);
   --cvx-neutral-6: rgb(118, 121, 131);
   --cvx-neutral-7: rgb(103, 106, 116);
@@ -44,57 +116,58 @@
   --cvx-neutral-10: rgb(57, 60, 66);
   --cvx-neutral-11: rgb(41, 43, 48);
   --cvx-neutral-12: rgb(24, 25, 28);
-  --cvx-accent: rgb(63, 82, 149);
-  --cvx-info: rgb(7, 191, 232);
-  --cvx-util-accent: rgb(38, 135, 246);
-  --cvx-util-info: rgb(7, 191, 232);
-  --cvx-util-success: rgb(79, 176, 20);
-  --cvx-util-danger: rgb(238, 52, 47);
-  --cvx-util-warning: rgb(243, 176, 28);
+
+  /* Updated to use shadcn vars */
+  --cvx-accent: var(--primary);
+  --cvx-info: var(--chart-2);
+  --cvx-util-accent: var(--primary);
+  --cvx-util-info: var(--chart-2);
+  --cvx-util-success: var(--chart-4);
+  --cvx-util-danger: var(--destructive);
+  --cvx-util-warning: var(--chart-1);
 }
 
-/* Convex Tokens Light Theme (from Dashboard) */
+/* Convex Tokens Light Theme (from Dashboard) - Mapped to shadcn Light Theme */
 :root,
 html.light {
-  --cvx-background-brand: rgb(249, 247, 238);
-  --cvx-background-primary: rgb(243, 240, 237);
-  --cvx-background-secondary: rgb(253, 252, 250);
-  --cvx-background-tertiary: rgb(240, 238, 235);
-  --cvx-background-highlight: rgb(254, 252, 232);
-  --cvx-background-success: rgb(203, 237, 182);
-  --cvx-background-warning: rgb(250, 228, 171);
-  --cvx-background-error: rgb(252, 215, 203);
-  --cvx-background-error-secondary: rgb(255, 202, 193);
-  --cvx-content-accent: rgb(48, 106, 207);
-  --cvx-content-success: rgb(34, 137, 9);
-  --cvx-content-warning: rgb(109, 82, 23);
-  --cvx-content-error: rgb(168, 21, 21);
-  --cvx-content-error-secondary: rgb(238, 52, 47);
-  --cvx-content-link: rgb(33, 34, 181);
-  --cvx-border-transparent: rgba(33, 34, 30, 0.14);
-  --cvx-border-selected: rgb(30, 28, 25);
+  --cvx-background-brand: var(--background);
+  --cvx-background-primary: var(--card);
+  --cvx-background-secondary: var(--card);
+  --cvx-background-tertiary: var(--muted);
+  --cvx-background-highlight: var(--muted);
+  --cvx-background-success: var(--chart-4);
+  --cvx-background-warning: var(--chart-1);
+  --cvx-background-error: var(--destructive);
+  --cvx-background-error-secondary: var(--destructive);
+  --cvx-content-accent: var(--primary);
+  --cvx-content-success: var(--chart-4);
+  --cvx-content-warning: var(--chart-1);
+  --cvx-content-error: var(--destructive);
+  --cvx-content-error-secondary: var(--destructive);
+  --cvx-content-link: var(--primary);
+  --cvx-border-transparent: var(--border);
+  --cvx-border-selected: var(--ring);
 }
 
-/* Convex Tokens Dark Theme (from Dashboard) */
-:root,
+/* Convex Tokens Dark Theme (from Dashboard) - Mapped to shadcn Dark Theme */
 html.dark {
-  --cvx-background-brand: rgb(30, 28, 26);
-  --cvx-background-primary: rgb(30, 28, 26);
-  --cvx-background-secondary: rgb(42, 40, 37);
-  --cvx-background-tertiary: rgb(60, 58, 65);
-  --cvx-background-highlight: rgb(109, 82, 23);
-  --cvx-background-success: rgb(44, 83, 20);
-  --cvx-background-warning: rgb(109, 82, 23);
-  --cvx-background-error: rgb(107, 33, 31);
-  --cvx-background-error-secondary: rgb(168, 21, 21);
-  --cvx-content-accent: rgb(99, 168, 248);
-  --cvx-content-success: rgb(180, 236, 146);
-  --cvx-content-warning: rgb(230, 226, 168);
-  --cvx-content-error: rgb(255, 202, 193);
-  --cvx-content-error-secondary: rgb(253, 76, 65);
-  --cvx-content-link: rgb(177, 202, 240);
-  --cvx-border-transparent: rgba(163, 156, 148, 0.3);
-  --cvx-border-selected: rgb(225, 215, 205);
+  --cvx-background-brand: var(--background);
+  --cvx-background-primary: var(--card);
+  --cvx-background-secondary: var(--card);
+  --cvx-background-tertiary: var(--muted);
+  --cvx-background-highlight: var(--muted);
+  --cvx-background-success: var(--chart-4);
+  --cvx-background-warning: var(--chart-1);
+  --cvx-background-error: var(--destructive);
+  --cvx-background-error-secondary: var(--destructive);
+  --cvx-content-accent: var(--primary);
+  --cvx-content-success: var(--chart-4);
+  --cvx-content-warning: var(--chart-1);
+  --cvx-content-error: var(--destructive);
+  --cvx-content-error-secondary: var(--destructive);
+  --cvx-content-link: var(--primary);
+  --cvx-border-transparent: var(--border);
+  --cvx-border-selected: var(--ring);
 }
 
 /* Color Tokens */
@@ -192,7 +265,6 @@ html.light {
 }
 
 /* Color Tokens Dark Theme */
-:root,
 html.dark {
   --bolt-elements-bg-depth-3: theme('colors.gray.800');
   --bolt-elements-bg-depth-4: theme('colors.white/0.05');
@@ -249,9 +321,9 @@ html.dark {
 :root {
   --header-height: 64px;
   --chat-max-width: 37rem;
-  --chat-min-width: 640px;
+  --chat-min-width: 620px;
   --workbench-width: min(calc(100% - var(--chat-min-width)), 2536px);
-  --workbench-inner-width: calc(var(--workbench-width) - 16px);
+  --workbench-inner-width: calc(var(--workbench-width));
   --workbench-left: calc(100% - var(--workbench-width));
 
   /* Terminal */

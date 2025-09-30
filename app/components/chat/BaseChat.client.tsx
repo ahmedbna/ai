@@ -28,7 +28,8 @@ import { SubchatLimitNudge } from './SubchatLimitNudge';
 import { useMutation } from 'convex/react';
 import { api } from '@convex/_generated/api';
 import { subchatIndexStore, useIsSubchatLoaded } from '~/lib/stores/subchats';
-import { Projects } from './projects';
+import { Projects } from './Projects';
+import Particles from './particles';
 
 interface BaseChatProps {
   // Refs
@@ -138,14 +139,15 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
         await onSend?.(lastUserMessage.content);
       }
     }, [lastUserMessage, onSend]);
-    const baseChat = (
+
+    return (
       <div
         ref={ref}
         className={classNames(styles.BaseChat, 'relative flex h-full w-full overflow-hidden')}
         data-chat-visible={showChat}
         data-messages-for-evals={dataForEvals}
       >
-        <div ref={scrollRef} className="flex size-full flex-col overflow-y-auto">
+        <div ref={scrollRef} className="relative z-10 flex size-full flex-col overflow-y-auto">
           <div className="flex w-full grow flex-col lg:flex-row">
             <div
               className={classNames(styles.Chat, 'flex flex-col flex-grow lg:min-w-[var(--chat-min-width)] h-full', {
@@ -154,15 +156,17 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
               })}
             >
               {!chatStarted && (
-                <div id="intro" className="mx-auto mb-8 mt-12 max-w-chat px-4 text-center md:mt-16 lg:px-0">
-                  <h1 className="mb-2 animate-fadeInFromLoading font-display text-4xl font-black leading-none tracking-tight text-content-primary md:text-5xl lg:mb-4 lg:text-6xl">
-                    Now you&rsquo;re cooking
-                  </h1>
-                  <p className="animate-fadeInFromLoading text-balance font-display text-lg font-medium text-content-secondary [animation-delay:200ms] [animation-fill-mode:backwards] md:text-xl">
-                    The open-source app generator powered by Convex
+                <div id="intro" className="mx-auto mb-8 pt-36 px-4 text-center md:mt-16 lg:px-0">
+                  <p className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-4xl md:text-6xl font-black leading-none text-transparent dark:from-white dark:to-slate-900/10">
+                    BNA AI
                   </p>
+
+                  <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-3xl font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10">
+                    Fullstack mobile apps in seconds
+                  </span>
                 </div>
               )}
+
               <div
                 className={classNames('w-full', {
                   'h-full flex flex-col': chatStarted,
@@ -208,13 +212,15 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                     )}
                   </>
                 ) : null}
+
                 <div
                   className={classNames('flex flex-col w-full max-w-chat mx-auto z-prompt relative', {
                     'sticky bottom-four': chatStarted,
+                    'max-w-[720px]': !chatStarted,
                   })}
                 >
                   {actionAlert && (
-                    <div className="mb-4 bg-background-secondary">
+                    <div className="mb-4">
                       <ChatAlert
                         alert={
                           actionAlert ?? {
@@ -246,7 +252,6 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                         </div>
                       )}
 
-                      {/* StreamingIndicator is now a normal block above the input */}
                       {!disableChatMessage && !shouldShowNudge && (
                         <StreamingIndicator
                           streamStatus={streamStatus}
@@ -272,25 +277,27 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                           numMessages={messages?.length}
                         />
                       )}
+
+                      <AnimatePresence>
+                        {disableChatMessage && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            transition={{ duration: 0.15 }}
+                            className="absolute top-full mt-2 w-full pb-2"
+                          >
+                            <Sheet
+                              className="flex w-full animate-fadeInFromLoading flex-col gap-3 rounded-xl bg-util-accent/10 p-4 shadow backdrop-blur-lg"
+                              padding={false}
+                            >
+                              {disableChatMessage}
+                            </Sheet>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </>
                   )}
-                  <AnimatePresence>
-                    {disableChatMessage && (
-                      <motion.div
-                        initial={{ translateY: '-100%', opacity: 0 }}
-                        animate={{ translateY: '0%', opacity: 1 }}
-                        exit={{ translateY: '-100%', opacity: 0 }}
-                        transition={{ duration: 0.15 }}
-                      >
-                        <Sheet
-                          className="-mt-2 flex w-full animate-fadeInFromLoading flex-col gap-3 rounded-xl rounded-t-none bg-util-accent/10 p-4 shadow backdrop-blur-lg"
-                          padding={false}
-                        >
-                          {disableChatMessage}
-                        </Sheet>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
                 </div>
                 {!chatEnabled && <CompatibilityWarnings setEnabled={setChatEnabled} />}
               </div>
@@ -304,6 +311,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                   </div>
                 </div>
               )}
+
               {/* {chatEnabled && (
                 <SuggestionButtons
                   disabled={disableChatMessage !== null}
@@ -315,7 +323,6 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
               )} */}
 
               {!chatStarted && <Projects />}
-              {/* {!chatStarted && <Landing />} */}
             </div>
             <Workbench
               chatStarted={chatStarted}
@@ -324,10 +331,17 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
             />
           </div>
         </div>
+
+        <div
+          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: 'url(/background.png)' }}
+        />
+
+        {!chatStarted && (
+          <Particles size={0.2} quantity={80} className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat" />
+        )}
       </div>
     );
-
-    return baseChat;
   },
 );
 BaseChat.displayName = 'BaseChat';

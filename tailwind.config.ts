@@ -39,6 +39,7 @@ export default {
       },
       colors: {
         ...TailwindConfig.theme?.extend?.colors,
+
         bolt: {
           elements: {
             background: {
@@ -187,6 +188,48 @@ export default {
           800: '#991B1B',
           900: '#7F1D1D',
           950: '#450A0A',
+        },
+
+        background: {
+          DEFAULT: 'var(--background)',
+          primary: 'var(--background)',
+          secondary: 'var(--secondary)',
+          tertiary: 'var(--secondary)',
+        },
+        border: {
+          DEFAULT: 'var(--border)',
+          transparent: 'var(--cvx-border-transparent)',
+        },
+        input: 'var(--input)',
+        ring: 'var(--ring)',
+        foreground: 'var(--foreground)',
+        primary: {
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
+        },
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
+        },
+        destructive: {
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
+        },
+        muted: {
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
+        },
+        accent: {
+          DEFAULT: 'var(--accent)',
+          foreground: 'var(--accent-foreground)',
+        },
+        popover: {
+          DEFAULT: 'var(--popover)',
+          foreground: 'var(--popover-foreground)',
+        },
+        card: {
+          DEFAULT: 'var(--card)',
+          foreground: 'var(--card-foreground)',
         },
       },
       transitionTimingFunction: {

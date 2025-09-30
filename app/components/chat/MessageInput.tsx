@@ -28,8 +28,6 @@ import { convexProjectStore } from '~/lib/stores/convexProject';
 import { useChefAuth } from './ChefAuthWrapper';
 import { getConvexAuthToken, useConvexSessionIdOrNullOrLoading } from '~/lib/stores/sessionId';
 import { KeyboardShortcut } from '@ui/KeyboardShortcut';
-import { Button } from '@ui/Button';
-import { Spinner } from '@ui/Spinner';
 import { debounce } from '~/utils/debounce';
 import { toast } from 'sonner';
 import { captureException } from '@sentry/remix';
@@ -38,6 +36,10 @@ import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { ChatBubbleLeftIcon, DocumentArrowUpIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '@workos-inc/authkit-react';
 import { useConvex } from 'convex/react';
+import { cn } from '~/lib/utils';
+import { Button } from '../ui/button';
+import { ArrowUp, Pause, Square } from 'lucide-react';
+import { Spinner } from '../ui/spinner';
 
 const PROMPT_LENGTH_WARNING_THRESHOLD = 2000;
 
@@ -251,9 +253,14 @@ export const MessageInput = memo(function MessageInput({
   );
 
   return (
-    <div className="relative z-20 mx-auto w-full max-w-chat rounded-xl shadow transition-all duration-200">
-      <div className="rounded-xl bg-background-primary/75 backdrop-blur-md">
-        <div className="rounded-t-xl border transition-all has-[textarea:focus]:border-border-selected">
+    <div className="relative z-20 mx-auto w-full rounded-2xl shadow transition-all duration-200 ">
+      <div
+        className={cn(
+          'rounded-2xl bg-white/50 dark:bg-black/50 backdrop-blur-lg',
+          chatStarted && 'opacity-100 bg-card',
+        )}
+      >
+        <div className="rounded-t-2xl ">
           <TextareaWithHighlights
             onKeyDown={handleKeyDown}
             onChange={handleChange}
@@ -271,112 +278,116 @@ export const MessageInput = memo(function MessageInput({
             disabled={disabled}
             highlights={HIGHLIGHTS}
           />
-        </div>
-        <div
-          className={classNames(
-            'flex items-center gap-2 border rounded-b-xl border-t-0 bg-background-secondary/80 p-1.5 text-sm flex-wrap',
-          )}
-        >
-          {chefAuthState.kind === 'fullyLoggedIn' && (
-            <ModelSelector modelSelection={modelSelection} setModelSelection={setModelSelection} size="sm" />
-          )}
-          {!chatStarted && sessionId && (
-            <TeamSelector
-              description="Your project will be created in this Convex team"
-              selectedTeamSlug={selectedTeamSlug}
-              setSelectedTeamSlug={setSelectedTeamSlug}
-              size="sm"
-            />
-          )}
-          {chatStarted && <ConvexConnection />}
-          {input.length > 3 && input.length <= PROMPT_LENGTH_WARNING_THRESHOLD && <NewLineShortcut />}
-          {input.length > PROMPT_LENGTH_WARNING_THRESHOLD && <CharacterWarning />}
-          <div className="ml-auto flex items-center gap-1">
-            {chefAuthState.kind === 'unauthenticated' && <SignInButton />}
+          <div className="flex items-center gap-2 p-1.5 text-sm flex-wrap">
             {chefAuthState.kind === 'fullyLoggedIn' && (
-              <MenuComponent
-                buttonProps={{
-                  variant: 'neutral',
-                  tip: 'Use a recipe',
-                  inline: true,
-                  icon: (
-                    <div className="text-lg">
-                      <SquaresPlusIcon className="size-4" />
-                    </div>
-                  ),
-                }}
-                placement="top-start"
-              >
-                <div className="ml-3 flex items-center gap-1">
-                  <h2 className="text-sm font-bold">Use a recipe</h2>
-                  <Tooltip tip="Recipes are Chef prompts that add powerful full-stack features to your app." side="top">
-                    <span className="cursor-help text-content-tertiary">
-                      <InformationCircleIcon className="size-4" />
-                    </span>
-                  </Tooltip>
-                </div>
-                <MenuItemComponent action={() => insertTemplate('Make a collaborative text editor that ...')}>
-                  <div className="flex w-full items-center gap-2">
-                    <PencilSquareIcon className="size-4 text-content-secondary" />
-                    Make a collaborative text editor
-                  </div>
-                </MenuItemComponent>
-                <MenuItemComponent action={() => insertTemplate('Add AI chat to ...')}>
-                  <div className="flex w-full items-center gap-2">
-                    <ChatBubbleLeftIcon className="size-4 text-content-secondary" />
-                    Add AI chat
-                  </div>
-                </MenuItemComponent>
-                <MenuItemComponent action={() => insertTemplate('Add file upload to ...')}>
-                  <div className="flex w-full items-center gap-2">
-                    <DocumentArrowUpIcon className="size-4 text-content-secondary" />
-                    Add file upload
-                  </div>
-                </MenuItemComponent>
-                <MenuItemComponent action={() => insertTemplate('Add full text search to ...')}>
-                  <div className="flex w-full items-center gap-2">
-                    <MagnifyingGlassIcon className="size-4 text-content-secondary" />
-                    Add full text search
-                  </div>
-                </MenuItemComponent>
-              </MenuComponent>
+              <ModelSelector modelSelection={modelSelection} setModelSelection={setModelSelection} size="sm" />
             )}
-            {chefAuthState.kind === 'fullyLoggedIn' && (
-              <EnhancePromptButton
-                isEnhancing={isEnhancing}
-                disabled={!selectedTeamSlug || disabled || input.length === 0}
-                onClick={enhancePrompt}
+
+            {!chatStarted && sessionId && (
+              <TeamSelector
+                description="Your project will be created in this Convex team"
+                selectedTeamSlug={selectedTeamSlug}
+                setSelectedTeamSlug={setSelectedTeamSlug}
+                size="sm"
               />
             )}
-            <Button
-              disabled={
-                (!isStreaming && input.length === 0) ||
-                !selectedTeamSlug ||
-                chefAuthState.kind === 'loading' ||
-                sendMessageInProgress ||
-                disabled
-              }
-              tip={
-                chefAuthState.kind === 'unauthenticated'
-                  ? 'Please sign in to continue'
-                  : !selectedTeamSlug
-                    ? 'Please select a team to continue'
-                    : undefined
-              }
-              onClick={handleClickButton}
-              size="xs"
-              className="ml-2 h-[1.625rem]"
-              aria-label={isStreaming ? 'Stop' : 'Send'}
-              icon={
-                sendMessageInProgress ? (
-                  <Spinner className="text-white" />
+
+            {chatStarted && <ConvexConnection />}
+
+            {input.length > 3 && input.length <= PROMPT_LENGTH_WARNING_THRESHOLD && <NewLineShortcut />}
+            {input.length > PROMPT_LENGTH_WARNING_THRESHOLD && <CharacterWarning />}
+
+            <div className="ml-auto flex items-center gap-1">
+              {chefAuthState.kind === 'unauthenticated' && <SignInButton />}
+
+              {/* {chefAuthState.kind === 'fullyLoggedIn' && (
+                <MenuComponent
+                  buttonProps={{
+                    variant: 'neutral',
+                    tip: 'Use a recipe',
+                    inline: true,
+                    icon: (
+                      <div className="text-lg">
+                        <SquaresPlusIcon className="size-4" />
+                      </div>
+                    ),
+                  }}
+                  placement="top-start"
+                >
+                  <div className="ml-3 flex items-center gap-1">
+                    <h2 className="text-sm font-bold">Use a recipe</h2>
+                    <Tooltip
+                      tip="Recipes are Chef prompts that add powerful full-stack features to your app."
+                      side="top"
+                    >
+                      <span className="cursor-help text-content-tertiary">
+                        <InformationCircleIcon className="size-4" />
+                      </span>
+                    </Tooltip>
+                  </div>
+                  <MenuItemComponent action={() => insertTemplate('Make a collaborative text editor that ...')}>
+                    <div className="flex w-full items-center gap-2">
+                      <PencilSquareIcon className="size-4 text-content-secondary" />
+                      Make a collaborative text editor
+                    </div>
+                  </MenuItemComponent>
+                  <MenuItemComponent action={() => insertTemplate('Add AI chat to ...')}>
+                    <div className="flex w-full items-center gap-2">
+                      <ChatBubbleLeftIcon className="size-4 text-content-secondary" />
+                      Add AI chat
+                    </div>
+                  </MenuItemComponent>
+                  <MenuItemComponent action={() => insertTemplate('Add file upload to ...')}>
+                    <div className="flex w-full items-center gap-2">
+                      <DocumentArrowUpIcon className="size-4 text-content-secondary" />
+                      Add file upload
+                    </div>
+                  </MenuItemComponent>
+                  <MenuItemComponent action={() => insertTemplate('Add full text search to ...')}>
+                    <div className="flex w-full items-center gap-2">
+                      <MagnifyingGlassIcon className="size-4 text-content-secondary" />
+                      Add full text search
+                    </div>
+                  </MenuItemComponent>
+                </MenuComponent>
+              )} */}
+
+              {/* {chefAuthState.kind === 'fullyLoggedIn' && (
+                <EnhancePromptButton
+                  isEnhancing={isEnhancing}
+                  disabled={!selectedTeamSlug || disabled || input.length === 0}
+                  onClick={enhancePrompt}
+                />
+              )} */}
+
+              <Button
+                disabled={
+                  (!isStreaming && input.length === 0) ||
+                  !selectedTeamSlug ||
+                  chefAuthState.kind === 'loading' ||
+                  sendMessageInProgress ||
+                  disabled
+                }
+                // tip={
+                //   chefAuthState.kind === 'unauthenticated'
+                //     ? 'Please sign in to continue'
+                //     : !selectedTeamSlug
+                //       ? 'Please select a team to continue'
+                //       : undefined
+                // }
+                onClick={handleClickButton}
+                className="rounded-full size-8 px-0 py-0 mr-2 flex items-center justify-center"
+                aria-label={isStreaming ? 'Stop' : 'Send'}
+              >
+                {sendMessageInProgress ? (
+                  <Spinner />
                 ) : !isStreaming ? (
-                  <ArrowRightIcon />
+                  <ArrowUp className="size-6" />
                 ) : (
-                  <StopIcon />
-                )
-              }
-            />
+                  <Square fill="#000" className="size-0.5" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -436,10 +447,11 @@ const TextareaWithHighlights = memo(function TextareaWithHighlights({
       <textarea
         ref={textareaRef}
         className={classNames(
-          'w-full px-3 py-3 outline-none resize-none text-content-primary placeholder-content-tertiary bg-transparent text-sm leading-snug',
+          'w-full px-3 py-3 outline-none resize-none text-content-primary placeholder-content-tertiary bg-transparent  leading-snug',
           'transition-opacity',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           'scrollbar-thin scrollbar-thumb-macosScrollbar-thumb scrollbar-track-transparent',
+          'text-opacity-100',
         )}
         disabled={disabled}
         onKeyDown={onKeyDown}
@@ -609,17 +621,15 @@ const SignInButton = memo(function SignInButton() {
 
   return (
     <Button
-      variant="neutral"
       onClick={() => {
         void signIn();
       }}
-      size="xs"
       className="text-xs font-normal"
-      icon={<img className="size-4" src="/icons/Convex.svg" alt="Convex" />}
     >
-      <>
+      <div className="flex items-center gap-1">
+        <img className="mr-2 size-4" src="/icons/Convex.svg" alt="Convex" />
         <span>Sign in</span>
-      </>
+      </div>
     </Button>
   );
 });

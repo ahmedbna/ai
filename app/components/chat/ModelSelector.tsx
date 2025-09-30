@@ -1,14 +1,17 @@
-import { Combobox } from '@ui/Combobox';
+import * as React from 'react';
+import { KeyRound, Lock } from 'lucide-react';
 import { MagicWandIcon } from '@radix-ui/react-icons';
-import type { ModelSelection } from '~/utils/constants';
-import React from 'react';
-import { Tooltip } from '@ui/Tooltip';
-import { HandThumbUpIcon, KeyIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 import { useQuery } from 'convex/react';
 import { api } from '@convex/_generated/api';
 import { captureMessage } from '@sentry/remix';
 import { useLaunchDarkly } from '~/lib/hooks/useLaunchDarkly';
 import { selectBestAvailableProvider, getAvailableApiKeys, hasApiKeySet } from '~/lib/common/apiKey';
+import type { ModelSelection } from '~/utils/constants';
+import { cn } from '~/lib/utils';
+import { Button } from '~/components/ui/button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '~/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover';
+import { Tooltip } from '@ui/Tooltip';
 
 export type ModelProvider = 'openai' | 'google' | 'xai' | 'anthropic' | 'auto';
 
@@ -60,14 +63,13 @@ const providerToIcon: Record<string, React.ReactNode> = {
   ),
 };
 
-// Updated models configuration - all models now require API keys
 export const models: Partial<
   Record<
     ModelSelection,
     {
       name: string;
       recommended?: boolean;
-      requireKey: boolean; // This is now always true
+      requireKey: boolean;
       provider: ModelProvider;
     }
   >
@@ -75,7 +77,7 @@ export const models: Partial<
   auto: {
     name: 'Auto (Smart Selection)',
     provider: 'auto',
-    recommended: true, // Making auto recommended since it's smart now
+    recommended: true,
     requireKey: true,
   },
   'claude-4-sonnet': {
@@ -127,6 +129,7 @@ export const ModelSelector = React.memo(function ModelSelector({
   setModelSelection,
   size = 'md',
 }: ModelSelectorProps) {
+  const [open, setOpen] = React.useState(false);
   const apiKey = useQuery(api.apiKeys.apiKeyForCurrentMember);
   const selectedModel = models[modelSelection];
   const { useGeminiAuto, enableGpt5 } = useLaunchDarkly();
@@ -143,7 +146,6 @@ export const ModelSelector = React.memo(function ModelSelector({
     return true;
   });
 
-  // Get information about what auto mode would select
   const autoSelectionInfo = React.useMemo(() => {
     if (!apiKey) return null;
     return selectBestAvailableProvider(apiKey, useGeminiAuto);
@@ -154,87 +156,103 @@ export const ModelSelector = React.memo(function ModelSelector({
   }, [apiKey]);
 
   return (
-    <Combobox
-      searchPlaceholder="Search models..."
-      label="Select model"
-      options={availableModels.map(([value, model]) => ({
-        label: model.provider + ' ' + model.name,
-        value: value as ModelSelection,
-      }))}
-      buttonClasses="w-fit"
-      size={size}
-      selectedOption={modelSelection}
-      setSelectedOption={(option) => {
-        if (!option) {
-          throw new Error('Model selection set to null');
-        }
-        setModelSelection(option);
-      }}
-      Option={({ value, inButton }) => {
-        const model = models[value as ModelSelection];
-        if (!model) {
-          return null;
-        }
-
-        const canUseModel = hasApiKeySet(value as ModelSelection, useGeminiAuto, apiKey);
-
-        // Special handling for auto mode
-        const isAuto = value === 'auto';
-        const autoWillWork = isAuto && availableApiKeys.length > 0;
-
-        return (
-          <div className={'flex items-center gap-2'}>
-            {providerToIcon[model.provider]}
-            <div className="max-w-48 truncate">
-              {model?.name}
-              {isAuto && autoSelectionInfo && !inButton && (
-                <span className="ml-1 text-xs text-content-secondary">→ {autoSelectionInfo.displayName}</span>
-              )}
-            </div>
-
-            {!inButton && (
-              <div className="ml-auto flex gap-1">
-                {model.recommended && (
-                  <Tooltip
-                    tip="This model is recommended for most use cases. It will automatically select the best available provider based on your API keys."
-                    side="right"
-                  >
-                    <HandThumbUpIcon className="size-4 text-content-secondary" />
-                  </Tooltip>
-                )}
-
-                {isAuto && autoWillWork && (
-                  <Tooltip
-                    tip={`Auto mode will use: ${autoSelectionInfo?.displayName || 'Available provider'}`}
-                    side="right"
-                  >
-                    <CheckCircleIcon className="size-4 text-green-500" />
-                  </Tooltip>
-                )}
-
-                {!canUseModel && (
-                  <Tooltip
-                    tip={
-                      isAuto
-                        ? 'Auto mode requires at least one API key to be set.'
-                        : 'You must set an API key for the relevant provider to use this model.'
-                    }
-                    side="right"
-                  >
-                    <KeyIcon className="size-4 text-content-secondary" />
-                  </Tooltip>
-                )}
-
-                {canUseModel && !isAuto && (
-                  <Tooltip tip="API key configured for this provider" side="right">
-                    <CheckCircleIcon className="size-4 text-green-500" />
-                  </Tooltip>
-                )}
-              </div>
-            )}
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="w-fit justify-between gap-2 h-8 text-sm"
+        >
+          <div className="flex items-center gap-2">
+            {selectedModel && providerToIcon[selectedModel.provider]}
+            <span className="truncate">{selectedModel?.name || 'Select model...'}</span>
           </div>
-        );
-      }}
-    />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[400px] p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Search models..." className="h-9" />
+          <CommandList>
+            <CommandEmpty>No model found.</CommandEmpty>
+            <CommandGroup>
+              {availableModels.map(([value, model]) => {
+                const canUseModel = hasApiKeySet(value as ModelSelection, useGeminiAuto, apiKey);
+                const isAuto = value === 'auto';
+                const autoWillWork = isAuto && availableApiKeys.length > 0;
+
+                const isSelected = modelSelection === value;
+
+                return (
+                  <CommandItem
+                    key={value}
+                    value={value}
+                    onSelect={(currentValue) => {
+                      setModelSelection(currentValue as ModelSelection);
+                      setOpen(false);
+                    }}
+                    className={cn(
+                      'flex items-center rounded-md gap-2 cursor-pointer aria-selected:bg-green-500 aria-selected:text-accent-foreground hover:bg-secondary',
+                      isSelected && 'bg-secondary',
+                    )}
+                  >
+                    {providerToIcon[model.provider]}
+                    <div className="flex-1 truncate">
+                      {model.name}
+                      {isAuto && autoSelectionInfo && (
+                        <span className={cn('ml-1 text-xs text-muted-foreground')}>
+                          → {autoSelectionInfo.displayName}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      {/* {model.recommended && (
+                        <Tooltip
+                          tip="This model is recommended for most use cases. It will automatically select the best available provider based on your API keys."
+                          side="right"
+                        >
+                          <HandThumbUpIcon className="size-4 text-muted-foreground" />
+                        </Tooltip>
+                      )} */}
+
+                      {isAuto && autoWillWork && (
+                        <Tooltip
+                          tip={`Auto mode will use: ${autoSelectionInfo?.displayName || 'Available provider'}`}
+                          side="right"
+                        >
+                          <KeyRound className="size-4 text-green-500" />
+                        </Tooltip>
+                      )}
+
+                      {!canUseModel && (
+                        <Tooltip
+                          tip={
+                            isAuto
+                              ? 'Auto mode requires at least one API key to be set.'
+                              : 'You must set an API key for the relevant provider to use this model.'
+                          }
+                          side="right"
+                        >
+                          <Lock className="size-4 text-red-500" />
+                        </Tooltip>
+                      )}
+
+                      {canUseModel && !isAuto && (
+                        <Tooltip tip="API key configured for this provider" side="right">
+                          <KeyRound className="size-4 text-green-500" />
+                        </Tooltip>
+                      )}
+
+                      {/* {isSelected && <Check className="ml-1 h-4 w-4 text-green-600 dark:text-green-400" />} */}
+                    </div>
+                  </CommandItem>
+                );
+              })}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 });
