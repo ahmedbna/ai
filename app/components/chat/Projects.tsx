@@ -10,7 +10,6 @@ import { useConvex, useQuery } from 'convex/react';
 import { api } from '@convex/_generated/api';
 import { getConvexAuthToken, useConvexSessionIdOrNullOrLoading } from '@/lib/stores/sessionId';
 import { getKnownInitialId } from '@/lib/stores/chatId';
-import { Button } from '@ui/Button';
 import { TextInput } from '@ui/TextInput';
 import { Checkbox } from '@ui/Checkbox';
 import { PlusIcon } from '@radix-ui/react-icons';
@@ -23,6 +22,11 @@ import { FeedbackButton } from '../header/FeedbackButton';
 import { DiscordButton } from '../header/DiscordButton';
 import { useAuth } from '@workos-inc/authkit-react';
 import { SESSION_ID_KEY } from '@/components/chat/ChefAuthWrapper';
+import { Input } from '../ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { Link, User2 } from 'lucide-react';
+import { Button } from '../ui/button';
+import { DeleteProject } from '../sidebar/delete-project';
 
 type ModalContent = { type: 'delete'; item: ChatHistoryItem } | null;
 
@@ -133,48 +137,25 @@ export const Projects = memo(() => {
           </div>
 
           <div className='flex items-center gap-3'>
-            <TextInput
-              id='search-projects'
+            <Input
               type='search'
-              placeholder='Search projects...'
+              id='search-projects'
+              placeholder='Search apps...'
               onChange={handleSearchChange}
               aria-label='Search projects'
-              className='max-w-md'
+              className='min-w-72 h-10'
             />
 
-            {profile && (
-              <MenuComponent
-                placement='top-start'
-                buttonProps={{
-                  variant: 'neutral',
-                  title: 'User menu',
-                  inline: true,
-                  className: 'rounded-full',
-                  icon: profile.avatar ? (
-                    <img
-                      src={profile.avatar}
-                      className='size-8 min-w-8 rounded-full object-cover'
-                      loading='eager'
-                      decoding='sync'
-                    />
-                  ) : (
-                    <PersonIcon className='size-8 min-w-8 rounded-full border text-content-secondary' />
-                  ),
-                }}
-              >
-                <FeedbackButton showInMenu={true} />
-                <DiscordButton showInMenu={true} />
-                <hr />
-                <MenuItemComponent action={handleSettingsClick}>
-                  <GearIcon className='text-content-secondary' />
-                  Settings & Usage
-                </MenuItemComponent>
-                <MenuItemComponent action={handleLogout}>
-                  <ExitIcon className='text-content-secondary' />
-                  Log out
-                </MenuItemComponent>
-              </MenuComponent>
-            )}
+            {profile ? (
+              <Button asChild onClick={handleSettingsClick} className='px-0 py-0' variant='ghost' size='icon'>
+                <Avatar>
+                  <AvatarImage src={profile.avatar} />
+                  <AvatarFallback>
+                    <User2 />
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            ) : null}
           </div>
         </div>
       </div>
@@ -185,18 +166,18 @@ export const Projects = memo(() => {
             <div className='text-center'>
               <div className='text-4xl'>📁</div>
               <h3 className='mt-4 text-lg font-medium text-gray-900 dark:text-gray-100'>
-                {list.length === 0 ? 'No projects yet' : 'No matches found'}
+                {list.length === 0 ? 'No apps yet' : 'No apps found'}
               </h3>
               <p className='mt-2 text-sm text-gray-600 dark:text-gray-400'>
                 {list.length === 0
                   ? 'Start your first project to see it listed here.'
                   : 'Try adjusting your search terms.'}
               </p>
-              {list.length === 0 && (
+              {/* {list.length === 0 && (
                 <Button className='mt-4' href='/' icon={<PlusIcon />}>
                   Create your first project
                 </Button>
-              )}
+              )} */}
             </div>
           </div>
         )}
@@ -225,53 +206,20 @@ export const Projects = memo(() => {
         </div>
       </div>
 
-      {/* Delete confirmation dialog */}
-      {dialogContent?.type === 'delete' && (
-        <ConfirmationDialog
-          onClose={closeDialog}
-          confirmText={'Delete'}
-          onConfirm={() => {
-            if (dialogContent?.type === 'delete') {
-              deleteItem(dialogContent.item);
-            }
-            closeDialog();
-            return Promise.resolve();
-          }}
-          dialogTitle='Delete Project'
-          validationText={dialogContent?.item.description || 'New project...'}
-          dialogBody={
-            <>
-              <p>
-                You are about to delete{' '}
-                <span className='font-medium text-content-primary'>
-                  {dialogContent?.item.description || 'New project...'}
-                </span>
-              </p>
-              {convexProjectInfo?.kind === 'connected' && (
-                <div className='mt-4 flex items-center gap-2'>
-                  <Checkbox
-                    id='delete-convex-project'
-                    checked={shouldDeleteConvexProject}
-                    onChange={() => setShouldDeleteConvexProject(!shouldDeleteConvexProject)}
-                  />
-                  <label htmlFor='delete-convex-project' className='text-pretty text-content-secondary'>
-                    Also delete the associated Convex project (
-                    <a
-                      href={`https://dashboard.convex.dev/p/${convexProjectInfo.projectSlug}`}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='text-content-link hover:underline'
-                    >
-                      {convexProjectInfo.projectSlug}
-                    </a>
-                    )
-                  </label>
-                </div>
-              )}
-            </>
+      <DeleteProject
+        open={dialogContent?.type === 'delete'}
+        setOpen={closeDialog}
+        name={dialogContent?.item.description}
+        connected={convexProjectInfo?.kind === 'connected'}
+        projectSlug={convexProjectInfo?.projectSlug}
+        shouldDeleteConvexProject={shouldDeleteConvexProject}
+        setShouldDeleteConvexProject={setShouldDeleteConvexProject}
+        onConfirm={() => {
+          if (dialogContent?.type === 'delete') {
+            deleteItem(dialogContent.item);
           }
-        />
-      )}
+        }}
+      />
 
       <div className='flex w-full flex-col justify-between gap-2 p-4 transition-opacity sm:flex-row'>
         <div className='flex items-end gap-3 font-display text-sm font-medium text-content-tertiary'>

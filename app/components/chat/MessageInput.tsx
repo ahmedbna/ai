@@ -278,7 +278,7 @@ export const MessageInput = memo(function MessageInput({
             disabled={disabled}
             highlights={HIGHLIGHTS}
           />
-          <div className='flex flex-wrap items-center gap-2 p-1.5 text-sm'>
+          <div className='flex flex-wrap items-center gap-2 p-2 text-sm'>
             {chefAuthState.kind === 'fullyLoggedIn' && (
               <ModelSelector modelSelection={modelSelection} setModelSelection={setModelSelection} size='sm' />
             )}
@@ -376,7 +376,7 @@ export const MessageInput = memo(function MessageInput({
                 //       : undefined
                 // }
                 onClick={handleClickButton}
-                className='mr-2 flex size-8 items-center justify-center rounded-full p-0'
+                className='mr-1 flex size-8 items-center justify-center rounded-full p-0'
                 aria-label={isStreaming ? 'Stop' : 'Send'}
               >
                 {sendMessageInProgress ? (

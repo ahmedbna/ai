@@ -79,8 +79,8 @@ export function useEditChatDescription({
   const handleBlur = useCallback(async () => {
     const latestDescription = await fetchLatestDescription();
     setCurrentDescription(latestDescription);
-    toggleEditMode();
-  }, [fetchLatestDescription, toggleEditMode]);
+    setEditing(false);
+  }, [fetchLatestDescription]);
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent) => {
@@ -90,7 +90,7 @@ export function useEditChatDescription({
         const trimmedDesc = desc.trim();
 
         if (trimmedDesc === initialDescription) {
-          toggleEditMode();
+          setEditing(false);
           return false; // No change, skip validation
         }
 
@@ -133,9 +133,9 @@ export function useEditChatDescription({
         toast.error('Failed to update chat description: ' + (error as Error).message);
       }
 
-      toggleEditMode();
+      setEditing(false);
     },
-    [currentDescription, convex, chatId, initialDescription, toggleEditMode, syncWithGlobalStore, sessionId],
+    [currentDescription, convex, chatId, initialDescription, syncWithGlobalStore, sessionId],
   );
 
   const handleKeyDown = useCallback(
