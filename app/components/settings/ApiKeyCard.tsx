@@ -21,7 +21,8 @@ export function ApiKeyCard() {
     try {
       await convex.mutation(api.apiKeys.setApiKeyForCurrentMember, {
         apiKey: {
-          preference: value ? 'always' : 'quotaExhausted',
+          preference: 'always',
+          // preference: value ? 'always' : 'quotaExhausted',
           value: apiKey?.value,
           openai: apiKey?.openai,
           xai: apiKey?.xai,
@@ -66,19 +67,17 @@ export function ApiKeyCard() {
       <div className='p-6'>
         <h2 className='mb-2 text-xl font-semibold text-content-primary'>API Keys</h2>
 
-        <p className='mb-1 max-w-prose text-sm text-content-secondary'>
-          You can use your own API keys to cook with Chef.
-        </p>
-        <p className='mb-4 max-w-prose text-sm text-content-secondary'>
+        <p className='max-w-prose text-sm text-content-secondary'>Add your own API keys to use with BNA AI.</p>
+        {/* <p className='mb-4 max-w-prose text-sm text-content-secondary'>
           By default, Chef will use tokens built into your Convex plan.
-        </p>
-        <div className='space-y-4'>
-          <AlwaysUseKeyCheckbox
+        </p> */}
+        <div className='mt-6 space-y-4'>
+          {/* <AlwaysUseKeyCheckbox
             isLoading={apiKey === undefined}
             disabled={!hasAnyKey}
             value={apiKey?.preference === 'always'}
             onChange={handleAlwaysUseKeyChange}
-          />
+          /> */}
           <ApiKeyItem
             label='Anthropic API key'
             description={
@@ -98,7 +97,7 @@ export function ApiKeyCard() {
           />
 
           <ApiKeyItem
-            label='Google API key'
+            label='Gemini API key'
             description={
               <a
                 href='https://ai.google.dev/gemini-api/docs/api-key'

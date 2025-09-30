@@ -29,7 +29,7 @@ import { useMutation } from 'convex/react';
 import { api } from '@convex/_generated/api';
 import { subchatIndexStore, useIsSubchatLoaded } from '@/lib/stores/subchats';
 import { Projects } from './Projects';
-import Particles from './particles';
+import Particles from '../ui/particles';
 
 interface BaseChatProps {
   // Refs

@@ -12,8 +12,9 @@ import { api } from '@convex/_generated/api';
 import { ApiKeyCard } from './settings/ApiKeyCard';
 import { Spinner } from '@ui/Spinner';
 import { useAuth } from '@workos-inc/authkit-react';
-import { Button } from '@ui/Button';
 import { Loading } from './Loading';
+import Particles from './ui/particles';
+import { Button } from './ui/button';
 
 export function Homepage() {
   // Set up a temporary chat ID early in app initialization. We'll
@@ -44,19 +45,38 @@ const ChatWrapper = ({ initialId }: { initialId: string }) => {
 
   if (chefAuthState.kind === 'unauthenticated') {
     return (
-      <div className='flex size-full flex-col items-center justify-center gap-4'>
-        <Button
-          variant='neutral'
-          className='text-xs font-normal'
-          icon={<img className='size-4' src='/icons/Convex.svg' alt='Convex' />}
-          onClick={() => {
-            void signIn();
-          }}
-        >
-          <>
-            <span>Sign in</span>
-          </>
-        </Button>
+      <div className='relative size-full overflow-hidden'>
+        <div className='absolute inset-0 z-10 flex flex-col items-center  gap-4'>
+          <div className='mx-auto mb-4 px-4 pt-36 text-center md:mt-16 lg:px-0'>
+            <p className='pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-4xl font-black leading-none text-transparent dark:from-white dark:to-slate-900/10 md:text-6xl'>
+              BNA AI
+            </p>
+
+            <span className='pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-3xl font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10'>
+              Idea to fullstack mobile app in seconds
+            </span>
+          </div>
+
+          <Button
+            size='lg'
+            className='flex items-center justify-center px-8 py-8'
+            onClick={() => {
+              void signIn();
+            }}
+          >
+            <img className='mr-2 size-8' src='/icons/Convex.svg' alt='Convex' />
+            <span className='text-lg'>Login with Convex</span>
+          </Button>
+        </div>
+
+        {/* This is the background image layer */}
+        <div
+          className='absolute inset-0 z-0 bg-cover bg-center bg-no-repeat'
+          style={{ backgroundImage: 'url(/background.png)' }}
+        />
+
+        {/* This is the particles layer */}
+        <Particles size={0.2} quantity={80} className='absolute inset-0 z-0' />
       </div>
     );
   }

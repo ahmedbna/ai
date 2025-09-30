@@ -4,7 +4,7 @@ export type Theme = 'dark' | 'light';
 
 const kTheme = 'bolt_theme';
 
-const DEFAULT_THEME = 'light';
+const DEFAULT_THEME = 'dark';
 
 export const themeStore = atom<Theme>(initStore());
 

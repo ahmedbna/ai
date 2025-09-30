@@ -54,9 +54,9 @@ export function ProfileCard() {
                   </button>
                 </div>
               </div>
-              <div className='ml-auto flex items-center'>
+              {/* <div className='ml-auto flex items-center'>
                 <Button onClick={() => toggleTheme()}>{theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}</Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { Spinner } from '@/components/ui/spinner';
-import Particles from './chat/particles';
+import Particles from './ui/particles';
 
 export function Loading(props: { message?: string }) {
   return (

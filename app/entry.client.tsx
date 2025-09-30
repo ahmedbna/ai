@@ -13,7 +13,7 @@ Sentry.init({
 
   integrations: [
     Sentry.feedbackIntegration({
-      colorScheme: 'system',
+      colorScheme: 'dark',
       autoInject: false,
       showName: false,
       showEmail: false,
