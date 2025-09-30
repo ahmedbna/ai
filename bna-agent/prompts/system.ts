@@ -37,8 +37,6 @@ export function generalSystemPrompt(options: SystemPromptOptions) {
   ${openaiProxyGuidelines(options)}
   ${resendProxyGuidelines(options)}
   ${outputInstructions(options)}
-  ${openAi(options)}
-  ${google(options)}
   `;
   return result;
 }

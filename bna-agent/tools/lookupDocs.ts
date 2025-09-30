@@ -1,8 +1,8 @@
-import type { Tool } from 'ai';
-import { presenceComponentReadmePrompt } from 'bna-agent/prompts/components/presence';
-import { proseMirrorComponentReadmePrompt } from 'bna-agent/prompts/components/proseMirror';
 import { z } from 'zod';
-import { resendComponentReadmePrompt } from 'bna-agent/prompts/components/resend';
+import type { Tool } from 'ai';
+import { proseMirrorComponentReadmePrompt } from '../prompts/components/proseMirror.js';
+import { presenceComponentReadmePrompt } from '../prompts/components/presence.js';
+import { resendComponentReadmePrompt } from '../prompts/components/resend.js';
 
 export const lookupDocsParameters = z.object({
   docs: z
