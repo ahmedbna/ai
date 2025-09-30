@@ -1,55 +1,55 @@
-import { v } from "convex/values";
-import { httpAction, internalMutation, mutation } from "./_generated/server";
-import { getCurrentMember } from "./sessions";
-import { internal } from "./_generated/api";
-import { rateLimiter } from "./rateLimiter";
+import { v } from 'convex/values';
+import { httpAction, internalMutation, mutation } from './_generated/server';
+import { getCurrentMember } from './sessions';
+import { internal } from './_generated/api';
+import { rateLimiter } from './rateLimiter';
 
 const MAX_RATELIMITER_WAIT = 60 * 1000;
 
 export const resendProxy = httpAction(async (ctx, req) => {
   if (!resendProxyEnabled()) {
-    return new Response(JSON.stringify("Convex Resend proxy is disabled."), { status: 400 });
+    return new Response(JSON.stringify('Convex Resend proxy is disabled.'), { status: 400 });
   }
   if (!process.env.RESEND_API_KEY) {
-    throw new Error("RESEND_API_KEY is not set");
+    throw new Error('RESEND_API_KEY is not set');
   }
 
   const url = new URL(req.url);
-  if (url.pathname != "/resend-proxy/emails") {
-    return new Response(JSON.stringify("Only the /emails API is supported"), { status: 400 });
+  if (url.pathname != '/resend-proxy/emails') {
+    return new Response(JSON.stringify('Only the /emails API is supported'), { status: 400 });
   }
 
   const headers = new Headers(req.headers);
   const body = await req.json();
 
   let recipientEmail: string;
-  if (typeof body.to === "string") {
+  if (typeof body.to === 'string') {
     recipientEmail = body.to;
   } else {
     if (!Array.isArray(body.to) || body.to.length !== 1) {
-      return new Response(JSON.stringify("Convex Resend proxy only supports one recipient."), { status: 400 });
+      return new Response(JSON.stringify('Convex Resend proxy only supports one recipient.'), { status: 400 });
     }
     recipientEmail = body.to[0];
   }
 
   if (body.bcc || body.cc) {
-    return new Response(JSON.stringify("Convex Resend proxy does not support bcc or cc."), { status: 400 });
+    return new Response(JSON.stringify('Convex Resend proxy does not support bcc or cc.'), { status: 400 });
   }
 
   if (body.scheduled_at) {
-    return new Response(JSON.stringify("Convex Resend proxy does not support scheduled emails."), { status: 400 });
+    return new Response(JSON.stringify('Convex Resend proxy does not support scheduled emails.'), { status: 400 });
   }
 
   if (body.headers) {
-    return new Response(JSON.stringify("Convex Resend proxy does not support custom headers."), { status: 400 });
+    return new Response(JSON.stringify('Convex Resend proxy does not support custom headers.'), { status: 400 });
   }
 
-  const authHeader = headers.get("Authorization");
+  const authHeader = headers.get('Authorization');
   if (!authHeader) {
-    return new Response(JSON.stringify("Unauthorized"), { status: 401 });
+    return new Response(JSON.stringify('Unauthorized'), { status: 401 });
   }
-  if (!authHeader.startsWith("Bearer ")) {
-    return new Response(JSON.stringify("Invalid authorization header"), { status: 401 });
+  if (!authHeader.startsWith('Bearer ')) {
+    return new Response(JSON.stringify('Invalid authorization header'), { status: 401 });
   }
   const token = authHeader.slice(7);
   const result = await ctx.runMutation(internal.resendProxy.decrementToken, { token, recipientEmail });
@@ -61,13 +61,13 @@ export const resendProxy = httpAction(async (ctx, req) => {
   let waitStart = Date.now();
   let deadline = waitStart + MAX_RATELIMITER_WAIT;
   while (true) {
-    const status = await rateLimiter.limit(ctx, "resendProxy");
+    const status = await rateLimiter.limit(ctx, 'resendProxy');
     if (status.ok) {
       break;
     }
     const now = Date.now();
     if (now > deadline) {
-      return new Response(JSON.stringify("Rate limit exceeded"), { status: 429 });
+      return new Response(JSON.stringify('Rate limit exceeded'), { status: 429 });
     }
     const remainingTime = deadline - now;
     const waitTime = Math.min(status.retryAfter * (1 + Math.random()), remainingTime);
@@ -75,12 +75,12 @@ export const resendProxy = httpAction(async (ctx, req) => {
     await new Promise((resolve) => setTimeout(resolve, waitTime));
   }
 
-  const deploymentName = process.env.CONVEX_CLOUD_URL?.replace("https://", "").replace(".convex.cloud", "");
-  return await fetch("https://api.resend.com/emails", {
-    method: "POST",
+  const deploymentName = process.env.CONVEX_CLOUD_URL?.replace('https://', '').replace('.convex.cloud', '');
+  return await fetch('https://api.resend.com/emails', {
+    method: 'POST',
     headers: {
       Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       from: `Chef Notifications <${deploymentName}@convexchef.app>`,
@@ -103,17 +103,17 @@ export const decrementToken = internalMutation({
   },
   handler: async (ctx, args) => {
     if (!resendProxyEnabled()) {
-      return { success: false, error: "Convex Resend proxy is disabled." };
+      return { success: false, error: 'Convex Resend proxy is disabled.' };
     }
     const token = await ctx.db
-      .query("resendTokens")
-      .withIndex("byToken", (q) => q.eq("token", args.token))
+      .query('resendTokens')
+      .withIndex('byToken', (q) => q.eq('token', args.token))
       .unique();
     if (!token) {
-      return { success: false, error: "Invalid RESEND_API_TOKEN" };
+      return { success: false, error: 'Invalid RESEND_API_TOKEN' };
     }
     if (token.requestsRemaining <= 0) {
-      return { success: false, error: "Resend API token has no requests remaining." };
+      return { success: false, error: 'Resend API token has no requests remaining.' };
     }
     if (token.verifiedEmail !== args.recipientEmail) {
       return {
@@ -136,21 +136,21 @@ export const issueResendToken = mutation({
     }
     const member = await getCurrentMember(ctx);
     if (!member) {
-      console.error("Not authorized", member);
+      console.error('Not authorized', member);
       return null;
     }
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      console.error("Not authorized", identity);
+      console.error('Not authorized', identity);
       return null;
     }
     if (!identity.email || !identity.emailVerified) {
-      console.error("User has no email or email is not verified", identity);
+      console.error('User has no email or email is not verified', identity);
       return null;
     }
     const existing = await ctx.db
-      .query("resendTokens")
-      .withIndex("byMemberId", (q) => q.eq("memberId", member._id))
+      .query('resendTokens')
+      .withIndex('byMemberId', (q) => q.eq('memberId', member._id))
       .unique();
     if (existing) {
       if (existing.verifiedEmail !== identity.email) {
@@ -161,7 +161,7 @@ export const issueResendToken = mutation({
       return existing.token;
     }
     const token = crypto.randomUUID();
-    await ctx.db.insert("resendTokens", {
+    await ctx.db.insert('resendTokens', {
       memberId: member._id,
       token,
       verifiedEmail: identity.email,
@@ -174,7 +174,7 @@ export const issueResendToken = mutation({
 
 function resendProxyEnabled() {
   const fromEnv = process.env.RESEND_PROXY_ENABLED;
-  return fromEnv && fromEnv == "1";
+  return fromEnv && fromEnv == '1';
 }
 
 function includedRequests() {

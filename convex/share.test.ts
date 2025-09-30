@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { api, internal } from "./_generated/api";
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+import { api, internal } from './_generated/api';
 import {
   createChat,
   setupTest,
@@ -9,12 +9,12 @@ import {
   verifyStoredContent,
   initializeChat,
   createSubchat,
-} from "./test.setup";
-import type { SerializedMessage } from "./messages";
-import { describe } from "node:test";
-import { cloneShow } from "./share";
+} from './test.setup';
+import type { SerializedMessage } from './messages';
+import { describe } from 'node:test';
+import { cloneShow } from './share';
 
-describe("share", () => {
+describe('share', () => {
   let t: TestConvex;
   beforeEach(() => {
     vi.useFakeTimers();
@@ -26,24 +26,24 @@ describe("share", () => {
     vi.useRealTimers();
   });
 
-  test("sharing a chat fails if there is no snapshot", async () => {
+  test('sharing a chat fails if there is no snapshot', async () => {
     const t = setupTest();
     const { sessionId } = await createChat(t);
-    await expect(t.mutation(api.share.create, { sessionId, id: "test" })).rejects.toThrow("Chat history not found");
+    await expect(t.mutation(api.share.create, { sessionId, id: 'test' })).rejects.toThrow('Chat history not found');
   });
 
-  test("sharing a chat works if there is an empty subchat after the first one", async () => {
+  test('sharing a chat works if there is an empty subchat after the first one', async () => {
     const { sessionId, chatId } = await initializeChat(t);
 
     const subchat0Message: SerializedMessage = {
-      id: "subchat0-msg1",
-      role: "user",
-      parts: [{ text: "Hello from subchat 0!", type: "text" }],
+      id: 'subchat0-msg1',
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 0!', type: 'text' }],
       createdAt: Date.now(),
     };
     await storeChat(t, chatId, sessionId, {
       messages: [subchat0Message],
-      snapshot: new Blob(["subchat 0 snapshot"]),
+      snapshot: new Blob(['subchat 0 snapshot']),
       subchatIndex: 0,
     });
 
@@ -54,7 +54,7 @@ describe("share", () => {
     expect(code).toBeDefined();
   });
 
-  test("sharing a chat works if there is a snapshot + message", async () => {
+  test('sharing a chat works if there is a snapshot + message', async () => {
     const { sessionId, chatId } = await initializeChat(t);
 
     // Create a second subchat
@@ -62,14 +62,14 @@ describe("share", () => {
 
     // Add messages to the second subchat
     const subchat1Message: SerializedMessage = {
-      id: "subchat1-msg1",
-      role: "user",
-      parts: [{ text: "Hello from subchat 1!", type: "text" }],
+      id: 'subchat1-msg1',
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 1!', type: 'text' }],
       createdAt: Date.now(),
     };
     await storeChat(t, chatId, sessionId, {
       messages: [subchat1Message],
-      snapshot: new Blob(["subchat 1 snapshot"]),
+      snapshot: new Blob(['subchat 1 snapshot']),
       subchatIndex: 1,
     });
 
@@ -77,7 +77,7 @@ describe("share", () => {
     expect(code).toBeDefined();
   });
 
-  test("getShareDescription works", async () => {
+  test('getShareDescription works', async () => {
     const { sessionId, chatId } = await initializeChat(t);
 
     // Create a second subchat
@@ -85,34 +85,34 @@ describe("share", () => {
 
     // Add messages to the second subchat
     const subchat1Message: SerializedMessage = {
-      id: "subchat1-msg1",
-      role: "user",
-      parts: [{ text: "Hello from subchat 1!", type: "text" }],
+      id: 'subchat1-msg1',
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 1!', type: 'text' }],
       createdAt: Date.now(),
     };
     await storeChat(t, chatId, sessionId, {
       messages: [subchat1Message],
-      snapshot: new Blob(["subchat 1 snapshot"]),
+      snapshot: new Blob(['subchat 1 snapshot']),
       subchatIndex: 1,
     });
 
     await t.mutation(api.messages.setUrlId, {
       sessionId,
       chatId,
-      urlHint: "test",
-      description: "This is a test chat",
+      urlHint: 'test',
+      description: 'This is a test chat',
     });
-    const { code } = await t.mutation(api.share.create, { sessionId, id: "test" });
+    const { code } = await t.mutation(api.share.create, { sessionId, id: 'test' });
     expect(code).toBeDefined();
     const { description } = await t.query(api.share.getShareDescription, { code });
-    expect(description).toBe("This is a test chat");
+    expect(description).toBe('This is a test chat');
   });
 
-  test("cloning a chat forks history", async () => {
+  test('cloning a chat forks history', async () => {
     const firstMessage: SerializedMessage = {
-      id: "1",
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      id: '1',
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
       createdAt: Date.now(),
     };
     const { sessionId, chatId } = await initializeChat(t, firstMessage);
@@ -122,14 +122,14 @@ describe("share", () => {
 
     // Add messages to the second subchat
     const subchat1Message: SerializedMessage = {
-      id: "subchat1-msg1",
-      role: "user",
-      parts: [{ text: "Hello from subchat 1!", type: "text" }],
+      id: 'subchat1-msg1',
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 1!', type: 'text' }],
       createdAt: Date.now(),
     };
     await storeChat(t, chatId, sessionId, {
       messages: [subchat1Message],
-      snapshot: new Blob(["subchat 1 snapshot"]),
+      snapshot: new Blob(['subchat 1 snapshot']),
       subchatIndex: 1,
     });
 
@@ -143,8 +143,8 @@ describe("share", () => {
     expect(clonedChatId).toBeDefined();
 
     // Test that subchat 0 messages are preserved
-    const subchat0Response = await t.fetch("/initial_messages", {
-      method: "POST",
+    const subchat0Response = await t.fetch('/initial_messages', {
+      method: 'POST',
       body: JSON.stringify({
         chatId: clonedChatId,
         sessionId,
@@ -156,8 +156,8 @@ describe("share", () => {
     expect(subchat0Messages[0]).toMatchObject(firstMessage);
 
     // Test that subchat 1 messages are preserved
-    const subchat1Response = await t.fetch("/initial_messages", {
-      method: "POST",
+    const subchat1Response = await t.fetch('/initial_messages', {
+      method: 'POST',
       body: JSON.stringify({
         chatId: clonedChatId,
         sessionId,
@@ -169,7 +169,7 @@ describe("share", () => {
     expect(subchat1Messages[0]).toMatchObject(subchat1Message);
   });
 
-  test("cloning a chat preserves the snapshotId in both the chat and storage state", async () => {
+  test('cloning a chat preserves the snapshotId in both the chat and storage state', async () => {
     const { sessionId, chatId } = await initializeChat(t);
 
     // Create a second subchat
@@ -177,14 +177,14 @@ describe("share", () => {
 
     // Add messages to the second subchat
     const subchat1Message: SerializedMessage = {
-      id: "subchat1-msg1",
-      role: "user",
-      parts: [{ text: "Hello from subchat 1!", type: "text" }],
+      id: 'subchat1-msg1',
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 1!', type: 'text' }],
       createdAt: Date.now(),
     };
     await storeChat(t, chatId, sessionId, {
       messages: [subchat1Message],
-      snapshot: new Blob(["subchat 1 snapshot"]),
+      snapshot: new Blob(['subchat 1 snapshot']),
       subchatIndex: 1,
     });
 
@@ -195,13 +195,13 @@ describe("share", () => {
     // Get the original share to get its snapshotId
     const originalShare = await t.run(async (ctx) => {
       return ctx.db
-        .query("shares")
-        .withIndex("byCode", (q) => q.eq("code", code))
+        .query('shares')
+        .withIndex('byCode', (q) => q.eq('code', code))
         .first();
     });
     expect(originalShare).not.toBeNull();
     if (!originalShare || !originalShare.snapshotId) {
-      throw new Error("Share not found or missing snapshotId");
+      throw new Error('Share not found or missing snapshotId');
     }
 
     // Clone the chat
@@ -215,13 +215,13 @@ describe("share", () => {
     // Get the cloned chat from the database
     const clonedChat = await t.run(async (ctx) => {
       return ctx.db
-        .query("chats")
-        .withIndex("byInitialId", (q) => q.eq("initialId", clonedChatId))
+        .query('chats')
+        .withIndex('byInitialId', (q) => q.eq('initialId', clonedChatId))
         .first();
     });
     expect(clonedChat).not.toBeNull();
     if (!clonedChat) {
-      throw new Error("Cloned chat not found");
+      throw new Error('Cloned chat not found');
     }
 
     // Verify the snapshotId was preserved in the chat
@@ -230,8 +230,8 @@ describe("share", () => {
     // Get the storage states for the cloned chat (should have multiple)
     const clonedStorageStates = await t.run(async (ctx) => {
       return ctx.db
-        .query("chatMessagesStorageState")
-        .filter((q) => q.eq(q.field("chatId"), clonedChat._id))
+        .query('chatMessagesStorageState')
+        .filter((q) => q.eq(q.field('chatId'), clonedChat._id))
         .collect();
     });
     expect(clonedStorageStates.length).toBeGreaterThan(0);
@@ -244,7 +244,7 @@ describe("share", () => {
     expect(subchat1Storage).not.toBeNull();
 
     if (!subchat0Storage || !subchat1Storage) {
-      throw new Error("Storage states for subchats not found");
+      throw new Error('Storage states for subchats not found');
     }
 
     // Verify the snapshotId was preserved in both storage states
@@ -253,10 +253,10 @@ describe("share", () => {
     expect(subchat0Storage.snapshotId).toBeDefined();
 
     // Verify the actual content of the snapshot is accessible
-    await verifyStoredContent(t, clonedChat.snapshotId, "subchat 1 snapshot");
+    await verifyStoredContent(t, clonedChat.snapshotId, 'subchat 1 snapshot');
   });
 
-  test("cloning a chat from a social share preserves the snapshotId in both the chat and storage state", async () => {
+  test('cloning a chat from a social share preserves the snapshotId in both the chat and storage state', async () => {
     const { sessionId, chatId } = await initializeChat(t);
 
     // Create a second subchat
@@ -264,14 +264,14 @@ describe("share", () => {
 
     // Add messages to the second subchat
     const subchat1Message: SerializedMessage = {
-      id: "subchat1-msg1",
-      role: "user",
-      parts: [{ text: "Hello from subchat 1!", type: "text" }],
+      id: 'subchat1-msg1',
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 1!', type: 'text' }],
       createdAt: Date.now(),
     };
     await storeChat(t, chatId, sessionId, {
       messages: [subchat1Message],
-      snapshot: new Blob(["subchat 1 snapshot"]),
+      snapshot: new Blob(['subchat 1 snapshot']),
       subchatIndex: 1,
     });
 
@@ -279,7 +279,7 @@ describe("share", () => {
     const code = await t.mutation(api.socialShare.share, {
       sessionId,
       id: chatId,
-      shared: "shared",
+      shared: 'shared',
       allowForkFromLatest: true,
     });
 
@@ -300,13 +300,13 @@ describe("share", () => {
     // Get the cloned chat from the database
     const clonedChat = await t.run(async (ctx) => {
       return ctx.db
-        .query("chats")
-        .withIndex("byInitialId", (q) => q.eq("initialId", clonedChatId))
+        .query('chats')
+        .withIndex('byInitialId', (q) => q.eq('initialId', clonedChatId))
         .first();
     });
     expect(clonedChat).not.toBeNull();
     if (!clonedChat) {
-      throw new Error("Cloned chat not found");
+      throw new Error('Cloned chat not found');
     }
 
     // Verify the snapshotId was preserved in the chat
@@ -315,8 +315,8 @@ describe("share", () => {
     // Get the storage states for the cloned chat (should have multiple)
     const clonedStorageStates = await t.run(async (ctx) => {
       return ctx.db
-        .query("chatMessagesStorageState")
-        .filter((q) => q.eq(q.field("chatId"), clonedChat._id))
+        .query('chatMessagesStorageState')
+        .filter((q) => q.eq(q.field('chatId'), clonedChat._id))
         .collect();
     });
     expect(clonedStorageStates.length).toBeGreaterThan(0);
@@ -329,7 +329,7 @@ describe("share", () => {
     expect(subchat1Storage).not.toBeNull();
 
     if (!subchat0Storage || !subchat1Storage) {
-      throw new Error("Storage states for subchats not found");
+      throw new Error('Storage states for subchats not found');
     }
 
     // Verify the snapshotId was preserved in both storage states
@@ -338,11 +338,11 @@ describe("share", () => {
   });
   // TODO: Test that cloning messages does not leak a more recent snapshot or later messages
 
-  test("sharing a chat uses the snapshot in the chatMessagesStorageState table", async () => {
+  test('sharing a chat uses the snapshot in the chatMessagesStorageState table', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // First, create an old snapshot and store it in the chats table
-    const oldSnapshotContent = "old snapshot content";
+    const oldSnapshotContent = 'old snapshot content';
     const oldSnapshotId = await t.run(async (ctx) => {
       return ctx.storage.store(new Blob([oldSnapshotContent]));
     });
@@ -355,12 +355,12 @@ describe("share", () => {
 
     // Store a message with a new snapshot using storeChat
     const message: SerializedMessage = {
-      id: "1",
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      id: '1',
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
       createdAt: Date.now(),
     };
-    const newSnapshotContent = "new snapshot content";
+    const newSnapshotContent = 'new snapshot content';
     await storeChat(t, chatId, sessionId, {
       messages: [message],
       snapshot: new Blob([newSnapshotContent]),
@@ -370,12 +370,12 @@ describe("share", () => {
     await createSubchat(t, chatId, sessionId);
 
     const subchat1Message: SerializedMessage = {
-      id: "subchat1-msg1",
-      role: "user",
-      parts: [{ text: "Hello from subchat 1!", type: "text" }],
+      id: 'subchat1-msg1',
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 1!', type: 'text' }],
       createdAt: Date.now(),
     };
-    const subchat1SnapshotContent = "subchat 1 snapshot content";
+    const subchat1SnapshotContent = 'subchat 1 snapshot content';
     await storeChat(t, chatId, sessionId, {
       messages: [subchat1Message],
       snapshot: new Blob([subchat1SnapshotContent]),
@@ -408,16 +408,16 @@ describe("share", () => {
     // Get the share and verify it has the new snapshot ID
     const share = await t.run(async (ctx) => {
       return ctx.db
-        .query("shares")
-        .withIndex("byCode", (q) => q.eq("code", code))
+        .query('shares')
+        .withIndex('byCode', (q) => q.eq('code', code))
         .first();
     });
     expect(share).not.toBeNull();
     if (!share) {
-      throw new Error("Share not found");
+      throw new Error('Share not found');
     }
     if (!subchat1StorageInfo?.snapshotId) {
-      throw new Error("No snapshot ID");
+      throw new Error('No snapshot ID');
     }
 
     // Verify the share uses the new snapshot from chatMessagesStorageState (latest subchat)
@@ -425,16 +425,16 @@ describe("share", () => {
     expect(share.snapshotId).not.toBe(oldSnapshotId);
 
     if (!share.snapshotId) {
-      throw new Error("No snapshot ID");
+      throw new Error('No snapshot ID');
     }
     await verifyStoredContent(t, share.snapshotId, subchat1SnapshotContent);
   });
 
-  test("sharing falls back to chat.snapshotId when storageState has no snapshot", async () => {
+  test('sharing falls back to chat.snapshotId when storageState has no snapshot', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Create a snapshot and store it in the chats table
-    const snapshotContent = "snapshot from chats table";
+    const snapshotContent = 'snapshot from chats table';
     const snapshotId = await t.run(async (ctx) => {
       return ctx.storage.store(new Blob([snapshotContent]));
     });
@@ -446,9 +446,9 @@ describe("share", () => {
 
     // Store a message without a snapshot to create storageState
     const message: SerializedMessage = {
-      id: "1",
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      id: '1',
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
       createdAt: Date.now(),
     };
     await storeChat(t, chatId, sessionId, {
@@ -459,9 +459,9 @@ describe("share", () => {
     await createSubchat(t, chatId, sessionId);
 
     const subchat1Message: SerializedMessage = {
-      id: "subchat1-msg1",
-      role: "user",
-      parts: [{ text: "Hello from subchat 1!", type: "text" }],
+      id: 'subchat1-msg1',
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 1!', type: 'text' }],
       createdAt: Date.now(),
     };
     await storeChat(t, chatId, sessionId, {
@@ -496,16 +496,16 @@ describe("share", () => {
     // Get the share and verify it has the snapshot ID from chats table
     const share = await t.run(async (ctx) => {
       return ctx.db
-        .query("shares")
-        .withIndex("byCode", (q) => q.eq("code", code))
+        .query('shares')
+        .withIndex('byCode', (q) => q.eq('code', code))
         .first();
     });
     expect(share).not.toBeNull();
     if (!share) {
-      throw new Error("Share not found");
+      throw new Error('Share not found');
     }
     if (!share.snapshotId) {
-      throw new Error("No snapshot ID in share");
+      throw new Error('No snapshot ID in share');
     }
 
     // Verify the share uses the snapshot from chats table
@@ -515,11 +515,11 @@ describe("share", () => {
     await verifyStoredContent(t, share.snapshotId, snapshotContent);
   });
 
-  test("cloning a chat copies over the subchat descriptions", async () => {
+  test('cloning a chat copies over the subchat descriptions', async () => {
     const firstMessage: SerializedMessage = {
-      id: "1",
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      id: '1',
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
       createdAt: Date.now(),
     };
     const { sessionId, chatId } = await initializeChat(t, firstMessage);
@@ -529,22 +529,22 @@ describe("share", () => {
 
     // Add messages to the second subchat
     const subchat1Message: SerializedMessage = {
-      id: "subchat1-msg1",
-      role: "user",
-      parts: [{ text: "Create a todo app with React!", type: "text" }],
+      id: 'subchat1-msg1',
+      role: 'user',
+      parts: [{ text: 'Create a todo app with React!', type: 'text' }],
       createdAt: Date.now(),
     };
     await storeChat(t, chatId, sessionId, {
       messages: [subchat1Message],
-      snapshot: new Blob(["subchat 1 snapshot"]),
+      snapshot: new Blob(['subchat 1 snapshot']),
       subchatIndex: 1,
     });
 
     // Get the original chat doc to find the internal chat ID
     const originalChat = await t.run(async (ctx) => {
       return ctx.db
-        .query("chats")
-        .withIndex("byInitialId", (q) => q.eq("initialId", chatId))
+        .query('chats')
+        .withIndex('byInitialId', (q) => q.eq('initialId', chatId))
         .first();
     });
     expect(originalChat).toBeDefined();
@@ -552,16 +552,16 @@ describe("share", () => {
     // Add descriptions to both subchats using saveMessageSummary - get the LATEST states after storeChat
     const originalSubchatStates = await t.run(async (ctx) => {
       const subchat0State = await ctx.db
-        .query("chatMessagesStorageState")
-        .filter((q) => q.eq(q.field("chatId"), originalChat!._id))
-        .filter((q) => q.eq(q.field("subchatIndex"), 0))
-        .order("desc")
+        .query('chatMessagesStorageState')
+        .filter((q) => q.eq(q.field('chatId'), originalChat!._id))
+        .filter((q) => q.eq(q.field('subchatIndex'), 0))
+        .order('desc')
         .first();
       const subchat1State = await ctx.db
-        .query("chatMessagesStorageState")
-        .filter((q) => q.eq(q.field("chatId"), originalChat!._id))
-        .filter((q) => q.eq(q.field("subchatIndex"), 1))
-        .order("desc")
+        .query('chatMessagesStorageState')
+        .filter((q) => q.eq(q.field('chatId'), originalChat!._id))
+        .filter((q) => q.eq(q.field('subchatIndex'), 1))
+        .order('desc')
         .first();
       return { subchat0State, subchat1State };
     });
@@ -571,12 +571,12 @@ describe("share", () => {
 
     await t.mutation(internal.summarize.saveMessageSummary, {
       chatMessageId: originalSubchatStates.subchat0State!._id,
-      summary: "Initial greeting chat",
+      summary: 'Initial greeting chat',
     });
 
     await t.mutation(internal.summarize.saveMessageSummary, {
       chatMessageId: originalSubchatStates.subchat1State!._id,
-      summary: "Todo app creation",
+      summary: 'Todo app creation',
     });
 
     const { code } = await t.mutation(api.share.create, { sessionId, id: chatId });
@@ -592,8 +592,8 @@ describe("share", () => {
     // Get the cloned chat doc to find the internal chat ID
     const clonedChat = await t.run(async (ctx) => {
       return ctx.db
-        .query("chats")
-        .withIndex("byInitialId", (q) => q.eq("initialId", clonedChatId))
+        .query('chats')
+        .withIndex('byInitialId', (q) => q.eq('initialId', clonedChatId))
         .first();
     });
     expect(clonedChat).toBeDefined();
@@ -601,8 +601,8 @@ describe("share", () => {
     // Verify subchat descriptions were copied
     const clonedSubchatStates = await t.run(async (ctx) => {
       return ctx.db
-        .query("chatMessagesStorageState")
-        .filter((q) => q.eq(q.field("chatId"), clonedChat!._id))
+        .query('chatMessagesStorageState')
+        .filter((q) => q.eq(q.field('chatId'), clonedChat!._id))
         .collect();
     });
 
@@ -611,7 +611,7 @@ describe("share", () => {
 
     expect(clonedSubchat0State).toBeDefined();
     expect(clonedSubchat1State).toBeDefined();
-    expect(clonedSubchat0State!.description).toBe("Initial greeting chat");
-    expect(clonedSubchat1State!.description).toBe("Todo app creation");
+    expect(clonedSubchat0State!.description).toBe('Initial greeting chat');
+    expect(clonedSubchat1State!.description).toBe('Todo app creation');
   });
 });

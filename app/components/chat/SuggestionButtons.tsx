@@ -1,6 +1,6 @@
 import { ArrowUpIcon, VideoIcon } from '@radix-ui/react-icons';
 import { SUGGESTIONS } from 'chef-agent/constants';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 
 interface SuggestionButtonsProps {
   chatStarted: boolean;

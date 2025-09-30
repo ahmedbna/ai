@@ -1,33 +1,33 @@
 import { Sheet } from '@ui/Sheet';
 import type { Message } from 'ai';
 import React, { type ReactNode, type RefCallback, useCallback, useEffect, useMemo, useState } from 'react';
-import Landing from '~/components/landing/Landing';
-import { Workbench } from '~/components/workbench/Workbench.client';
-import type { ToolStatus } from '~/lib/common/types';
-import type { TerminalInitializationOptions } from '~/types/terminal';
-import type { ModelSelection } from '~/utils/constants';
+import Landing from '@/components/landing/Landing';
+import { Workbench } from '@/components/workbench/Workbench.client';
+import type { ToolStatus } from '@/lib/common/types';
+import type { TerminalInitializationOptions } from '@/types/terminal';
+import type { ModelSelection } from '@/utils/constants';
 import { MessageInput } from './MessageInput';
-import { useChatId } from '~/lib/stores/chatId';
-import { getConvexSiteUrl } from '~/lib/convexSiteUrl';
-import { messageInputStore } from '~/lib/stores/messageInput';
-import { useConvexSessionIdOrNullOrLoading } from '~/lib/stores/sessionId';
-import type { ActionAlert } from '~/types/actions';
-import { classNames } from '~/utils/classNames';
+import { useChatId } from '@/lib/stores/chatId';
+import { getConvexSiteUrl } from '@/lib/convexSiteUrl';
+import { messageInputStore } from '@/lib/stores/messageInput';
+import { useConvexSessionIdOrNullOrLoading } from '@/lib/stores/sessionId';
+import type { ActionAlert } from '@/types/actions';
+import { classNames } from '@/utils/classNames';
 import styles from './BaseChat.module.css';
 import ChatAlert from './ChatAlert';
 import { Messages } from './Messages.client';
 import StreamingIndicator from './StreamingIndicator';
 import { SuggestionButtons } from './SuggestionButtons';
-import { useLaunchDarkly } from '~/lib/hooks/useLaunchDarkly';
-import { CompatibilityWarnings } from '~/components/CompatibilityWarnings.client';
-import { chooseExperience } from '~/utils/experienceChooser';
+import { useLaunchDarkly } from '@/lib/hooks/useLaunchDarkly';
+import { CompatibilityWarnings } from '@/components/CompatibilityWarnings.client';
+import { chooseExperience } from '@/utils/experienceChooser';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useStore } from '@nanostores/react';
 import { SubchatBar } from './SubchatBar';
 import { SubchatLimitNudge } from './SubchatLimitNudge';
 import { useMutation } from 'convex/react';
 import { api } from '@convex/_generated/api';
-import { subchatIndexStore, useIsSubchatLoaded } from '~/lib/stores/subchats';
+import { subchatIndexStore, useIsSubchatLoaded } from '@/lib/stores/subchats';
 import { Projects } from './Projects';
 import Particles from './particles';
 
@@ -162,7 +162,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                   </p>
 
                   <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-3xl font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10">
-                    Fullstack mobile apps in seconds
+                    Idea to fullstack mobile app in seconds
                   </span>
                 </div>
               )}
@@ -214,9 +214,8 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                 ) : null}
 
                 <div
-                  className={classNames('flex flex-col w-full max-w-chat mx-auto z-prompt relative', {
-                    'sticky bottom-four': chatStarted,
-                    'max-w-[720px]': !chatStarted,
+                  className={classNames('flex flex-col w-full max-w-[800px] mx-auto z-prompt relative', {
+                    'sticky bottom-four max-w-chat': chatStarted,
                   })}
                 >
                   {actionAlert && (

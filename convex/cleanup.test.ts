@@ -1,19 +1,19 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { api, internal } from "./_generated/api";
-import { initializeChat, setupTest, type TestConvex } from "./test.setup";
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { api, internal } from './_generated/api';
+import { initializeChat, setupTest, type TestConvex } from './test.setup';
 
 async function createChatId(t: TestConvex) {
   return await t.run(async (ctx) => {
-    return await ctx.db.insert("chats", {
-      creatorId: await ctx.db.insert("sessions", {}),
-      initialId: "test-chat",
+    return await ctx.db.insert('chats', {
+      creatorId: await ctx.db.insert('sessions', {}),
+      initialId: 'test-chat',
       timestamp: new Date().toISOString(),
       lastSubchatIndex: 0,
     });
   });
 }
 
-describe("cleanup", () => {
+describe('cleanup', () => {
   let t: TestConvex;
   beforeEach(async () => {
     vi.useFakeTimers();
@@ -31,12 +31,12 @@ describe("cleanup", () => {
 
     // Create a storage file
     const storageId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["test content"]));
+      return await ctx.storage.store(new Blob(['test content']));
     });
 
     // Create a chatMessagesStorageState
     const storageStateId = await t.run(async (ctx) => {
-      return await ctx.db.insert("chatMessagesStorageState", {
+      return await ctx.db.insert('chatMessagesStorageState', {
         chatId,
         storageId,
         lastMessageRank: 1,
@@ -47,13 +47,13 @@ describe("cleanup", () => {
 
     // Create a debug log entry
     const logId = await t.run(async (ctx) => {
-      return await ctx.db.insert("debugChatApiRequestLog", {
+      return await ctx.db.insert('debugChatApiRequestLog', {
         chatId,
         subchatIndex: 0,
         responseCoreMessages: [],
         promptCoreMessagesStorageId: storageId,
-        finishReason: "stop",
-        modelId: "test-model",
+        finishReason: 'stop',
+        modelId: 'test-model',
         usage: {
           completionTokens: 0,
           promptTokens: 0,
@@ -66,7 +66,7 @@ describe("cleanup", () => {
     return { chatId, storageId, storageStateId, logId };
   }
 
-  test("deleteDebugFilesForInactiveChats only deletes from debugChatApiRequestLog and referenced storage", async () => {
+  test('deleteDebugFilesForInactiveChats only deletes from debugChatApiRequestLog and referenced storage', async () => {
     const { chatId, storageId, storageStateId, logId } = await setupTestData();
 
     // Advance time by a second
@@ -103,7 +103,7 @@ describe("cleanup", () => {
     expect(storageState).not.toBeNull();
   });
 
-  test("no deletion when data is too recent", async () => {
+  test('no deletion when data is too recent', async () => {
     const { chatId, storageId, storageStateId, logId } = await setupTestData();
 
     // Run the cleanup function with daysInactive=1 (older than our test data)
@@ -115,7 +115,7 @@ describe("cleanup", () => {
 
     // Verify no new jobs were scheduled
     const scheduledJobs = await t.run(async (ctx) => {
-      return await ctx.db.system.query("_scheduled_functions").collect();
+      return await ctx.db.system.query('_scheduled_functions').collect();
     });
     expect(scheduledJobs).toHaveLength(0);
 
@@ -142,7 +142,7 @@ describe("cleanup", () => {
   });
 });
 
-describe("deleteOldStorageStatesForLastMessageRank", () => {
+describe('deleteOldStorageStatesForLastMessageRank', () => {
   let t: TestConvex;
   beforeEach(async () => {
     vi.useFakeTimers();
@@ -154,7 +154,7 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
     vi.useRealTimers();
   });
 
-  test("deletes all storage states except the latest one", async () => {
+  test('deletes all storage states except the latest one', async () => {
     // Create a chat
     const chatId = await createChatId(t);
 
@@ -164,7 +164,7 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
       for (let i = 0; i < 3; i++) {
         const storageId = await ctx.storage.store(new Blob([`content-${i}`]));
         const snapshotId = await ctx.storage.store(new Blob([`snapshot-${i}`]));
-        const state = await ctx.db.insert("chatMessagesStorageState", {
+        const state = await ctx.db.insert('chatMessagesStorageState', {
           chatId,
           storageId,
           lastMessageRank: 1,
@@ -187,8 +187,8 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
     // Verify only the latest storage state remains
     const remainingStates = await t.run(async (ctx) => {
       return await ctx.db
-        .query("chatMessagesStorageState")
-        .withIndex("byChatId", (q) => q.eq("chatId", chatId))
+        .query('chatMessagesStorageState')
+        .withIndex('byChatId', (q) => q.eq('chatId', chatId))
         .collect();
     });
     expect(remainingStates.length).toBe(1);
@@ -220,12 +220,12 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
     });
   });
 
-  test("does not delete snapshots that are referenced in other storage states", async () => {
+  test('does not delete snapshots that are referenced in other storage states', async () => {
     // Create a chat
     const chatId = await createChatId(t);
     // Create a snapshot
     const snapshotId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["content"]));
+      return await ctx.storage.store(new Blob(['content']));
     });
     const snapshotId2 = await t.run(async (ctx) => {
       return await ctx.storage.store(new Blob([`snapshot-2`]));
@@ -238,7 +238,7 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
 
     await t.run(async (ctx) => {
       const storageId = await ctx.storage.store(new Blob([`content`]));
-      await ctx.db.insert("chatMessagesStorageState", {
+      await ctx.db.insert('chatMessagesStorageState', {
         chatId,
         storageId,
         lastMessageRank: 1,
@@ -246,7 +246,7 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
         subchatIndex: 0,
         snapshotId,
       });
-      await ctx.db.insert("chatMessagesStorageState", {
+      await ctx.db.insert('chatMessagesStorageState', {
         chatId,
         storageId,
         lastMessageRank: 1,
@@ -255,7 +255,7 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
         snapshotId: snapshotId2,
       });
 
-      await ctx.db.insert("chatMessagesStorageState", {
+      await ctx.db.insert('chatMessagesStorageState', {
         chatId,
         storageId,
         lastMessageRank: 2,
@@ -263,7 +263,7 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
         subchatIndex: 0,
         snapshotId: snapshotId2,
       });
-      await ctx.db.insert("chatMessagesStorageState", {
+      await ctx.db.insert('chatMessagesStorageState', {
         chatId,
         storageId: null,
         lastMessageRank: 2,
@@ -307,13 +307,13 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
     expect(snapshotFile3).not.toBeNull();
   });
 
-  test("does not delete snapshots that are used by the latest storage state", async () => {
+  test('does not delete snapshots that are used by the latest storage state', async () => {
     // Create a chat
     const chatId = await createChatId(t);
 
     // Create a snapshot
     const snapshotId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["content"]));
+      return await ctx.storage.store(new Blob(['content']));
     });
 
     // Create multiple storage states for the same lastMessageRank
@@ -321,7 +321,7 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
       const states = [];
       for (let i = 0; i < 3; i++) {
         const storageId = await ctx.storage.store(new Blob([`content-${i}`]));
-        const state = await ctx.db.insert("chatMessagesStorageState", {
+        const state = await ctx.db.insert('chatMessagesStorageState', {
           chatId,
           storageId,
           lastMessageRank: 1,
@@ -342,8 +342,8 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
 
     const remainingStates = await t.run(async (ctx) => {
       return await ctx.db
-        .query("chatMessagesStorageState")
-        .withIndex("byChatId", (q) => q.eq("chatId", chatId))
+        .query('chatMessagesStorageState')
+        .withIndex('byChatId', (q) => q.eq('chatId', chatId))
         .collect();
     });
     expect(remainingStates.length).toBe(1);
@@ -355,19 +355,19 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
     expect(snapshotFile).not.toBeNull();
   });
 
-  test("does nothing when there is only one storage state", async () => {
+  test('does nothing when there is only one storage state', async () => {
     // Create a chat
     const chatId = await createChatId(t);
 
     // Create a single storage state
     const storageId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["content"]));
+      return await ctx.storage.store(new Blob(['content']));
     });
     const snapshotId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["snapshot"]));
+      return await ctx.storage.store(new Blob(['snapshot']));
     });
     const stateId = await t.run(async (ctx) => {
-      return await ctx.db.insert("chatMessagesStorageState", {
+      return await ctx.db.insert('chatMessagesStorageState', {
         chatId,
         storageId,
         lastMessageRank: 1,
@@ -403,7 +403,7 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
     expect(snapshotFile).not.toBeNull();
   });
 
-  test("dry run does not delete anything", async () => {
+  test('dry run does not delete anything', async () => {
     // Create a chat
     const chatId = await createChatId(t);
 
@@ -413,7 +413,7 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
       for (let i = 0; i < 3; i++) {
         const storageId = await ctx.storage.store(new Blob([`content-${i}`]));
         const snapshotId = await ctx.storage.store(new Blob([`snapshot-${i}`]));
-        const state = await ctx.db.insert("chatMessagesStorageState", {
+        const state = await ctx.db.insert('chatMessagesStorageState', {
           chatId,
           storageId,
           lastMessageRank: 1,
@@ -436,8 +436,8 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
     // Verify all storage states still exist
     const remainingStates = await t.run(async (ctx) => {
       return await ctx.db
-        .query("chatMessagesStorageState")
-        .withIndex("byChatId", (q) => q.eq("chatId", chatId))
+        .query('chatMessagesStorageState')
+        .withIndex('byChatId', (q) => q.eq('chatId', chatId))
         .collect();
     });
     expect(remainingStates.length).toBe(3);
@@ -464,7 +464,7 @@ describe("deleteOldStorageStatesForLastMessageRank", () => {
   });
 });
 
-describe("file cleanup tests", () => {
+describe('file cleanup tests', () => {
   let t: TestConvex;
   beforeEach(async () => {
     vi.useFakeTimers();
@@ -475,10 +475,10 @@ describe("file cleanup tests", () => {
     await t.finishAllScheduledFunctions(() => vi.runAllTimers());
     vi.useRealTimers();
   });
-  test("deletes file when not referenced anywhere", async () => {
+  test('deletes file when not referenced anywhere', async () => {
     // Create a storage file
     const storageId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["test content"]));
+      return await ctx.storage.store(new Blob(['test content']));
     });
 
     // Run the cleanup function
@@ -499,17 +499,17 @@ describe("file cleanup tests", () => {
     expect(storageFile).toBeNull();
   });
 
-  test("does not delete file when referenced by chat", async () => {
+  test('does not delete file when referenced by chat', async () => {
     // Create a storage file
     const storageId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["test content"]));
+      return await ctx.storage.store(new Blob(['test content']));
     });
 
     // Create a chat that references the storage file
     await t.run(async (ctx) => {
-      await ctx.db.insert("chats", {
-        creatorId: await ctx.db.insert("sessions", {}),
-        initialId: "test-chat",
+      await ctx.db.insert('chats', {
+        creatorId: await ctx.db.insert('sessions', {}),
+        initialId: 'test-chat',
         timestamp: new Date().toISOString(),
         lastSubchatIndex: 0,
         snapshotId: storageId,
@@ -529,16 +529,16 @@ describe("file cleanup tests", () => {
     expect(storageFile).not.toBeNull();
   });
 
-  test("does not delete file when referenced by chatMessagesStorageState as snapshotId", async () => {
+  test('does not delete file when referenced by chatMessagesStorageState as snapshotId', async () => {
     // Create a storage file
     const storageId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["test content"]));
+      return await ctx.storage.store(new Blob(['test content']));
     });
 
     // Create a chat and storage state that references the storage file
     const chatId = await createChatId(t);
     await t.run(async (ctx) => {
-      await ctx.db.insert("chatMessagesStorageState", {
+      await ctx.db.insert('chatMessagesStorageState', {
         chatId,
         storageId: null,
         lastMessageRank: 1,
@@ -561,15 +561,15 @@ describe("file cleanup tests", () => {
     expect(storageFile).not.toBeNull();
   });
 
-  test("does not delete file when referenced by chatMessagesStorageState as storageId", async () => {
+  test('does not delete file when referenced by chatMessagesStorageState as storageId', async () => {
     // Create a storage file
     const storageId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["test content"]));
+      return await ctx.storage.store(new Blob(['test content']));
     });
     // Create a chat and storage state that references the storage file
     const chatId = await createChatId(t);
     await t.run(async (ctx) => {
-      await ctx.db.insert("chatMessagesStorageState", {
+      await ctx.db.insert('chatMessagesStorageState', {
         chatId,
         storageId,
         lastMessageRank: 1,
@@ -589,11 +589,11 @@ describe("file cleanup tests", () => {
     expect(storageFile).not.toBeNull();
   });
 
-  test("does not delete files when referenced by share", async () => {
+  test('does not delete files when referenced by share', async () => {
     const { sessionId, chatId } = await initializeChat(t);
     await t.mutation(api.share.create, { sessionId, id: chatId });
     await t.run(async (ctx) => {
-      for (const doc of await ctx.db.query("chatMessagesStorageState").collect()) {
+      for (const doc of await ctx.db.query('chatMessagesStorageState').collect()) {
         await ctx.db.delete(doc._id);
       }
     });
@@ -604,14 +604,14 @@ describe("file cleanup tests", () => {
       shouldScheduleNext: false,
     });
 
-    const files = await t.run(async (ctx) => await ctx.db.system.query("_storage").collect());
+    const files = await t.run(async (ctx) => await ctx.db.system.query('_storage').collect());
     expect(files.length).toBe(2);
   });
 
-  test("does not delete file when referenced by socialShare", async () => {
+  test('does not delete file when referenced by socialShare', async () => {
     // Create a storage file
     const storageId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["test content"]));
+      return await ctx.storage.store(new Blob(['test content']));
     });
 
     // Create a social share that references the storage file
@@ -638,22 +638,22 @@ describe("file cleanup tests", () => {
     expect(storageFile).not.toBeNull();
   });
 
-  test("does not delete file when referenced by debugChatApiRequestLog", async () => {
+  test('does not delete file when referenced by debugChatApiRequestLog', async () => {
     // Create a storage file
     const storageId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["test content"]));
+      return await ctx.storage.store(new Blob(['test content']));
     });
 
     // Create a debug log that references the storage file
     const chatId = await createChatId(t);
     await t.run(async (ctx) => {
-      await ctx.db.insert("debugChatApiRequestLog", {
+      await ctx.db.insert('debugChatApiRequestLog', {
         chatId,
         subchatIndex: 0,
         responseCoreMessages: [],
         promptCoreMessagesStorageId: storageId,
-        finishReason: "stop",
-        modelId: "test-model",
+        finishReason: 'stop',
+        modelId: 'test-model',
         usage: {
           completionTokens: 0,
           promptTokens: 0,
@@ -676,10 +676,10 @@ describe("file cleanup tests", () => {
     expect(storageFile).not.toBeNull();
   });
 
-  test("dry run does not delete file", async () => {
+  test('dry run does not delete file', async () => {
     // Create a storage file
     const storageId = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["test content"]));
+      return await ctx.storage.store(new Blob(['test content']));
     });
 
     // Run the cleanup function with dry run

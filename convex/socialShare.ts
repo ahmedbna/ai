@@ -1,17 +1,17 @@
-import { ConvexError, v } from "convex/values";
-import { mutation, query, internalMutation } from "./_generated/server";
-import type { QueryCtx } from "./_generated/server";
-import { getChatByIdOrUrlIdEnsuringAccess } from "./messages";
-import { generateUniqueCode } from "./share";
+import { ConvexError, v } from 'convex/values';
+import { mutation, query, internalMutation } from './_generated/server';
+import type { QueryCtx } from './_generated/server';
+import { getChatByIdOrUrlIdEnsuringAccess } from './messages';
+import { generateUniqueCode } from './share';
 
 // Create or modify a share record
 export const share = mutation({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
     id: v.string(),
-    shared: v.union(v.literal("shared"), v.literal("expresslyUnshared"), v.literal("noPreferenceExpressed")),
+    shared: v.union(v.literal('shared'), v.literal('expresslyUnshared'), v.literal('noPreferenceExpressed')),
     allowForkFromLatest: v.boolean(),
-    thumbnailImageStorageId: v.optional(v.id("_storage")),
+    thumbnailImageStorageId: v.optional(v.id('_storage')),
     referralCode: v.optional(v.union(v.string(), v.null())),
   },
   handler: async (ctx, { sessionId, id, shared, allowForkFromLatest, referralCode }) => {
@@ -19,16 +19,16 @@ export const share = mutation({
     if (referralCode !== undefined && referralCode !== null) {
       // Only allow alphanumeric, dashes, and underscores
       if (!/^[a-zA-Z0-9_-]+$/.test(referralCode)) {
-        throw new ConvexError("Invalid referral code: must be alphanumeric, dashes, or underscores only");
+        throw new ConvexError('Invalid referral code: must be alphanumeric, dashes, or underscores only');
       }
     }
     const chat = await getChatByIdOrUrlIdEnsuringAccess(ctx, { id, sessionId });
     if (!chat) {
-      throw new ConvexError("Chat not found");
+      throw new ConvexError('Chat not found');
     }
     const existing = await ctx.db
-      .query("socialShares")
-      .withIndex("byChatId", (q) => q.eq("chatId", chat._id))
+      .query('socialShares')
+      .withIndex('byChatId', (q) => q.eq('chatId', chat._id))
       .unique();
 
     // Not currently configurable but behavior we'll want to remember for later.
@@ -37,7 +37,7 @@ export const share = mutation({
 
     if (!existing) {
       const code = await generateUniqueCode(ctx.db);
-      await ctx.db.insert("socialShares", {
+      await ctx.db.insert('socialShares', {
         chatId: chat._id,
         code,
         shared,
@@ -79,8 +79,8 @@ export const getSocialShareOrIsSnapshotShare = query({
     } catch (e: any) {
       if (e instanceof NotASocialShare) {
         const snapshotShare = await ctx.db
-          .query("shares")
-          .withIndex("byCode", (q) => q.eq("code", code))
+          .query('shares')
+          .withIndex('byCode', (q) => q.eq('code', code))
           .first();
         if (snapshotShare) {
           return { isSnapshotShare: true };
@@ -95,15 +95,15 @@ class NotASocialShare extends ConvexError<string> {}
 
 async function getSocialShareInner(ctx: QueryCtx, code: string) {
   const socialShare = await ctx.db
-    .query("socialShares")
-    .withIndex("byCode", (q) => q.eq("code", code))
+    .query('socialShares')
+    .withIndex('byCode', (q) => q.eq('code', code))
     .first();
   if (!socialShare) {
-    throw new NotASocialShare("Invalid share link");
+    throw new NotASocialShare('Invalid share link');
   }
   const chat = await ctx.db.get(socialShare.chatId);
   if (!chat) {
-    throw new ConvexError("Invalid chat");
+    throw new ConvexError('Invalid chat');
   }
 
   const session = await ctx.db.get(chat.creatorId);
@@ -116,7 +116,7 @@ async function getSocialShareInner(ctx: QueryCtx, code: string) {
     : null;
 
   const deployedUrl =
-    chatHasBeenDeployed && chat.convexProject?.kind === "connected"
+    chatHasBeenDeployed && chat.convexProject?.kind === 'connected'
       ? `https://${chat.convexProject.deploymentName}.convex.app`
       : null;
 
@@ -140,18 +140,18 @@ async function getSocialShareInner(ctx: QueryCtx, code: string) {
 
 export const getCurrentSocialShare = query({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
     id: v.string(),
   },
   handler: async (ctx, { sessionId, id }) => {
     const chat = await getChatByIdOrUrlIdEnsuringAccess(ctx, { id, sessionId });
     if (!chat) {
-      throw new ConvexError("Chat not found");
+      throw new ConvexError('Chat not found');
     }
 
     const socialShare = await ctx.db
-      .query("socialShares")
-      .withIndex("byChatId", (q) => q.eq("chatId", chat._id))
+      .query('socialShares')
+      .withIndex('byChatId', (q) => q.eq('chatId', chat._id))
       .unique();
 
     if (!socialShare) {
@@ -170,29 +170,29 @@ export const getCurrentSocialShare = query({
 
 export const saveThumbnail = internalMutation({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
     urlId: v.string(),
-    storageId: v.id("_storage"),
+    storageId: v.id('_storage'),
   },
   handler: async (ctx, { sessionId, urlId, storageId }) => {
     const chat = await getChatByIdOrUrlIdEnsuringAccess(ctx, { id: urlId, sessionId });
     if (!chat) {
-      throw new ConvexError("Chat not found");
+      throw new ConvexError('Chat not found');
     }
 
     // Get or create social share
     const existing = await ctx.db
-      .query("socialShares")
-      .withIndex("byChatId", (q) => q.eq("chatId", chat._id))
+      .query('socialShares')
+      .withIndex('byChatId', (q) => q.eq('chatId', chat._id))
       .unique();
 
     if (!existing) {
       const code = await generateUniqueCode(ctx.db);
-      await ctx.db.insert("socialShares", {
+      await ctx.db.insert('socialShares', {
         chatId: chat._id,
         code,
         thumbnailImageStorageId: storageId,
-        shared: "noPreferenceExpressed",
+        shared: 'noPreferenceExpressed',
         linkToDeployed: true,
         allowForkFromLatest: false,
         allowShowInGallery: false,
@@ -213,17 +213,17 @@ export const saveThumbnail = internalMutation({
 // This is used for admin's to create a share link for debugging purposes. Be sure to delete the share link after use.
 export const createAdminShare = internalMutation({
   args: {
-    chatId: v.id("chats"),
+    chatId: v.id('chats'),
   },
   handler: async (ctx, { chatId }) => {
     const chat = await ctx.db.get(chatId);
     if (!chat) {
-      throw new ConvexError("Chat not found");
+      throw new ConvexError('Chat not found');
     }
     // Use an existing share link for this chat if it exists
     const existing = await ctx.db
-      .query("socialShares")
-      .withIndex("byChatId", (q) => q.eq("chatId", chatId))
+      .query('socialShares')
+      .withIndex('byChatId', (q) => q.eq('chatId', chatId))
       .unique();
     if (existing) {
       console.log(`Already have a share for chat ${chatId}: Go to https://chef.show/${existing.code}`);
@@ -232,10 +232,10 @@ export const createAdminShare = internalMutation({
 
     const randomCode = await generateUniqueCode(ctx.db);
     const code = `support-${randomCode}`;
-    const id = await ctx.db.insert("socialShares", {
+    const id = await ctx.db.insert('socialShares', {
       chatId,
       code,
-      shared: "shared",
+      shared: 'shared',
       linkToDeployed: false,
       allowForkFromLatest: true,
       allowShowInGallery: false,

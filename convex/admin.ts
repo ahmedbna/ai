@@ -1,10 +1,10 @@
-import { ConvexError, v } from "convex/values";
-import { mutation, internalMutation, internalAction, query } from "./_generated/server";
-import type { QueryCtx } from "./_generated/server";
-import { internal } from "./_generated/api";
-import { getMemberByConvexMemberIdQuery } from "./sessions";
+import { ConvexError, v } from 'convex/values';
+import { mutation, internalMutation, internalAction, query } from './_generated/server';
+import type { QueryCtx } from './_generated/server';
+import { internal } from './_generated/api';
+import { getMemberByConvexMemberIdQuery } from './sessions';
 
-const PROVISION_HOST = process.env.PROVISION_HOST || "https://api.convex.dev";
+const PROVISION_HOST = process.env.PROVISION_HOST || 'https://api.convex.dev';
 const CONVEX_TEAM_ID = 4916;
 const RETRY_MS = 60 * 60 * 1000;
 const STALE_ADMIN_STATUS_ALLOWED_MS = 7 * 24 * 60 * 60 * 1000;
@@ -12,30 +12,30 @@ const STALE_ADMIN_STATUS_ALLOWED_MS = 7 * 24 * 60 * 60 * 1000;
 export async function assertIsConvexAdmin(ctx: QueryCtx) {
   const identity = await ctx.auth.getUserIdentity();
   if (!identity) {
-    throw new ConvexError({ code: "NotAuthorized", message: "Unauthorized" });
+    throw new ConvexError({ code: 'NotAuthorized', message: 'Unauthorized' });
   }
 
   const member = await getMemberByConvexMemberIdQuery(ctx, identity).first();
 
   if (!member) {
-    throw new ConvexError({ code: "NotAuthorized", message: "Unauthorized" });
+    throw new ConvexError({ code: 'NotAuthorized', message: 'Unauthorized' });
   }
 
   const adminStatus = await ctx.db
-    .query("convexAdmins")
-    .withIndex("byConvexMemberId", (q) => q.eq("convexMemberId", member._id))
+    .query('convexAdmins')
+    .withIndex('byConvexMemberId', (q) => q.eq('convexMemberId', member._id))
     .unique();
 
   if (!adminStatus) {
-    throw new ConvexError({ code: "NotAuthorized", message: "Not a Convex admin" });
+    throw new ConvexError({ code: 'NotAuthorized', message: 'Not a Convex admin' });
   }
 
   if (!adminStatus.wasAdmin) {
-    throw new ConvexError({ code: "NotAuthorized", message: "Not a Convex admin" });
+    throw new ConvexError({ code: 'NotAuthorized', message: 'Not a Convex admin' });
   }
 
   if (adminStatus.lastCheckedForAdminStatus < Date.now() - STALE_ADMIN_STATUS_ALLOWED_MS) {
-    throw new ConvexError({ code: "NotAuthorized", message: "Need to refresh auth" });
+    throw new ConvexError({ code: 'NotAuthorized', message: 'Need to refresh auth' });
   }
 
   return { member, adminStatus };
@@ -43,13 +43,13 @@ export async function assertIsConvexAdmin(ctx: QueryCtx) {
 
 export const updateAdminStatus = internalMutation({
   args: {
-    memberId: v.id("convexMembers"),
+    memberId: v.id('convexMembers'),
     wasAdmin: v.boolean(),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
-      .query("convexAdmins")
-      .withIndex("byConvexMemberId", (q) => q.eq("convexMemberId", args.memberId))
+      .query('convexAdmins')
+      .withIndex('byConvexMemberId', (q) => q.eq('convexMemberId', args.memberId))
       .unique();
 
     if (existing) {
@@ -58,7 +58,7 @@ export const updateAdminStatus = internalMutation({
         lastCheckedForAdminStatus: Date.now(),
       });
     } else {
-      await ctx.db.insert("convexAdmins", {
+      await ctx.db.insert('convexAdmins', {
         convexMemberId: args.memberId,
         wasAdmin: args.wasAdmin,
         lastCheckedForAdminStatus: Date.now(),
@@ -70,7 +70,7 @@ export const updateAdminStatus = internalMutation({
 export const checkIsConvexAdminInternal = internalAction({
   args: {
     token: v.string(),
-    memberId: v.id("convexMembers"),
+    memberId: v.id('convexMembers'),
   },
   handler: async (ctx, args): Promise<void> => {
     try {
@@ -91,10 +91,10 @@ export const checkIsConvexAdminInternal = internalAction({
         wasAdmin: isAdmin,
       });
     } catch (error) {
-      console.error("Error checking Convex admin status:", error);
+      console.error('Error checking Convex admin status:', error);
       throw new ConvexError({
-        code: "Internal",
-        message: "Failed to verify admin status",
+        code: 'Internal',
+        message: 'Failed to verify admin status',
       });
     }
   },
@@ -107,18 +107,18 @@ export const requestAdminCheck = mutation({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      throw new ConvexError({ code: "NotAuthorized", message: "Unauthorized" });
+      throw new ConvexError({ code: 'NotAuthorized', message: 'Unauthorized' });
     }
 
     const member = await getMemberByConvexMemberIdQuery(ctx, identity).first();
 
     if (!member) {
-      throw new ConvexError({ code: "NotAuthorized", message: "Unauthorized" });
+      throw new ConvexError({ code: 'NotAuthorized', message: 'Unauthorized' });
     }
 
     const adminStatus = await ctx.db
-      .query("convexAdmins")
-      .withIndex("byConvexMemberId", (q) => q.eq("convexMemberId", member._id))
+      .query('convexAdmins')
+      .withIndex('byConvexMemberId', (q) => q.eq('convexMemberId', member._id))
       .unique();
 
     if (adminStatus?.lastCheckedForAdminStatus) {
@@ -152,8 +152,8 @@ export const isCurrentUserAdmin = query({
     }
 
     const adminStatus = await ctx.db
-      .query("convexAdmins")
-      .withIndex("byConvexMemberId", (q) => q.eq("convexMemberId", member._id))
+      .query('convexAdmins')
+      .withIndex('byConvexMemberId', (q) => q.eq('convexMemberId', member._id))
       .unique();
 
     return adminStatus?.wasAdmin ?? false;

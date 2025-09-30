@@ -1,14 +1,14 @@
-import { internalMutation, query } from "./_generated/server";
-import { v } from "convex/values";
-import type { MutationCtx, QueryCtx } from "./_generated/server";
-import { assertIsConvexAdmin } from "./admin";
-import type { Id } from "./_generated/dataModel";
-import { usageRecordValidator } from "./schema";
+import { internalMutation, query } from './_generated/server';
+import { v } from 'convex/values';
+import type { MutationCtx, QueryCtx } from './_generated/server';
+import { assertIsConvexAdmin } from './admin';
+import type { Id } from './_generated/dataModel';
+import { usageRecordValidator } from './schema';
 
 async function getChatByInitialId(ctx: QueryCtx, initialId: string) {
   const chatByInitialId = await ctx.db
-    .query("chats")
-    .withIndex("byInitialId", (q: any) => q.eq("initialId", initialId).lt("isDeleted", true))
+    .query('chats')
+    .withIndex('byInitialId', (q: any) => q.eq('initialId', initialId).lt('isDeleted', true))
     .unique();
   if (!chatByInitialId) {
     throw new Error(`No corresponding chat found for initial ID ${initialId}`);
@@ -20,7 +20,7 @@ export const storeDebugPrompt = internalMutation({
   args: {
     chatInitialId: v.string(),
     responseCoreMessages: v.array(v.any()),
-    promptCoreMessagesStorageId: v.id("_storage"),
+    promptCoreMessagesStorageId: v.id('_storage'),
     finishReason: v.string(),
     modelId: v.optional(v.string()),
     usage: usageRecordValidator,
@@ -37,13 +37,13 @@ export const storeDebugPrompt = internalMutation({
       chefTokens,
     } = args;
     const chat = await getChatByInitialId(ctx, chatInitialId);
-    await ctx.db.insert("debugChatApiRequestLog", {
+    await ctx.db.insert('debugChatApiRequestLog', {
       chatId: chat._id,
       subchatIndex: chat.lastSubchatIndex,
       responseCoreMessages,
       promptCoreMessagesStorageId,
       finishReason,
-      modelId: modelId ?? "",
+      modelId: modelId ?? '',
       usage,
       chefTokens,
     });
@@ -52,14 +52,14 @@ export const storeDebugPrompt = internalMutation({
 
 export const deleteDebugPrompt = internalMutation({
   args: {
-    id: v.id("debugChatApiRequestLog"),
+    id: v.id('debugChatApiRequestLog'),
   },
   handler: async (ctx, args) => {
     await _deleteDebugPrompt(ctx, args.id);
   },
 });
 
-async function _deleteDebugPrompt(ctx: MutationCtx, id: Id<"debugChatApiRequestLog">) {
+async function _deleteDebugPrompt(ctx: MutationCtx, id: Id<'debugChatApiRequestLog'>) {
   const record = await ctx.db.get(id);
   if (!record) {
     return;
@@ -72,7 +72,7 @@ async function _deleteDebugPrompt(ctx: MutationCtx, id: Id<"debugChatApiRequestL
 export const deleteAllDebugPrompts = internalMutation({
   args: {},
   handler: async (ctx) => {
-    const records = await ctx.db.query("debugChatApiRequestLog").collect();
+    const records = await ctx.db.query('debugChatApiRequestLog').collect();
 
     for (let i = 0; i < records.length; i += 10) {
       const chunk = records.slice(i, i + 10);
@@ -91,8 +91,8 @@ export const show = query({
     const chat = await getChatByInitialId(ctx, args.chatInitialId);
 
     const debugPrompts = await ctx.db
-      .query("debugChatApiRequestLog")
-      .withIndex("byChatId", (q) => q.eq("chatId", chat._id))
+      .query('debugChatApiRequestLog')
+      .withIndex('byChatId', (q) => q.eq('chatId', chat._id))
       .collect();
 
     const promptsWithUrls = await Promise.all(

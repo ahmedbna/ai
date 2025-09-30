@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { api, internal } from "./_generated/api";
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { api, internal } from './_generated/api';
 import {
   createChat,
   createSubchat,
@@ -8,19 +8,19 @@ import {
   verifyStoredContent,
   verifyStoredMessages,
   type TestConvex,
-} from "./test.setup";
-import { getChatByIdOrUrlIdEnsuringAccess, type SerializedMessage, type StorageInfo } from "./messages";
-import type { Id } from "./_generated/dataModel";
+} from './test.setup';
+import { getChatByIdOrUrlIdEnsuringAccess, type SerializedMessage, type StorageInfo } from './messages';
+import type { Id } from './_generated/dataModel';
 
-function getChatStorageStates(t: TestConvex, chatId: string, sessionId: Id<"sessions">) {
+function getChatStorageStates(t: TestConvex, chatId: string, sessionId: Id<'sessions'>) {
   return t.run(async (ctx) => {
     const chat = await getChatByIdOrUrlIdEnsuringAccess(ctx, { id: chatId, sessionId });
     if (!chat) {
-      throw new Error("Chat not found");
+      throw new Error('Chat not found');
     }
     return ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byChatId", (q) => q.eq("chatId", chat._id))
+      .query('chatMessagesStorageState')
+      .withIndex('byChatId', (q) => q.eq('chatId', chat._id))
       .collect();
   });
 }
@@ -28,12 +28,12 @@ function getChatStorageStates(t: TestConvex, chatId: string, sessionId: Id<"sess
 function createMessage(overrides: Partial<SerializedMessage> = {}): SerializedMessage {
   return {
     id: `test-${Math.random()}`,
-    role: "user",
-    content: "test",
+    role: 'user',
+    content: 'test',
     parts: [
       {
-        type: "text",
-        text: "test",
+        type: 'text',
+        text: 'test',
       },
     ],
     createdAt: Date.now(),
@@ -55,12 +55,12 @@ async function assertStorageInfo(
   expect(storageInfo).not.toBeNull();
   if (storageInfo === null) {
     // Redundant with check above, but makes TypeScript happy
-    throw new Error("No storage info");
+    throw new Error('No storage info');
   }
   if (options.expectedMessages) {
     expect(storageInfo.storageId).not.toBeNull();
     if (storageInfo.storageId === null) {
-      throw new Error("No storage ID");
+      throw new Error('No storage ID');
     }
     await verifyStoredMessages(t, storageInfo.storageId, options.expectedMessages);
   } else {
@@ -69,7 +69,7 @@ async function assertStorageInfo(
   if (options.expectedSnapshotContent) {
     expect(storageInfo.snapshotId).toBeDefined();
     if (storageInfo.snapshotId === undefined) {
-      throw new Error("No snapshot ID");
+      throw new Error('No snapshot ID');
     }
     await verifyStoredContent(t, storageInfo.snapshotId, options.expectedSnapshotContent);
   } else {
@@ -80,9 +80,9 @@ async function assertStorageInfo(
   expect(storageInfo.subchatIndex).toBe(options.expectedSubchatIndex);
 }
 
-async function createSocialShare(t: TestConvex, chatId: string, sessionId: Id<"sessions">, code: string = "test123") {
+async function createSocialShare(t: TestConvex, chatId: string, sessionId: Id<'sessions'>, code: string = 'test123') {
   await t.run(async (ctx) => {
-    await ctx.db.insert("socialShares", {
+    await ctx.db.insert('socialShares', {
       chatId: (await getChatByIdOrUrlIdEnsuringAccess(ctx, { id: chatId, sessionId }))!._id,
       code,
       allowForkFromLatest: true,
@@ -94,7 +94,7 @@ async function createSocialShare(t: TestConvex, chatId: string, sessionId: Id<"s
   return code;
 }
 
-describe("messages", () => {
+describe('messages', () => {
   let t: TestConvex;
   beforeEach(async () => {
     vi.useFakeTimers();
@@ -106,7 +106,7 @@ describe("messages", () => {
     vi.useRealTimers();
   });
 
-  test("sending messages", async () => {
+  test('sending messages', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     const chats = await t.query(api.messages.getAll, {
@@ -121,11 +121,11 @@ describe("messages", () => {
     expect(chat.timestamp).toBeDefined();
   });
 
-  test("store messages", async () => {
+  test('store messages', async () => {
     const { sessionId, chatId } = await createChat(t);
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
 
     await storeChat(t, chatId, sessionId, {
@@ -145,7 +145,7 @@ describe("messages", () => {
     });
   });
 
-  test("remove chat", async () => {
+  test('remove chat', async () => {
     const { sessionId, chatId } = await createChat(t);
     await t.mutation(internal.messages.removeChat, { sessionId, id: chatId });
     const chats = await t.query(api.messages.getAll, {
@@ -155,18 +155,18 @@ describe("messages", () => {
 
     // Set description fails - uses getChatByIdOrUrlIdEnsuringAccess helper that should not include deleted chats
     await expect(
-      t.mutation(api.messages.setDescription, { sessionId, id: chatId, description: "test" }),
+      t.mutation(api.messages.setDescription, { sessionId, id: chatId, description: 'test' }),
     ).rejects.toThrow();
   });
 
-  test("store chat without snapshot", async () => {
+  test('store chat without snapshot', async () => {
     // Note: this should be impossible from the UI since we will need to store
     // the initial snapshot, but we'll test it fore completeness
     const { sessionId, chatId } = await createChat(t);
 
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
 
     await storeChat(t, chatId, sessionId, {
@@ -187,8 +187,8 @@ describe("messages", () => {
     });
 
     const secondMessage: SerializedMessage = createMessage({
-      role: "assistant",
-      parts: [{ text: "How can I help you today?", type: "text" }],
+      role: 'assistant',
+      parts: [{ text: 'How can I help you today?', type: 'text' }],
     });
 
     await storeChat(t, chatId, sessionId, {
@@ -214,14 +214,14 @@ describe("messages", () => {
     expect(allChatMessagesStorageStates.length).toBe(3);
   });
 
-  test("store chat with snapshot", async () => {
+  test('store chat with snapshot', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
-    const initialSnapshotContent = "initial snapshot";
+    const initialSnapshotContent = 'initial snapshot';
     const snapshotBlob = new Blob([initialSnapshotContent]);
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
@@ -243,8 +243,8 @@ describe("messages", () => {
 
     // Store second message without snapshot - should keep the old snapshot ID
     const secondMessage: SerializedMessage = createMessage({
-      role: "assistant",
-      parts: [{ text: "How can I help you today?", type: "text" }],
+      role: 'assistant',
+      parts: [{ text: 'How can I help you today?', type: 'text' }],
     });
 
     await storeChat(t, chatId, sessionId, {
@@ -265,7 +265,7 @@ describe("messages", () => {
     });
 
     // Store only a new snapshot - should keep the old storage ID
-    const updatedSnapshotContent = "updated snapshot";
+    const updatedSnapshotContent = 'updated snapshot';
     const updatedSnapshotBlob = new Blob([updatedSnapshotContent]);
     await storeChat(t, chatId, sessionId, {
       snapshot: updatedSnapshotBlob,
@@ -291,14 +291,14 @@ describe("messages", () => {
     expect(allChatMessagesStorageStates.length).toBe(3);
   });
 
-  test("rewind chat with snapshot", async () => {
+  test('rewind chat with snapshot', async () => {
     const { sessionId, chatId } = await createChat(t);
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
 
-    const initialSnapshotContent = "initial snapshot";
+    const initialSnapshotContent = 'initial snapshot';
     const snapshotBlob = new Blob([initialSnapshotContent]);
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
@@ -318,11 +318,11 @@ describe("messages", () => {
       expectedSubchatIndex: 0,
     });
     const secondMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "foobar", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'foobar', type: 'text' }],
     });
 
-    const updatedSnapshotContent = "updated snapshot";
+    const updatedSnapshotContent = 'updated snapshot';
     const updatedSnapshotBlob = new Blob([updatedSnapshotContent]);
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage, secondMessage],
@@ -364,15 +364,15 @@ describe("messages", () => {
     expect(allChatMessagesStorageStates.length).toBe(2);
   });
 
-  test("sending message after rewind deletes future records when no share exists", async () => {
+  test('sending message after rewind deletes future records when no share exists', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Store first message with snapshot
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
-    const initialSnapshotContent = "initial snapshot";
+    const initialSnapshotContent = 'initial snapshot';
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
       snapshot: new Blob([initialSnapshotContent]),
@@ -380,10 +380,10 @@ describe("messages", () => {
 
     // Store second message with updated snapshot
     const secondMessage: SerializedMessage = createMessage({
-      role: "assistant",
-      parts: [{ text: "Hi there!", type: "text" }],
+      role: 'assistant',
+      parts: [{ text: 'Hi there!', type: 'text' }],
     });
-    const updatedSnapshotContent = "updated snapshot";
+    const updatedSnapshotContent = 'updated snapshot';
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage, secondMessage],
       snapshot: new Blob([updatedSnapshotContent]),
@@ -406,7 +406,7 @@ describe("messages", () => {
     const preRewindSnapshotId = preRewindInfo?.snapshotId;
     if (!preRewindStorageId || !preRewindSnapshotId) {
       // Note: redundant with earlier assertions, but makes TypeScript happy
-      throw new Error("No storage ID or snapshot ID");
+      throw new Error('No storage ID or snapshot ID');
     }
 
     // Rewind to first message
@@ -414,10 +414,10 @@ describe("messages", () => {
 
     // Send a new message after rewinding
     const newMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "New direction!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'New direction!', type: 'text' }],
     });
-    const newSnapshotContent = "new snapshot";
+    const newSnapshotContent = 'new snapshot';
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage, newMessage],
       snapshot: new Blob([newSnapshotContent]),
@@ -437,15 +437,15 @@ describe("messages", () => {
     expect(finalStorageStates.length).toBe(3);
   });
 
-  test("sending message after rewind preserves future records when share exists", async () => {
+  test('sending message after rewind preserves future records when share exists', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Store first message with snapshot
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
-    const initialSnapshotContent = "initial snapshot";
+    const initialSnapshotContent = 'initial snapshot';
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
       snapshot: new Blob([initialSnapshotContent]),
@@ -453,10 +453,10 @@ describe("messages", () => {
 
     // Store second message with updated snapshot
     const secondMessage: SerializedMessage = createMessage({
-      role: "assistant",
-      parts: [{ text: "Hi there!", type: "text" }],
+      role: 'assistant',
+      parts: [{ text: 'Hi there!', type: 'text' }],
     });
-    const updatedSnapshotContent = "updated snapshot";
+    const updatedSnapshotContent = 'updated snapshot';
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage, secondMessage],
       snapshot: new Blob([updatedSnapshotContent]),
@@ -485,10 +485,10 @@ describe("messages", () => {
 
     // Send a new message after rewinding
     const newMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "New direction!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'New direction!', type: 'text' }],
     });
-    const newSnapshotContent = "new snapshot";
+    const newSnapshotContent = 'new snapshot';
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage, newMessage],
       snapshot: new Blob([newSnapshotContent]),
@@ -497,8 +497,8 @@ describe("messages", () => {
     // Verify that the shared chat references the history and snapshot before the rewind
     const share = await t.run(async (ctx) => {
       const share = await ctx.db
-        .query("shares")
-        .withIndex("byCode", (q) => q.eq("code", code))
+        .query('shares')
+        .withIndex('byCode', (q) => q.eq('code', code))
         .first();
       return share;
     });
@@ -533,15 +533,15 @@ describe("messages", () => {
     });
   });
 
-  test("sending message after rewind preserves snapshots referenced by previous chatMessageStorageState", async () => {
+  test('sending message after rewind preserves snapshots referenced by previous chatMessageStorageState', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Store first message with snapshot
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
-    const initialSnapshotContent = "initial snapshot content";
+    const initialSnapshotContent = 'initial snapshot content';
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
       snapshot: new Blob([initialSnapshotContent]),
@@ -563,8 +563,8 @@ describe("messages", () => {
 
     // Store second message with the same snapshot (using doNotUpdateMessages to keep the snapshot reference)
     const secondMessage: SerializedMessage = createMessage({
-      role: "assistant",
-      parts: [{ text: "Hi there!", type: "text" }],
+      role: 'assistant',
+      parts: [{ text: 'Hi there!', type: 'text' }],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage, secondMessage],
@@ -589,10 +589,10 @@ describe("messages", () => {
 
     // Send a new message with a different snapshot
     const newMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "New direction!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'New direction!', type: 'text' }],
     });
-    const newSnapshotContent = "new snapshot content";
+    const newSnapshotContent = 'new snapshot content';
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage, newMessage],
       snapshot: new Blob([newSnapshotContent]),
@@ -618,41 +618,41 @@ describe("messages", () => {
     });
   });
 
-  test("rewinding to a previous subchat deletes all storage states for future subchats", async () => {
+  test('rewinding to a previous subchat deletes all storage states for future subchats', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Store initial message in subchat 0
     const subchat0Message: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello from subchat 0!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 0!', type: 'text' }],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [subchat0Message],
-      snapshot: new Blob(["subchat 0 snapshot"]),
+      snapshot: new Blob(['subchat 0 snapshot']),
       subchatIndex: 0,
     });
 
     // Create subchat 1
     await createSubchat(t, chatId, sessionId);
     const subchat1Message: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello from subchat 1!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 1!', type: 'text' }],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [subchat1Message],
-      snapshot: new Blob(["subchat 1 snapshot"]),
+      snapshot: new Blob(['subchat 1 snapshot']),
       subchatIndex: 1,
     });
 
     // Create subchat 2
     await createSubchat(t, chatId, sessionId);
     const subchat2Message: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello from subchat 2!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 2!', type: 'text' }],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [subchat2Message],
-      snapshot: new Blob(["subchat 2 snapshot"]),
+      snapshot: new Blob(['subchat 2 snapshot']),
       subchatIndex: 2,
     });
 
@@ -684,7 +684,7 @@ describe("messages", () => {
     });
     await assertStorageInfo(t, subchat0StorageInfo, {
       expectedMessages: [subchat0Message],
-      expectedSnapshotContent: "subchat 0 snapshot",
+      expectedSnapshotContent: 'subchat 0 snapshot',
       expectedLastMessageRank: 0,
       expectedPartIndex: 0,
       expectedSubchatIndex: 0,
@@ -706,39 +706,39 @@ describe("messages", () => {
     expect(subchat2StorageInfo).toBeNull();
   });
 
-  test("storageId cannot be null if there exist previous storageId for the chat", async () => {
+  test('storageId cannot be null if there exist previous storageId for the chat', async () => {
     const { sessionId, chatId } = await createChat(t);
     await storeChat(t, chatId, sessionId, {
-      snapshot: new Blob(["initial snapshot content"]),
-      messages: [createMessage({ role: "user", parts: [{ text: "Hello, world!", type: "text" }] })],
+      snapshot: new Blob(['initial snapshot content']),
+      messages: [createMessage({ role: 'user', parts: [{ text: 'Hello, world!', type: 'text' }] })],
     });
     await storeChat(
       t,
       chatId,
       sessionId,
       {
-        snapshot: new Blob(["new snapshot content"]),
+        snapshot: new Blob(['new snapshot content']),
       },
       true,
     );
   });
 
-  test("snapshotId should not be deleted if it is referenced by earlier chatMessagesStorageStates", async () => {
+  test('snapshotId should not be deleted if it is referenced by earlier chatMessagesStorageStates', async () => {
     const { sessionId, chatId } = await createChat(t);
     const snapshotId1 = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["initial snapshot content"]));
+      return await ctx.storage.store(new Blob(['initial snapshot content']));
     });
     const snapshotId2 = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["second snapshot content"]));
+      return await ctx.storage.store(new Blob(['second snapshot content']));
     });
     const storageId1 = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["initial storage content"]));
+      return await ctx.storage.store(new Blob(['initial storage content']));
     });
     const storageId2 = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["second storage content"]));
+      return await ctx.storage.store(new Blob(['second storage content']));
     });
     const storageId3 = await t.run(async (ctx) => {
-      return await ctx.storage.store(new Blob(["third storage content"]));
+      return await ctx.storage.store(new Blob(['third storage content']));
     });
     await t.mutation(internal.messages.updateStorageState, {
       sessionId,
@@ -778,15 +778,15 @@ describe("messages", () => {
     expect(snapshot2).not.toBeNull();
   });
 
-  test("patches existing document and cleans up storage when receiving update with same lastMessageRank", async () => {
+  test('patches existing document and cleans up storage when receiving update with same lastMessageRank', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Store first message with snapshot
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
-    const initialSnapshotContent = "initial snapshot";
+    const initialSnapshotContent = 'initial snapshot';
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
       snapshot: new Blob([initialSnapshotContent]),
@@ -811,13 +811,13 @@ describe("messages", () => {
 
     // Store update with same lastMessageRank but different content
     const updatedMessage: SerializedMessage = createMessage({
-      role: "user",
+      role: 'user',
       parts: [
-        { text: "Hello, world!", type: "text" },
-        { text: "Updated message!", type: "text" },
+        { text: 'Hello, world!', type: 'text' },
+        { text: 'Updated message!', type: 'text' },
       ],
     });
-    const updatedSnapshotContent = "updated snapshot";
+    const updatedSnapshotContent = 'updated snapshot';
     await storeChat(t, chatId, sessionId, {
       messages: [updatedMessage],
       snapshot: new Blob([updatedSnapshotContent]),
@@ -855,15 +855,15 @@ describe("messages", () => {
     });
   });
 
-  test("preserves previous snapshotId when new snapshotId is null", async () => {
+  test('preserves previous snapshotId when new snapshotId is null', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Store first message with snapshot
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
-    const initialSnapshotContent = "initial snapshot";
+    const initialSnapshotContent = 'initial snapshot';
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
       snapshot: new Blob([initialSnapshotContent]),
@@ -885,10 +885,10 @@ describe("messages", () => {
 
     // Store update with same lastMessageRank but no snapshotId
     const updatedMessage: SerializedMessage = createMessage({
-      role: "user",
+      role: 'user',
       parts: [
-        { text: "Hello, world!", type: "text" },
-        { text: "Updated message!", type: "text" },
+        { text: 'Hello, world!', type: 'text' },
+        { text: 'Updated message!', type: 'text' },
       ],
     });
     await storeChat(t, chatId, sessionId, {
@@ -915,17 +915,17 @@ describe("messages", () => {
     });
   });
 
-  test("preserves storageId referenced by share when updating storage state with same lastMessageRank", async () => {
+  test('preserves storageId referenced by share when updating storage state with same lastMessageRank', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Store first message
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
-      snapshot: new Blob(["initial snapshot content"]),
+      snapshot: new Blob(['initial snapshot content']),
     });
 
     // Get initial storage info
@@ -936,7 +936,7 @@ describe("messages", () => {
     });
     await assertStorageInfo(t, initialStorageInfo, {
       expectedMessages: [firstMessage],
-      expectedSnapshotContent: "initial snapshot content",
+      expectedSnapshotContent: 'initial snapshot content',
       expectedLastMessageRank: 0,
       expectedPartIndex: 0,
       expectedSubchatIndex: 0,
@@ -947,15 +947,15 @@ describe("messages", () => {
 
     // Store update with same lastMessageRank but different content
     const updatedMessage: SerializedMessage = createMessage({
-      role: "user",
+      role: 'user',
       parts: [
-        { text: "Hello, world!", type: "text" },
-        { text: "Updated message!", type: "text" },
+        { text: 'Hello, world!', type: 'text' },
+        { text: 'Updated message!', type: 'text' },
       ],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [updatedMessage],
-      snapshot: new Blob(["updated snapshot content"]),
+      snapshot: new Blob(['updated snapshot content']),
     });
 
     // Verify storage states
@@ -975,8 +975,8 @@ describe("messages", () => {
     // Verify the share still references the same storage ID
     const share = await t.run(async (ctx) => {
       return await ctx.db
-        .query("shares")
-        .withIndex("byCode", (q) => q.eq("code", shareCode))
+        .query('shares')
+        .withIndex('byCode', (q) => q.eq('code', shareCode))
         .unique();
     });
     console.log(initialStorageInfo);
@@ -988,20 +988,20 @@ describe("messages", () => {
         const storageBlob = await ctx.storage.get(initialStorageInfo.storageId);
         expect(storageBlob).not.toBeNull();
       } else {
-        throw new Error("No storage ID found");
+        throw new Error('No storage ID found');
       }
 
       if (initialStorageInfo?.snapshotId) {
         const snapshotBlob = await ctx.storage.get(initialStorageInfo.snapshotId);
         expect(snapshotBlob).not.toBeNull();
       } else {
-        throw new Error("No snapshot ID found");
+        throw new Error('No snapshot ID found');
       }
     });
   });
 });
 
-describe("eraseMessageHistory", () => {
+describe('eraseMessageHistory', () => {
   let t: TestConvex;
   beforeEach(async () => {
     vi.useFakeTimers();
@@ -1013,15 +1013,15 @@ describe("eraseMessageHistory", () => {
     vi.useRealTimers();
   });
 
-  test("successfully erases message history and rewinds chat", async () => {
+  test('successfully erases message history and rewinds chat', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Create initial messages and snapshot
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
-    const initialSnapshotContent = "initial snapshot";
+    const initialSnapshotContent = 'initial snapshot';
     const snapshotBlob = new Blob([initialSnapshotContent]);
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
@@ -1030,10 +1030,10 @@ describe("eraseMessageHistory", () => {
 
     // Add more messages
     const secondMessage: SerializedMessage = createMessage({
-      role: "assistant",
-      parts: [{ text: "How can I help you today?", type: "text" }],
+      role: 'assistant',
+      parts: [{ text: 'How can I help you today?', type: 'text' }],
     });
-    const nextSnapshotContent = "final snapshot";
+    const nextSnapshotContent = 'final snapshot';
     const nextSnapshotBlob = new Blob([nextSnapshotContent]);
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage, secondMessage],
@@ -1063,15 +1063,15 @@ describe("eraseMessageHistory", () => {
     expect(latestStorageState.snapshotId).toBeDefined();
   });
 
-  test("dry run does not update chat or filesystem snapshot", async () => {
+  test('dry run does not update chat or filesystem snapshot', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Create initial messages and snapshot
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
-    const initialSnapshotContent = "initial snapshot";
+    const initialSnapshotContent = 'initial snapshot';
     const snapshotBlob = new Blob([initialSnapshotContent]);
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
@@ -1080,10 +1080,10 @@ describe("eraseMessageHistory", () => {
 
     // Add more messages
     const secondMessage: SerializedMessage = createMessage({
-      role: "assistant",
-      parts: [{ text: "How can I help you today?", type: "text" }],
+      role: 'assistant',
+      parts: [{ text: 'How can I help you today?', type: 'text' }],
     });
-    const nextSnapshotContent = "final snapshot";
+    const nextSnapshotContent = 'final snapshot';
     const nextSnapshotBlob = new Blob([nextSnapshotContent]);
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage, secondMessage],
@@ -1112,16 +1112,16 @@ describe("eraseMessageHistory", () => {
     expect(earliestStorageStateWithSnapshot.snapshotId).not.toBe(latestStorageState.snapshotId);
   });
 
-  test("throws error when share not found", async () => {
+  test('throws error when share not found', async () => {
     await expect(
       t.mutation(internal.messages.eraseMessageHistory, {
-        shareCode: "nonexistent",
+        shareCode: 'nonexistent',
         dryRun: false,
       }),
-    ).rejects.toThrow("Share not found");
+    ).rejects.toThrow('Share not found');
   });
 
-  test("throws error when no storage state found", async () => {
+  test('throws error when no storage state found', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Create a social share without any storage state
@@ -1132,16 +1132,16 @@ describe("eraseMessageHistory", () => {
         shareCode,
         dryRun: false,
       }),
-    ).rejects.toThrow("No filesystem snapshot found for chat");
+    ).rejects.toThrow('No filesystem snapshot found for chat');
   });
 
-  test("throws error when no filesystem snapshot found", async () => {
+  test('throws error when no filesystem snapshot found', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Create messages without snapshot
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
@@ -1155,18 +1155,18 @@ describe("eraseMessageHistory", () => {
         shareCode,
         dryRun: false,
       }),
-    ).rejects.toThrow("No filesystem snapshot found for chat");
+    ).rejects.toThrow('No filesystem snapshot found for chat');
   });
 
-  test("throws error when no message with snapshot found", async () => {
+  test('throws error when no message with snapshot found', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Create initial messages with snapshot
     const firstMessage: SerializedMessage = createMessage({
-      role: "user",
-      parts: [{ text: "Hello, world!", type: "text" }],
+      role: 'user',
+      parts: [{ text: 'Hello, world!', type: 'text' }],
     });
-    const initialSnapshotContent = "initial snapshot";
+    const initialSnapshotContent = 'initial snapshot';
     const snapshotBlob = new Blob([initialSnapshotContent]);
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
@@ -1180,8 +1180,8 @@ describe("eraseMessageHistory", () => {
     await t.run(async (ctx) => {
       const chat = await getChatByIdOrUrlIdEnsuringAccess(ctx, { id: chatId, sessionId });
       const storageStates = await ctx.db
-        .query("chatMessagesStorageState")
-        .withIndex("byChatId", (q) => q.eq("chatId", chat!._id))
+        .query('chatMessagesStorageState')
+        .withIndex('byChatId', (q) => q.eq('chatId', chat!._id))
         .collect();
       for (const state of storageStates) {
         await ctx.db.patch(state._id, { snapshotId: undefined });
@@ -1193,6 +1193,6 @@ describe("eraseMessageHistory", () => {
         shareCode,
         dryRun: false,
       }),
-    ).rejects.toThrow("No filesystem snapshot found for chat");
+    ).rejects.toThrow('No filesystem snapshot found for chat');
   });
 });

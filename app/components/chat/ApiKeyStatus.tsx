@@ -1,13 +1,13 @@
-// ~/components/chat/ApiKeyStatus.tsx
+// @/components/chat/ApiKeyStatus.tsx
 import React from 'react';
 import { useQuery } from 'convex/react';
 import { api } from '@convex/_generated/api';
 import { CheckCircleIcon, KeyIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
 import { Tooltip } from '@ui/Tooltip';
 import { Button } from '@ui/Button';
-import { getAvailableApiKeys, selectBestAvailableProvider } from '~/lib/common/apiKey';
-import { useLaunchDarkly } from '~/lib/hooks/useLaunchDarkly';
-import type { ModelSelection } from '~/utils/constants';
+import { getAvailableApiKeys, selectBestAvailableProvider } from '@/lib/common/apiKey';
+import { useLaunchDarkly } from '@/lib/hooks/useLaunchDarkly';
+import type { ModelSelection } from '@/utils/constants';
 
 interface ApiKeyStatusProps {
   modelSelection: ModelSelection;

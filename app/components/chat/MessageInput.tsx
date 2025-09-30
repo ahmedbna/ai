@@ -1,7 +1,7 @@
 import Cookies from 'js-cookie';
 import { useStore } from '@nanostores/react';
 import { EnhancePromptButton } from './EnhancePromptButton.client';
-import { messageInputStore } from '~/lib/stores/messageInput';
+import { messageInputStore } from '@/lib/stores/messageInput';
 import React, {
   memo,
   useCallback,
@@ -15,20 +15,20 @@ import React, {
   type KeyboardEventHandler,
 } from 'react';
 import { useSearchParams } from '@remix-run/react';
-import { classNames } from '~/utils/classNames';
-import { ConvexConnection } from '~/components/convex/ConvexConnection';
-import { PROMPT_COOKIE_KEY, type ModelSelection } from '~/utils/constants';
+import { classNames } from '@/utils/classNames';
+import { ConvexConnection } from '@/components/convex/ConvexConnection';
+import { PROMPT_COOKIE_KEY, type ModelSelection } from '@/utils/constants';
 import { ModelSelector } from './ModelSelector';
-import { TeamSelector } from '~/components/convex/TeamSelector';
+import { TeamSelector } from '@/components/convex/TeamSelector';
 import { ArrowRightIcon, ExclamationTriangleIcon, MagnifyingGlassIcon, StopIcon } from '@radix-ui/react-icons';
 import { SquaresPlusIcon } from '@heroicons/react/24/outline';
 import { Tooltip } from '@ui/Tooltip';
-import { setSelectedTeamSlug, useSelectedTeamSlug } from '~/lib/stores/convexTeams';
-import { convexProjectStore } from '~/lib/stores/convexProject';
+import { setSelectedTeamSlug, useSelectedTeamSlug } from '@/lib/stores/convexTeams';
+import { convexProjectStore } from '@/lib/stores/convexProject';
 import { useChefAuth } from './ChefAuthWrapper';
-import { getConvexAuthToken, useConvexSessionIdOrNullOrLoading } from '~/lib/stores/sessionId';
+import { getConvexAuthToken, useConvexSessionIdOrNullOrLoading } from '@/lib/stores/sessionId';
 import { KeyboardShortcut } from '@ui/KeyboardShortcut';
-import { debounce } from '~/utils/debounce';
+import { debounce } from '@/utils/debounce';
 import { toast } from 'sonner';
 import { captureException } from '@sentry/remix';
 import { Menu as MenuComponent, MenuItem as MenuItemComponent } from '@ui/Menu';
@@ -36,10 +36,10 @@ import { PencilSquareIcon } from '@heroicons/react/24/outline';
 import { ChatBubbleLeftIcon, DocumentArrowUpIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '@workos-inc/authkit-react';
 import { useConvex } from 'convex/react';
-import { cn } from '~/lib/utils';
-import { Button } from '../ui/button';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import { ArrowUp, Pause, Square } from 'lucide-react';
-import { Spinner } from '../ui/spinner';
+import { Spinner } from '@/components/ui/spinner';
 
 const PROMPT_LENGTH_WARNING_THRESHOLD = 2000;
 
@@ -256,7 +256,7 @@ export const MessageInput = memo(function MessageInput({
     <div className="relative z-20 mx-auto w-full rounded-2xl shadow transition-all duration-200 ">
       <div
         className={cn(
-          'rounded-2xl bg-white/50 dark:bg-black/50 backdrop-blur-lg',
+          'rounded-2xl bg-white/50 dark:bg-black/50 backdrop-blur-lg p-2',
           chatStarted && 'opacity-100 bg-card',
         )}
       >

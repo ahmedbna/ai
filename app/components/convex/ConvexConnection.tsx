@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { useConvexSessionIdOrNullOrLoading } from '~/lib/stores/sessionId';
-import { useChatId } from '~/lib/stores/chatId';
+import { useConvexSessionIdOrNullOrLoading } from '@/lib/stores/sessionId';
+import { useChatId } from '@/lib/stores/chatId';
 import { useQuery } from 'convex/react';
 import { api } from '@convex/_generated/api';
-import { ConvexConnectButton } from '~/components/convex/ConvexConnectButton';
+import { ConvexConnectButton } from '@/components/convex/ConvexConnectButton';
 import { ExternalLinkIcon } from '@radix-ui/react-icons';
 import { AlertCircle } from 'lucide-react';
 
 // Shadcn/ui component imports
-import { Button } from '~/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
-import { Alert, AlertDescription } from '~/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export function ConvexConnection() {
   const [isOpen, setIsOpen] = useState(false);

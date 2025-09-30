@@ -1,18 +1,18 @@
-import { afterEach, beforeEach, expect, test, vi } from "vitest";
-import { api, internal } from "./_generated/api";
-import { createChat, createSubchat, setupTest, storeChat, type TestConvex } from "./test.setup";
-import type { SerializedMessage } from "./messages";
-import { describe } from "node:test";
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+import { api, internal } from './_generated/api';
+import { createChat, createSubchat, setupTest, storeChat, type TestConvex } from './test.setup';
+import type { SerializedMessage } from './messages';
+import { describe } from 'node:test';
 
 function createMessage(overrides: Partial<SerializedMessage> = {}): SerializedMessage {
   return {
     id: `test-${Math.random()}`,
-    role: "user",
-    content: "test",
+    role: 'user',
+    content: 'test',
     parts: [
       {
-        type: "text",
-        text: "test",
+        type: 'text',
+        text: 'test',
       },
     ],
     createdAt: Date.now(),
@@ -23,20 +23,20 @@ function createMessage(overrides: Partial<SerializedMessage> = {}): SerializedMe
 function getChatStorageStates(t: TestConvex, chatId: string) {
   return t.run(async (ctx) => {
     const chat = await ctx.db
-      .query("chats")
-      .withIndex("byInitialId", (q) => q.eq("initialId", chatId))
+      .query('chats')
+      .withIndex('byInitialId', (q) => q.eq('initialId', chatId))
       .first();
     if (!chat) {
-      throw new Error("Chat not found");
+      throw new Error('Chat not found');
     }
     return ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byChatId", (q) => q.eq("chatId", chat._id))
+      .query('chatMessagesStorageState')
+      .withIndex('byChatId', (q) => q.eq('chatId', chat._id))
       .collect();
   });
 }
 
-describe("subchats", () => {
+describe('subchats', () => {
   let t: TestConvex;
   beforeEach(() => {
     vi.useFakeTimers();
@@ -48,37 +48,37 @@ describe("subchats", () => {
     vi.useRealTimers();
   });
 
-  test("creates chat with messages in different subchats and verifies initial_messages returns correct results", async () => {
+  test('creates chat with messages in different subchats and verifies initial_messages returns correct results', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Create messages for subchat 0 (default)
     const subchat0Message1: SerializedMessage = createMessage({
-      id: "subchat0-msg1",
-      role: "user",
-      parts: [{ text: "Hello from subchat 0!", type: "text" }],
+      id: 'subchat0-msg1',
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 0!', type: 'text' }],
     });
     const subchat0Message2: SerializedMessage = createMessage({
-      id: "subchat0-msg2",
-      role: "assistant",
-      parts: [{ text: "Response from subchat 0!", type: "text" }],
+      id: 'subchat0-msg2',
+      role: 'assistant',
+      parts: [{ text: 'Response from subchat 0!', type: 'text' }],
     });
 
     // Store messages for subchat 0s
     await storeChat(t, chatId, sessionId, {
       messages: [subchat0Message1, subchat0Message2],
-      snapshot: new Blob(["subchat 0 snapshot"]),
+      snapshot: new Blob(['subchat 0 snapshot']),
     });
 
     // Create messages for subchat 1
     const subchat1Message1: SerializedMessage = createMessage({
-      id: "subchat1-msg1",
-      role: "user",
-      parts: [{ text: "Hello from subchat 1!", type: "text" }],
+      id: 'subchat1-msg1',
+      role: 'user',
+      parts: [{ text: 'Hello from subchat 1!', type: 'text' }],
     });
     const subchat1Message2: SerializedMessage = createMessage({
-      id: "subchat1-msg2",
-      role: "assistant",
-      parts: [{ text: "Response from subchat 1!", type: "text" }],
+      id: 'subchat1-msg2',
+      role: 'assistant',
+      parts: [{ text: 'Response from subchat 1!', type: 'text' }],
     });
 
     // Create a new subchat
@@ -100,13 +100,13 @@ describe("subchats", () => {
 
     await storeChat(t, chatId, sessionId, {
       messages: [subchat1Message1, subchat1Message2],
-      snapshot: new Blob(["subchat 1 snapshot"]),
+      snapshot: new Blob(['subchat 1 snapshot']),
       subchatIndex: 1,
     });
 
     // Test /initial_messages for subchat 0
-    const subchat0Response = await t.fetch("/initial_messages", {
-      method: "POST",
+    const subchat0Response = await t.fetch('/initial_messages', {
+      method: 'POST',
       body: JSON.stringify({
         chatId,
         sessionId,
@@ -120,8 +120,8 @@ describe("subchats", () => {
     expect(subchat0Messages[1]).toMatchObject(subchat0Message2);
 
     // Test /initial_messages for subchat 1
-    const subchat1Response = await t.fetch("/initial_messages", {
-      method: "POST",
+    const subchat1Response = await t.fetch('/initial_messages', {
+      method: 'POST',
       body: JSON.stringify({
         chatId,
         sessionId,
@@ -154,38 +154,38 @@ describe("subchats", () => {
     expect(subchat1StorageInfo?.subchatIndex).toBe(1);
   });
 
-  test("creating new subchat deletes all storage states from previous subchat except latest", async () => {
+  test('creating new subchat deletes all storage states from previous subchat except latest', async () => {
     const { sessionId, chatId } = await createChat(t);
 
     // Setup subchat 0 with multiple messages
     const firstMessage: SerializedMessage = createMessage({
-      id: "msg1",
-      role: "user",
-      parts: [{ text: "First message", type: "text" }],
+      id: 'msg1',
+      role: 'user',
+      parts: [{ text: 'First message', type: 'text' }],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage],
-      snapshot: new Blob(["first snapshot"]),
+      snapshot: new Blob(['first snapshot']),
     });
 
     const secondMessage: SerializedMessage = createMessage({
-      id: "msg2",
-      role: "assistant",
-      parts: [{ text: "Second message", type: "text" }],
+      id: 'msg2',
+      role: 'assistant',
+      parts: [{ text: 'Second message', type: 'text' }],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage, secondMessage],
-      snapshot: new Blob(["second snapshot"]),
+      snapshot: new Blob(['second snapshot']),
     });
 
     const thirdMessage: SerializedMessage = createMessage({
-      id: "msg3",
-      role: "user",
-      parts: [{ text: "Third message", type: "text" }],
+      id: 'msg3',
+      role: 'user',
+      parts: [{ text: 'Third message', type: 'text' }],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [firstMessage, secondMessage, thirdMessage],
-      snapshot: new Blob(["third snapshot"]),
+      snapshot: new Blob(['third snapshot']),
     });
 
     // Verify subchat 0 has multiple messages
@@ -204,24 +204,24 @@ describe("subchats", () => {
     await t.finishAllScheduledFunctions(() => vi.runAllTimers());
 
     const subchat1Message1: SerializedMessage = createMessage({
-      id: "subchat1-msg1",
-      role: "user",
-      parts: [{ text: "First message in subchat 1", type: "text" }],
+      id: 'subchat1-msg1',
+      role: 'user',
+      parts: [{ text: 'First message in subchat 1', type: 'text' }],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [subchat1Message1],
-      snapshot: new Blob(["subchat 1 first snapshot"]),
+      snapshot: new Blob(['subchat 1 first snapshot']),
       subchatIndex: 1,
     });
 
     const subchat1Message2: SerializedMessage = createMessage({
-      id: "subchat1-msg2",
-      role: "assistant",
-      parts: [{ text: "Second message in subchat 1", type: "text" }],
+      id: 'subchat1-msg2',
+      role: 'assistant',
+      parts: [{ text: 'Second message in subchat 1', type: 'text' }],
     });
     await storeChat(t, chatId, sessionId, {
       messages: [subchat1Message1, subchat1Message2],
-      snapshot: new Blob(["subchat 1 second snapshot"]),
+      snapshot: new Blob(['subchat 1 second snapshot']),
       subchatIndex: 1,
     });
 

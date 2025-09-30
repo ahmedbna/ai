@@ -1,10 +1,10 @@
-import { defineSchema, defineTable } from "convex/server";
-import { v } from "convex/values";
-import type { Infer, Validator } from "convex/values";
-import type { CoreMessage } from "ai";
+import { defineSchema, defineTable } from 'convex/server';
+import { v } from 'convex/values';
+import type { Infer, Validator } from 'convex/values';
+import type { CoreMessage } from 'ai';
 
 export const apiKeyValidator = v.object({
-  preference: v.union(v.literal("always"), v.literal("quotaExhausted")),
+  preference: v.union(v.literal('always'), v.literal('quotaExhausted')),
   // NB: This is the *Anthropic* API key.
   value: v.optional(v.string()),
   openai: v.optional(v.string()),
@@ -32,8 +32,8 @@ export default defineSchema({
   sessions: defineTable({
     // When auth-ing with convex.dev, we'll save a `convexMembers` document and
     // reference it here.
-    memberId: v.optional(v.id("convexMembers")),
-  }).index("byMemberId", ["memberId"]),
+    memberId: v.optional(v.id('convexMembers')),
+  }).index('byMemberId', ['memberId']),
 
   convexMembers: defineTable({
     tokenIdentifier: v.string(),
@@ -50,18 +50,18 @@ export default defineSchema({
       }),
     ),
   })
-    .index("byTokenIdentifier", ["tokenIdentifier"])
-    .index("byConvexMemberId", ["convexMemberId", "softDeletedForWorkOSMerge"]),
+    .index('byTokenIdentifier', ['tokenIdentifier'])
+    .index('byConvexMemberId', ['convexMemberId', 'softDeletedForWorkOSMerge']),
 
   /*
    * Admin status means being on the convex team on the provision host.
    * It doesn't work when using a local big brain (provision host).
    */
   convexAdmins: defineTable({
-    convexMemberId: v.id("convexMembers"), // should be unique
+    convexMemberId: v.id('convexMembers'), // should be unique
     lastCheckedForAdminStatus: v.number(),
     wasAdmin: v.boolean(),
-  }).index("byConvexMemberId", ["convexMemberId"]),
+  }).index('byConvexMemberId', ['convexMemberId']),
 
   /*
    * All chats have two IDs -- an `initialId` that is always set (UUID) and a `urlId`
@@ -72,13 +72,13 @@ export default defineSchema({
    * we should prefer `urlId` if it is set.
    */
   chats: defineTable({
-    creatorId: v.id("sessions"),
+    creatorId: v.id('sessions'),
     initialId: v.string(),
     urlId: v.optional(v.string()),
     description: v.optional(v.string()),
     timestamp: v.string(),
     metadata: v.optional(v.any()), // TODO migration to remove this column
-    snapshotId: v.optional(v.id("_storage")),
+    snapshotId: v.optional(v.id('_storage')),
     lastMessageRank: v.optional(v.number()),
     lastSubchatIndex: v.number(),
     hasBeenDeployed: v.optional(v.boolean()),
@@ -86,7 +86,7 @@ export default defineSchema({
     convexProject: v.optional(
       v.union(
         v.object({
-          kind: v.literal("connected"),
+          kind: v.literal('connected'),
           projectSlug: v.string(),
           teamSlug: v.string(),
           // for this member's dev deployment
@@ -95,50 +95,50 @@ export default defineSchema({
           warningMessage: v.optional(v.string()),
         }),
         v.object({
-          kind: v.literal("connecting"),
-          checkConnectionJobId: v.optional(v.id("_scheduled_functions")),
+          kind: v.literal('connecting'),
+          checkConnectionJobId: v.optional(v.id('_scheduled_functions')),
         }),
         v.object({
-          kind: v.literal("failed"),
+          kind: v.literal('failed'),
           errorMessage: v.string(),
         }),
       ),
     ),
   })
-    .index("byCreatorAndId", ["creatorId", "initialId", "isDeleted"])
-    .index("byCreatorAndUrlId", ["creatorId", "urlId", "isDeleted"])
-    .index("bySnapshotId", ["snapshotId"])
-    .index("byInitialId", ["initialId", "isDeleted"]),
+    .index('byCreatorAndId', ['creatorId', 'initialId', 'isDeleted'])
+    .index('byCreatorAndUrlId', ['creatorId', 'urlId', 'isDeleted'])
+    .index('bySnapshotId', ['snapshotId'])
+    .index('byInitialId', ['initialId', 'isDeleted']),
 
   convexProjectCredentials: defineTable({
     projectSlug: v.string(),
     teamSlug: v.string(),
-    memberId: v.optional(v.id("convexMembers")),
+    memberId: v.optional(v.id('convexMembers')),
     projectDeployKey: v.string(),
-  }).index("bySlugs", ["teamSlug", "projectSlug"]),
+  }).index('bySlugs', ['teamSlug', 'projectSlug']),
   chatMessagesStorageState: defineTable({
-    chatId: v.id("chats"),
-    storageId: v.union(v.id("_storage"), v.null()),
+    chatId: v.id('chats'),
+    storageId: v.union(v.id('_storage'), v.null()),
     subchatIndex: v.number(),
     lastMessageRank: v.number(),
     description: v.optional(v.string()),
     partIndex: v.number(),
-    snapshotId: v.optional(v.id("_storage")),
+    snapshotId: v.optional(v.id('_storage')),
   })
-    .index("byChatId", ["chatId", "subchatIndex", "lastMessageRank", "partIndex"])
-    .index("byStorageId", ["storageId"])
-    .index("bySnapshotId", ["snapshotId"]),
+    .index('byChatId', ['chatId', 'subchatIndex', 'lastMessageRank', 'partIndex'])
+    .index('byStorageId', ['storageId'])
+    .index('bySnapshotId', ['snapshotId']),
 
   // This type of share is for forking from a specific point in time.
   // Call it a debugging snapshot or a fork point. There can be multiple per chat.
   // The main thing they are used for is forking a project at a set point
   // into another user's account.
   shares: defineTable({
-    chatId: v.id("chats"),
-    snapshotId: v.id("_storage"),
+    chatId: v.id('chats'),
+    snapshotId: v.id('_storage'),
     code: v.string(),
 
-    chatHistoryId: v.union(v.id("_storage"), v.null()),
+    chatHistoryId: v.union(v.id('_storage'), v.null()),
 
     // Keeps track of the lastMessageRank, partIndex, and subchatIndex of the chat at the time the share was created.
     // These fields aren't used but they are useful hints for how big the chat is and where the snapshot came from.
@@ -148,19 +148,19 @@ export default defineSchema({
     // The description of the chat at the time the share was created.
     description: v.optional(v.string()),
   })
-    .index("byCode", ["code"])
-    .index("bySnapshotId", ["snapshotId"])
-    .index("byChatHistoryId", ["chatHistoryId"])
-    .index("byChatIdAndLastSubchatIndex", ["chatId", "lastSubchatIndex"]),
+    .index('byCode', ['code'])
+    .index('bySnapshotId', ['snapshotId'])
+    .index('byChatHistoryId', ['chatHistoryId'])
+    .index('byChatIdAndLastSubchatIndex', ['chatId', 'lastSubchatIndex']),
 
   // This type of share is for sharing a "project."
   // You only get one for a given project for now.
   socialShares: defineTable({
-    chatId: v.id("chats"),
+    chatId: v.id('chats'),
     code: v.string(),
-    thumbnailImageStorageId: v.optional(v.id("_storage")),
+    thumbnailImageStorageId: v.optional(v.id('_storage')),
     // Does the share link work. Three states so we can immediately share on opening the share dialog.
-    shared: v.union(v.literal("shared"), v.literal("expresslyUnshared"), v.literal("noPreferenceExpressed")),
+    shared: v.union(v.literal('shared'), v.literal('expresslyUnshared'), v.literal('noPreferenceExpressed')),
     // Allow others to fork this project at its most recent state. Always true for now.
     allowForkFromLatest: v.boolean(),
     // Allow to be shown in gallery (doesn't mean we actual show it).
@@ -171,29 +171,29 @@ export default defineSchema({
     // Optional referral code for Convex signup bonus
     referralCode: v.optional(v.union(v.string(), v.null())),
   })
-    .index("byCode", ["code"])
-    .index("byChatId", ["chatId"])
-    .index("byAllowShowInGallery", ["allowShowInGallery"])
-    .index("byThumbnailImageStorageId", ["thumbnailImageStorageId"]),
+    .index('byCode', ['code'])
+    .index('byChatId', ['chatId'])
+    .index('byAllowShowInGallery', ['allowShowInGallery'])
+    .index('byThumbnailImageStorageId', ['thumbnailImageStorageId']),
 
   memberOpenAITokens: defineTable({
-    memberId: v.id("convexMembers"),
+    memberId: v.id('convexMembers'),
     token: v.string(),
     requestsRemaining: v.number(),
     lastUsedTime: v.union(v.number(), v.null()),
   })
-    .index("byMemberId", ["memberId"])
-    .index("byToken", ["token"]),
+    .index('byMemberId', ['memberId'])
+    .index('byToken', ['token']),
 
   resendTokens: defineTable({
-    memberId: v.id("convexMembers"),
+    memberId: v.id('convexMembers'),
     token: v.string(),
     verifiedEmail: v.string(),
     requestsRemaining: v.number(),
     lastUsedTime: v.union(v.number(), v.null()),
   })
-    .index("byMemberId", ["memberId"])
-    .index("byToken", ["token"]),
+    .index('byMemberId', ['memberId'])
+    .index('byToken', ['token']),
 
   /*
    * The entire prompt sent to a LLM and the response we received.
@@ -207,13 +207,13 @@ export default defineSchema({
    * it may be missing or incomplete for any given chat.
    */
   debugChatApiRequestLog: defineTable({
-    chatId: v.id("chats"),
+    chatId: v.id('chats'),
     subchatIndex: v.optional(v.number()),
     // Such a loose type doesn't feel so bad since this is debugging data, but if we try
     // to display older versions of this we need to make any fields added to CoreMessage in
     // later versions of the Vercel AI SDK optional on the read path.
-    responseCoreMessages: v.array(v.any() as Validator<CoreMessage, "required", any>),
-    promptCoreMessagesStorageId: v.id("_storage"),
+    responseCoreMessages: v.array(v.any() as Validator<CoreMessage, 'required', any>),
+    promptCoreMessagesStorageId: v.id('_storage'),
     finishReason: v.string(),
     modelId: v.string(),
 
@@ -225,8 +225,8 @@ export default defineSchema({
     usage: usageRecordValidator,
     chefTokens: v.number(),
   })
-    .index("byChatId", ["chatId"])
-    .index("byStorageId", ["promptCoreMessagesStorageId"]),
+    .index('byChatId', ['chatId'])
+    .index('byStorageId', ['promptCoreMessagesStorageId']),
   // Inspired by the migrations component, but for our migrations that we don't use the component for.
   migrations: defineTable({
     name: v.string(),
@@ -238,6 +238,6 @@ export default defineSchema({
     numDeleted: v.number(),
     latestEnd: v.optional(v.number()),
   })
-    .index("name", ["name"])
-    .index("isDone", ["isDone"]),
+    .index('name', ['name'])
+    .index('isDone', ['isDone']),
 });

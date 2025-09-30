@@ -1,11 +1,11 @@
 import { useStore } from '@nanostores/react';
-import { profileStore } from '~/lib/stores/profile';
+import { profileStore } from '@/lib/stores/profile';
 import { ExitIcon, ExternalLinkIcon, PersonIcon } from '@radix-ui/react-icons';
 import { LoadingTransition } from '@ui/Loading';
 import { useAuth } from '@workos-inc/authkit-react';
 import { Button } from '@ui/Button';
-import { themeStore } from '~/lib/stores/theme';
-import { toggleTheme } from '~/lib/stores/theme';
+import { themeStore } from '@/lib/stores/theme';
+import { toggleTheme } from '@/lib/stores/theme';
 
 export function ProfileCard() {
   const profile = useStore(profileStore);

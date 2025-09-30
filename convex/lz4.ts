@@ -1,4 +1,4 @@
-import { wasmSource } from "./lz4Wasm";
+import { wasmSource } from './lz4Wasm';
 
 // Do some work at import time to speed `vitest` up (since it reuses the same module
 // across tests, unlike the Convex runtime).
@@ -20,7 +20,7 @@ export class Lz4 {
   private heap_next: number;
 
   constructor() {
-    this.textDecoder = new TextDecoder("utf-8", { ignoreBOM: true, fatal: true });
+    this.textDecoder = new TextDecoder('utf-8', { ignoreBOM: true, fatal: true });
     this.textDecoder.decode();
 
     this.heap = new Array(32).fill(undefined);
@@ -31,7 +31,7 @@ export class Lz4 {
   static async initialize() {
     const lz4 = new Lz4();
     const { instance } = await WebAssembly.instantiate(wasmBuffer, {
-      "./lz4_wasm_bg.js": {
+      './lz4_wasm_bg.js': {
         __wbindgen_string_new: (arg0: number, arg1: number) => {
           const ret = lz4.getStringFromWasm0(arg0, arg1);
           return lz4.addHeapObject(ret);
@@ -81,14 +81,14 @@ export class Lz4 {
 
   private get exports() {
     if (!this.instance) {
-      throw new Error("Lz4 instance not initialized");
+      throw new Error('Lz4 instance not initialized');
     }
     return this.instance.exports as any;
   }
 
   private getUint8Memory0() {
     if (!this.instance) {
-      throw new Error("Lz4 instance not initialized");
+      throw new Error('Lz4 instance not initialized');
     }
     if (this.uint8Memory0 === null || this.uint8Memory0.buffer !== this.exports.memory.buffer) {
       this.uint8Memory0 = new Uint8Array(this.exports.memory.buffer);
@@ -113,7 +113,7 @@ export class Lz4 {
 
   private getInt32Memory0() {
     if (!this.instance) {
-      throw new Error("Lz4 instance not initialized");
+      throw new Error('Lz4 instance not initialized');
     }
     if (this.int32Memory0 === null || this.int32Memory0.buffer !== this.exports.memory.buffer) {
       this.int32Memory0 = new Int32Array(this.exports.memory.buffer);

@@ -1,7 +1,7 @@
-import { v } from "convex/values";
-import { internalAction, internalMutation } from "./_generated/server";
-import { OpenAI } from "openai";
-import { internal } from "./_generated/api";
+import { v } from 'convex/values';
+import { internalAction, internalMutation } from './_generated/server';
+import { OpenAI } from 'openai';
+import { internal } from './_generated/api';
 
 const SUMMARIZE_SYSTEM_PROMPT = `You are a helpful assistant that given a users' prompt, summarizes it into 5 words
 or less. These summaries should be a short description of the feature/bug a user is trying to work on.
@@ -19,24 +19,24 @@ Summary: "Splitwise clone"
 `;
 
 export const firstMessage = internalAction({
-  args: { chatMessageId: v.id("chatMessagesStorageState"), message: v.string() },
+  args: { chatMessageId: v.id('chatMessagesStorageState'), message: v.string() },
   handler: async (ctx, args) => {
     const { chatMessageId, message } = args;
     const openai = new OpenAI({
       apiKey: process.env.OPENAI_API_KEY,
     });
     const response = await openai.chat.completions.create({
-      model: "gpt-4.1-mini",
+      model: 'gpt-4.1-mini',
       messages: [
         {
-          role: "system",
+          role: 'system',
           content: SUMMARIZE_SYSTEM_PROMPT,
         },
-        { role: "user", content: message },
+        { role: 'user', content: message },
       ],
     });
     if (!response.choices[0].message.content) {
-      throw new Error("Failed to summarize message");
+      throw new Error('Failed to summarize message');
     }
     const summary = response.choices[0].message.content;
     await ctx.runMutation(internal.summarize.saveMessageSummary, {
@@ -47,7 +47,7 @@ export const firstMessage = internalAction({
 });
 
 export const saveMessageSummary = internalMutation({
-  args: { chatMessageId: v.id("chatMessagesStorageState"), summary: v.string() },
+  args: { chatMessageId: v.id('chatMessagesStorageState'), summary: v.string() },
   handler: async (ctx, args) => {
     const { chatMessageId, summary } = args;
     await ctx.db.patch(chatMessageId, {

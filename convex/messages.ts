@@ -6,26 +6,26 @@ import {
   query,
   type MutationCtx,
   type QueryCtx,
-} from "./_generated/server";
-import type { Message as AIMessage } from "ai";
-import { ConvexError, v } from "convex/values";
-import type { Infer } from "convex/values";
-import { isValidSession } from "./sessions";
-import type { Doc, Id } from "./_generated/dataModel";
-import { ensureEnvVar, startProvisionConvexProjectHelper } from "./convexProjects";
-import { internal } from "./_generated/api";
-import { assertIsConvexAdmin } from "./admin";
+} from './_generated/server';
+import type { Message as AIMessage } from 'ai';
+import { ConvexError, v } from 'convex/values';
+import type { Infer } from 'convex/values';
+import { isValidSession } from './sessions';
+import type { Doc, Id } from './_generated/dataModel';
+import { ensureEnvVar, startProvisionConvexProjectHelper } from './convexProjects';
+import { internal } from './_generated/api';
+import { assertIsConvexAdmin } from './admin';
 
-export type SerializedMessage = Omit<AIMessage, "createdAt" | "content"> & {
+export type SerializedMessage = Omit<AIMessage, 'createdAt' | 'content'> & {
   createdAt: number | undefined;
   content?: string;
 };
 
-export const CHAT_NOT_FOUND_ERROR = new ConvexError({ code: "NotFound", message: "Chat not found" });
+export const CHAT_NOT_FOUND_ERROR = new ConvexError({ code: 'NotFound', message: 'Chat not found' });
 
 export const initializeChat = mutation({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
     id: v.string(),
     projectInitParams: v.optional(
       v.object({
@@ -53,7 +53,7 @@ export const initializeChat = mutation({
 
 export const setUrlId = mutation({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
     chatId: v.string(),
     urlHint: v.string(),
     description: v.string(),
@@ -83,7 +83,7 @@ export const setUrlId = mutation({
 
 export const setDescription = mutation({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
     id: v.string(),
     description: v.string(),
   },
@@ -102,7 +102,7 @@ export const setDescription = mutation({
   },
 });
 
-export async function getChat(ctx: QueryCtx, id: string, sessionId: Id<"sessions">) {
+export async function getChat(ctx: QueryCtx, id: string, sessionId: Id<'sessions'>) {
   const chat = await getChatByIdOrUrlIdEnsuringAccess(ctx, { id, sessionId });
 
   if (!chat) {
@@ -123,7 +123,7 @@ export async function getChat(ctx: QueryCtx, id: string, sessionId: Id<"sessions
 export const get = query({
   args: {
     id: v.string(),
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
   },
   returns: v.union(
     v.null(),
@@ -132,7 +132,7 @@ export const get = query({
       urlId: v.optional(v.string()),
       description: v.optional(v.string()),
       timestamp: v.string(),
-      snapshotId: v.optional(v.id("_storage")),
+      snapshotId: v.optional(v.id('_storage')),
       subchatIndex: v.optional(v.number()),
     }),
   ),
@@ -144,30 +144,30 @@ export const get = query({
 
 export async function getLatestChatMessageStorageState(
   ctx: QueryCtx,
-  chat: { _id: Id<"chats">; subchatIndex: number; lastMessageRank?: number },
+  chat: { _id: Id<'chats'>; subchatIndex: number; lastMessageRank?: number },
 ) {
   const lastMessageRank = chat.lastMessageRank;
   if (lastMessageRank === undefined) {
     return await ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byChatId", (q) => q.eq("chatId", chat._id).eq("subchatIndex", chat.subchatIndex))
-      .order("desc")
+      .query('chatMessagesStorageState')
+      .withIndex('byChatId', (q) => q.eq('chatId', chat._id).eq('subchatIndex', chat.subchatIndex))
+      .order('desc')
       .first();
   }
   return await ctx.db
-    .query("chatMessagesStorageState")
-    .withIndex("byChatId", (q) =>
-      q.eq("chatId", chat._id).eq("subchatIndex", chat.subchatIndex).lte("lastMessageRank", lastMessageRank),
+    .query('chatMessagesStorageState')
+    .withIndex('byChatId', (q) =>
+      q.eq('chatId', chat._id).eq('subchatIndex', chat.subchatIndex).lte('lastMessageRank', lastMessageRank),
     )
-    .order("desc")
+    .order('desc')
     .first();
 }
 
 export const storageInfo = v.object({
-  storageId: v.union(v.id("_storage"), v.null()),
+  storageId: v.union(v.id('_storage'), v.null()),
   lastMessageRank: v.number(),
   partIndex: v.number(),
-  snapshotId: v.optional(v.id("_storage")),
+  snapshotId: v.optional(v.id('_storage')),
   subchatIndex: v.optional(v.number()),
 });
 
@@ -175,7 +175,7 @@ export type StorageInfo = Infer<typeof storageInfo>;
 
 export const getInitialMessagesStorageInfo = internalQuery({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
     chatId: v.string(),
     subchatIndex: v.number(),
   },
@@ -208,14 +208,14 @@ export const getMessagesByChatInitialIdBypassingAccessControl = internalQuery({
     ensureAdmin: v.optional(v.boolean()),
     subchatIndex: v.number(),
   },
-  returns: v.union(v.id("_storage"), v.null()),
+  returns: v.union(v.id('_storage'), v.null()),
   handler: async (ctx, args) => {
     if (args.ensureAdmin) {
       await assertIsConvexAdmin(ctx);
     }
     const chat = await ctx.db
-      .query("chats")
-      .withIndex("byInitialId", (q) => q.eq("initialId", args.id))
+      .query('chats')
+      .withIndex('byInitialId', (q) => q.eq('initialId', args.id))
       .unique();
     if (!chat) {
       throw CHAT_NOT_FOUND_ERROR;
@@ -223,7 +223,7 @@ export const getMessagesByChatInitialIdBypassingAccessControl = internalQuery({
     const chatWithSubchatIndex = { ...chat, subchatIndex: args.subchatIndex };
     const storageInfo = await getLatestChatMessageStorageState(ctx, chatWithSubchatIndex);
     if (storageInfo === null) {
-      throw new ConvexError({ code: "NotFound", message: "Chat messages storage state not found" });
+      throw new ConvexError({ code: 'NotFound', message: 'Chat messages storage state not found' });
     }
     return storageInfo.storageId;
   },
@@ -231,16 +231,16 @@ export const getMessagesByChatInitialIdBypassingAccessControl = internalQuery({
 
 export const updateStorageState = internalMutation({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
     chatId: v.string(),
-    storageId: v.union(v.id("_storage"), v.null()),
+    storageId: v.union(v.id('_storage'), v.null()),
     lastMessageRank: v.number(),
     subchatIndex: v.number(),
     partIndex: v.number(),
-    snapshotId: v.optional(v.union(v.id("_storage"), v.null())),
+    snapshotId: v.optional(v.union(v.id('_storage'), v.null())),
   },
-  returns: v.union(v.id("chatMessagesStorageState"), v.null()),
-  handler: async (ctx, args): Promise<Id<"chatMessagesStorageState"> | null> => {
+  returns: v.union(v.id('chatMessagesStorageState'), v.null()),
+  handler: async (ctx, args): Promise<Id<'chatMessagesStorageState'> | null> => {
     const { chatId, storageId, lastMessageRank, partIndex, snapshotId, sessionId } = args;
     const messageHistoryStorageId = storageId;
     const chat = await getChatByIdOrUrlIdEnsuringAccess(ctx, { id: chatId, sessionId });
@@ -253,7 +253,7 @@ export const updateStorageState = internalMutation({
       subchatIndex: args.subchatIndex,
     });
     if (!previous) {
-      throw new Error("Chat messages storage state not found");
+      throw new Error('Chat messages storage state not found');
     }
     if (previous.lastMessageRank > lastMessageRank) {
       console.warn(
@@ -277,7 +277,7 @@ export const updateStorageState = internalMutation({
         return null;
       }
       if (snapshotId === null) {
-        throw new Error("Received null snapshotId for message that is already saved and has no storageId");
+        throw new Error('Received null snapshotId for message that is already saved and has no storageId');
       }
       await ctx.db.patch(previous._id, {
         snapshotId,
@@ -286,12 +286,12 @@ export const updateStorageState = internalMutation({
     }
 
     if (previous.storageId !== null && storageId === null) {
-      throw new Error("Received null storageId for a chat with messages");
+      throw new Error('Received null storageId for a chat with messages');
     }
 
     if (previous.lastMessageRank === lastMessageRank) {
       if (previous.partIndex >= partIndex) {
-        throw new Error("Tried to update to a part that is already stored. Should have already returned.");
+        throw new Error('Tried to update to a part that is already stored. Should have already returned.');
       }
       // This is a part update, so we can patch instead of inserting a new document, cleaning up the old stored state.
       // We do not support rewinding to parts.
@@ -304,8 +304,8 @@ export const updateStorageState = internalMutation({
       if (previous.snapshotId && previous.snapshotId !== snapshotId && snapshotId) {
         const unusedByChatsAndShares = await snapshotIdUnusedByChatsAndShares(ctx, previous.snapshotId);
         const storageStatesWithSameSnapshotId = await ctx.db
-          .query("chatMessagesStorageState")
-          .withIndex("bySnapshotId", (q) => q.eq("snapshotId", previous.snapshotId))
+          .query('chatMessagesStorageState')
+          .withIndex('bySnapshotId', (q) => q.eq('snapshotId', previous.snapshotId))
           .collect();
         // Only the document we're updating references this snapshotId, so it's safe to delete.
         if (
@@ -324,7 +324,7 @@ export const updateStorageState = internalMutation({
       return null;
     }
 
-    const id = await ctx.db.insert("chatMessagesStorageState", {
+    const id = await ctx.db.insert('chatMessagesStorageState', {
       chatId: chat._id,
       storageId,
       lastMessageRank,
@@ -341,24 +341,24 @@ export const updateStorageState = internalMutation({
   },
 });
 
-export async function storageIdUnusedByShares(ctx: MutationCtx, chatStorageId: Id<"_storage">) {
+export async function storageIdUnusedByShares(ctx: MutationCtx, chatStorageId: Id<'_storage'>) {
   const shareRef = await ctx.db
-    .query("shares")
-    .withIndex("byChatHistoryId", (q) => q.eq("chatHistoryId", chatStorageId))
+    .query('shares')
+    .withIndex('byChatHistoryId', (q) => q.eq('chatHistoryId', chatStorageId))
     .first();
   return shareRef === null;
 }
 
-async function deleteChatStorageIdIfUnused(ctx: MutationCtx, chatStorageId: Id<"_storage">) {
+async function deleteChatStorageIdIfUnused(ctx: MutationCtx, chatStorageId: Id<'_storage'>) {
   const chatHistoryRef = await ctx.db
-    .query("chatMessagesStorageState")
-    .withIndex("byStorageId", (q) => q.eq("storageId", chatStorageId))
+    .query('chatMessagesStorageState')
+    .withIndex('byStorageId', (q) => q.eq('storageId', chatStorageId))
     .first();
   if (chatHistoryRef) {
     // I don't think it's possible in the current data model to have a duplicate storageId
     // here because there should not be duplicate rows for the same chatId, lastMessageRank,
     //  and partIndex. Newer snapshots should be patched.
-    console.warn("Unexpectedly found chatHistoryRef for storageId", chatStorageId);
+    console.warn('Unexpectedly found chatHistoryRef for storageId', chatStorageId);
   }
   const unusedByShares = await storageIdUnusedByShares(ctx, chatStorageId);
   if (unusedByShares && chatHistoryRef === null) {
@@ -366,22 +366,22 @@ async function deleteChatStorageIdIfUnused(ctx: MutationCtx, chatStorageId: Id<"
   }
 }
 
-export async function snapshotIdUnusedByChatsAndShares(ctx: MutationCtx, snapshotId: Id<"_storage">) {
+export async function snapshotIdUnusedByChatsAndShares(ctx: MutationCtx, snapshotId: Id<'_storage'>) {
   const chatRef = await ctx.db
-    .query("chats")
-    .withIndex("bySnapshotId", (q) => q.eq("snapshotId", snapshotId))
+    .query('chats')
+    .withIndex('bySnapshotId', (q) => q.eq('snapshotId', snapshotId))
     .first();
   const shareRef = await ctx.db
-    .query("shares")
-    .withIndex("bySnapshotId", (q) => q.eq("snapshotId", snapshotId))
+    .query('shares')
+    .withIndex('bySnapshotId', (q) => q.eq('snapshotId', snapshotId))
     .first();
   return chatRef === null && shareRef === null;
 }
 
-async function deleteSnapshotIdIfUnused(ctx: MutationCtx, snapshotId: Id<"_storage">) {
+async function deleteSnapshotIdIfUnused(ctx: MutationCtx, snapshotId: Id<'_storage'>) {
   const chatHistoryRef = await ctx.db
-    .query("chatMessagesStorageState")
-    .withIndex("bySnapshotId", (q) => q.eq("snapshotId", snapshotId))
+    .query('chatMessagesStorageState')
+    .withIndex('bySnapshotId', (q) => q.eq('snapshotId', snapshotId))
     .first();
   const unusedByChatsAndShares = await snapshotIdUnusedByChatsAndShares(ctx, snapshotId);
   if (unusedByChatsAndShares && chatHistoryRef === null) {
@@ -389,7 +389,7 @@ async function deleteSnapshotIdIfUnused(ctx: MutationCtx, snapshotId: Id<"_stora
   }
 }
 
-export async function deleteStorageState(ctx: MutationCtx, storageState: Doc<"chatMessagesStorageState">) {
+export async function deleteStorageState(ctx: MutationCtx, storageState: Doc<'chatMessagesStorageState'>) {
   await ctx.db.delete(storageState._id);
   const chatStorageId = storageState.storageId;
   if (chatStorageId) {
@@ -404,7 +404,7 @@ export async function deleteStorageState(ctx: MutationCtx, storageState: Doc<"ch
 async function deletePreviousStorageStates(
   ctx: MutationCtx,
   args: {
-    chat: Doc<"chats">;
+    chat: Doc<'chats'>;
     subchatIndex: number;
   },
 ) {
@@ -413,16 +413,16 @@ async function deletePreviousStorageStates(
   if (chatLastMessageRank !== undefined) {
     // Remove the storage state records for future messages on a different branch
     let storageStatesToDelete = await ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byChatId", (q) =>
-        q.eq("chatId", chat._id).eq("subchatIndex", args.subchatIndex).gt("lastMessageRank", chatLastMessageRank),
+      .query('chatMessagesStorageState')
+      .withIndex('byChatId', (q) =>
+        q.eq('chatId', chat._id).eq('subchatIndex', args.subchatIndex).gt('lastMessageRank', chatLastMessageRank),
       )
       .collect();
 
     // If we rewinded to a previous subchat, we delete all the storage states for the future subchats
     const futureSubchatStorageStates = await ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byChatId", (q) => q.eq("chatId", chat._id).gt("subchatIndex", args.subchatIndex))
+      .query('chatMessagesStorageState')
+      .withIndex('byChatId', (q) => q.eq('chatId', chat._id).gt('subchatIndex', args.subchatIndex))
       .collect();
     storageStatesToDelete.push(...futureSubchatStorageStates);
 
@@ -435,7 +435,7 @@ async function deletePreviousStorageStates(
 
 export const earliestRewindableMessageRank = query({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
     chatId: v.string(),
     subchatIndex: v.optional(v.number()),
   },
@@ -457,11 +457,11 @@ export const earliestRewindableMessageRank = query({
       return null;
     }
     const docs = await ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byChatId", (q) =>
-        q.eq("chatId", chat._id).eq("subchatIndex", subchatIndex).lte("lastMessageRank", latestState.lastMessageRank),
+      .query('chatMessagesStorageState')
+      .withIndex('byChatId', (q) =>
+        q.eq('chatId', chat._id).eq('subchatIndex', subchatIndex).lte('lastMessageRank', latestState.lastMessageRank),
       )
-      .order("asc")
+      .order('asc')
       .take(10);
 
     const docWithSnapshot = docs.find((doc) => doc.snapshotId !== undefined && doc.snapshotId !== null);
@@ -475,7 +475,7 @@ export const earliestRewindableMessageRank = query({
 
 export const rewindChat = mutation({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
     chatId: v.string(),
     subchatIndex: v.optional(v.number()),
     lastMessageRank: v.optional(v.number()),
@@ -489,14 +489,14 @@ export const rewindChat = mutation({
     }
     if (lastMessageRank && args.subchatIndex !== chat.lastSubchatIndex) {
       throw new ConvexError({
-        code: "InvalidState",
-        message: "Cannot rewind to a specific message in a subchat that is not the latest subchat",
+        code: 'InvalidState',
+        message: 'Cannot rewind to a specific message in a subchat that is not the latest subchat',
       });
     }
     if (lastMessageRank === undefined && args.subchatIndex === chat.lastSubchatIndex) {
       throw new ConvexError({
-        code: "InvalidState",
-        message: "Cannot rewind to a specific message in the latest subchat without a lastMessageRank",
+        code: 'InvalidState',
+        message: 'Cannot rewind to a specific message in the latest subchat without a lastMessageRank',
       });
     }
     const latestStorageState = await getLatestChatMessageStorageState(ctx, {
@@ -508,13 +508,13 @@ export const rewindChat = mutation({
       throw new Error(`Storage state not found for lastMessageRank ${lastMessageRank} in chat ${chatId}`);
     }
     if (latestStorageState.storageId === null) {
-      throw new ConvexError({ code: "NoMessagesSaved", message: "Cannot rewind to a chat with no messages saved" });
+      throw new ConvexError({ code: 'NoMessagesSaved', message: 'Cannot rewind to a chat with no messages saved' });
     }
 
     if (chat.lastMessageRank !== undefined && lastMessageRank !== undefined && chat.lastMessageRank < lastMessageRank) {
       throw new ConvexError({
-        code: "RewindToFuture",
-        message: "Cannot rewind to a future message",
+        code: 'RewindToFuture',
+        message: 'Cannot rewind to a future message',
         data: {
           lastMessageRank,
           currentLastMessageRank: chat.lastMessageRank,
@@ -534,20 +534,20 @@ export const rewindChat = mutation({
 
 export const maybeCleanupStaleChatHistory = internalMutation({
   args: {
-    storageId: v.id("_storage"),
+    storageId: v.id('_storage'),
   },
   handler: async (ctx, args): Promise<void> => {
     const chatRef = await ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byStorageId", (q) => q.eq("storageId", args.storageId))
+      .query('chatMessagesStorageState')
+      .withIndex('byStorageId', (q) => q.eq('storageId', args.storageId))
       .first();
     if (chatRef !== null) {
       return;
     }
 
     const shareRef = await ctx.db
-      .query("shares")
-      .withIndex("byChatHistoryId", (q) => q.eq("chatHistoryId", args.storageId))
+      .query('shares')
+      .withIndex('byChatHistoryId', (q) => q.eq('chatHistoryId', args.storageId))
       .first();
     if (shareRef !== null) {
       return;
@@ -559,7 +559,7 @@ export const maybeCleanupStaleChatHistory = internalMutation({
 
 export const getAll = query({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
   },
   returns: v.array(
     v.object({
@@ -573,9 +573,9 @@ export const getAll = query({
   handler: async (ctx, args) => {
     const { sessionId } = args;
     const results = await ctx.db
-      .query("chats")
-      .withIndex("byCreatorAndUrlId", (q) => q.eq("creatorId", sessionId))
-      .filter((q) => q.neq(q.field("isDeleted"), true))
+      .query('chats')
+      .withIndex('byCreatorAndUrlId', (q) => q.eq('creatorId', sessionId))
+      .filter((q) => q.neq(q.field('isDeleted'), true))
       .collect();
 
     return results.map((result) => ({
@@ -590,7 +590,7 @@ export const getAll = query({
 
 export const remove = action({
   args: {
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
     id: v.string(),
     teamSlug: v.optional(v.string()),
     projectSlug: v.optional(v.string()),
@@ -599,7 +599,7 @@ export const remove = action({
   },
   handler: async (ctx, args) => {
     const { accessToken, id, sessionId, teamSlug, projectSlug, shouldDeleteConvexProject } = args;
-    let projectDeletionResult: { kind: "success" } | { kind: "error"; error: string } = { kind: "success" };
+    let projectDeletionResult: { kind: 'success' } | { kind: 'error'; error: string } = { kind: 'success' };
     if (shouldDeleteConvexProject) {
       projectDeletionResult = await tryDeleteProject({ teamSlug, projectSlug, accessToken });
     }
@@ -609,13 +609,13 @@ export const remove = action({
       sessionId,
     });
 
-    if (projectDeletionResult.kind === "error") {
+    if (projectDeletionResult.kind === 'error') {
       return {
-        kind: "error",
+        kind: 'error',
         error: `Deleted chat, but failed to delete linked Convex project:\n${projectDeletionResult.error}`,
       };
     }
-    return { kind: "success" };
+    return { kind: 'success' };
   },
 });
 
@@ -623,13 +623,13 @@ async function tryDeleteProject(args: {
   teamSlug: string | undefined;
   projectSlug: string | undefined;
   accessToken: string;
-}): Promise<{ kind: "success" } | { kind: "error"; error: string }> {
+}): Promise<{ kind: 'success' } | { kind: 'error'; error: string }> {
   const { teamSlug, projectSlug, accessToken } = args;
   if (teamSlug === undefined || projectSlug === undefined) {
-    return { kind: "error", error: "Team slug and project slug are required to delete a Convex project" };
+    return { kind: 'error', error: 'Team slug and project slug are required to delete a Convex project' };
   }
 
-  const bigBrainHost = ensureEnvVar("BIG_BRAIN_HOST");
+  const bigBrainHost = ensureEnvVar('BIG_BRAIN_HOST');
 
   const projectsResponse = await fetch(`${bigBrainHost}/api/teams/${teamSlug}/projects`, {
     headers: {
@@ -641,12 +641,12 @@ async function tryDeleteProject(args: {
     const text = await projectsResponse.text();
     try {
       const error = JSON.parse(text);
-      if (error.code === "TeamNotFound") {
-        return { kind: "error", error: `Team not found: ${teamSlug}` };
+      if (error.code === 'TeamNotFound') {
+        return { kind: 'error', error: `Team not found: ${teamSlug}` };
       }
-      return { kind: "error", error: `Failed to fetch team projects: ${projectsResponse.statusText} ${text}` };
+      return { kind: 'error', error: `Failed to fetch team projects: ${projectsResponse.statusText} ${text}` };
     } catch (_e) {
-      return { kind: "error", error: `Failed to fetch team projects: ${projectsResponse.statusText} ${text}` };
+      return { kind: 'error', error: `Failed to fetch team projects: ${projectsResponse.statusText} ${text}` };
     }
   }
 
@@ -655,7 +655,7 @@ async function tryDeleteProject(args: {
 
   if (project) {
     const response = await fetch(`${bigBrainHost}/api/dashboard/delete_project/${project.id}`, {
-      method: "POST",
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -663,17 +663,17 @@ async function tryDeleteProject(args: {
 
     if (!response.ok) {
       const text = await response.text();
-      return { kind: "error", error: `Failed to delete project: ${response.statusText} ${text}` };
+      return { kind: 'error', error: `Failed to delete project: ${response.statusText} ${text}` };
     }
   }
 
-  return { kind: "success" };
+  return { kind: 'success' };
 }
 
 export const removeChat = internalMutation({
   args: {
     id: v.string(),
-    sessionId: v.id("sessions"),
+    sessionId: v.id('sessions'),
   },
   handler: async (ctx, args) => {
     const existing = await getChatByIdOrUrlIdEnsuringAccess(ctx, { id: args.id, sessionId: args.sessionId });
@@ -683,11 +683,11 @@ export const removeChat = internalMutation({
     }
 
     const convexProject = existing.convexProject;
-    if (convexProject !== undefined && convexProject.kind === "connected") {
+    if (convexProject !== undefined && convexProject.kind === 'connected') {
       const credentials = await ctx.db
-        .query("convexProjectCredentials")
-        .withIndex("bySlugs", (q) =>
-          q.eq("teamSlug", convexProject.teamSlug).eq("projectSlug", convexProject.projectSlug),
+        .query('convexProjectCredentials')
+        .withIndex('bySlugs', (q) =>
+          q.eq('teamSlug', convexProject.teamSlug).eq('projectSlug', convexProject.projectSlug),
         )
         .unique();
       if (credentials !== null) {
@@ -700,7 +700,7 @@ export const removeChat = internalMutation({
   },
 });
 
-async function _allocateUrlId(ctx: QueryCtx, { urlHint, sessionId }: { urlHint: string; sessionId: Id<"sessions"> }) {
+async function _allocateUrlId(ctx: QueryCtx, { urlHint, sessionId }: { urlHint: string; sessionId: Id<'sessions'> }) {
   const existing = await getChatByUrlId(ctx, { id: urlHint, sessionId });
 
   if (existing === null) {
@@ -726,18 +726,18 @@ export async function createNewChat(
   ctx: MutationCtx,
   args: {
     id: string;
-    sessionId: Id<"sessions">;
+    sessionId: Id<'sessions'>;
     projectInitParams?: {
       teamSlug: string;
       workosAccessToken: string;
     };
   },
-): Promise<Id<"chats">> {
+): Promise<Id<'chats'>> {
   const { id, sessionId, projectInitParams } = args;
   const existing = await getChatByIdOrUrlIdEnsuringAccess(ctx, { id, sessionId });
 
   if (existing) {
-    throw new ConvexError({ code: "InvalidState", message: "Chat already exists" });
+    throw new ConvexError({ code: 'InvalidState', message: 'Chat already exists' });
   }
 
   const session = await ctx.db.get(sessionId);
@@ -745,14 +745,14 @@ export async function createNewChat(
     throw new Error(`Invalid state -- session should exist: ${sessionId}`);
   }
 
-  const chatId = await ctx.db.insert("chats", {
+  const chatId = await ctx.db.insert('chats', {
     creatorId: sessionId,
     initialId: id,
     timestamp: new Date().toISOString(),
     isDeleted: false,
     lastSubchatIndex: 0,
   });
-  await ctx.db.insert("chatMessagesStorageState", {
+  await ctx.db.insert('chatMessagesStorageState', {
     chatId,
     storageId: null,
     lastMessageRank: -1,
@@ -769,23 +769,23 @@ export async function createNewChat(
   return chatId;
 }
 
-function getChatByInitialId(ctx: QueryCtx, { id, sessionId }: { id: string; sessionId: Id<"sessions"> }) {
+function getChatByInitialId(ctx: QueryCtx, { id, sessionId }: { id: string; sessionId: Id<'sessions'> }) {
   return ctx.db
-    .query("chats")
-    .withIndex("byCreatorAndId", (q) => q.eq("creatorId", sessionId).eq("initialId", id).lt("isDeleted", true))
+    .query('chats')
+    .withIndex('byCreatorAndId', (q) => q.eq('creatorId', sessionId).eq('initialId', id).lt('isDeleted', true))
     .unique();
 }
 
-function getChatByUrlId(ctx: QueryCtx, { id, sessionId }: { id: string; sessionId: Id<"sessions"> }) {
+function getChatByUrlId(ctx: QueryCtx, { id, sessionId }: { id: string; sessionId: Id<'sessions'> }) {
   return ctx.db
-    .query("chats")
-    .withIndex("byCreatorAndUrlId", (q) => q.eq("creatorId", sessionId).eq("urlId", id).lt("isDeleted", true))
+    .query('chats')
+    .withIndex('byCreatorAndUrlId', (q) => q.eq('creatorId', sessionId).eq('urlId', id).lt('isDeleted', true))
     .unique();
 }
 
 export async function getChatByIdOrUrlIdEnsuringAccess(
   ctx: QueryCtx,
-  { id, sessionId }: { id: string; sessionId: Id<"sessions"> },
+  { id, sessionId }: { id: string; sessionId: Id<'sessions'> },
 ) {
   const isValid = await isValidSession(ctx, { sessionId });
   if (!isValid) {
@@ -801,7 +801,7 @@ export async function getChatByIdOrUrlIdEnsuringAccess(
   return byUrlId;
 }
 
-function getIdentifier(chat: Doc<"chats">): string {
+function getIdentifier(chat: Doc<'chats'>): string {
   return chat.urlId ?? chat.initialId!;
 }
 
@@ -814,37 +814,37 @@ export const eraseMessageHistory = internalMutation({
   handler: async (ctx, args) => {
     const { shareCode, dryRun } = args;
     const share = await ctx.db
-      .query("socialShares")
-      .withIndex("byCode", (q) => q.eq("code", shareCode))
+      .query('socialShares')
+      .withIndex('byCode', (q) => q.eq('code', shareCode))
       .unique();
     if (share === null) {
-      throw new ConvexError({ code: "NotFound", message: "Share not found" });
+      throw new ConvexError({ code: 'NotFound', message: 'Share not found' });
     }
-    console.log("ChatId for share is", share.chatId);
+    console.log('ChatId for share is', share.chatId);
     const chat = await ctx.db.get(share.chatId);
     if (chat === null) {
       throw CHAT_NOT_FOUND_ERROR;
     }
     // Get the most recent filesystem snapshot
     const mostRecentStorageState = await ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byChatId", (q) => q.eq("chatId", share.chatId))
-      .order("desc")
+      .query('chatMessagesStorageState')
+      .withIndex('byChatId', (q) => q.eq('chatId', share.chatId))
+      .order('desc')
       .first();
     if (mostRecentStorageState === null) {
-      throw new ConvexError({ code: "NotFound", message: "No storage state found for chat" });
+      throw new ConvexError({ code: 'NotFound', message: 'No storage state found for chat' });
     }
-    console.log("Most recent storage state is", mostRecentStorageState);
+    console.log('Most recent storage state is', mostRecentStorageState);
     const mostRecentFilesystemSnapshot = mostRecentStorageState.snapshotId;
     if (mostRecentFilesystemSnapshot === undefined) {
-      throw new ConvexError({ code: "NotFound", message: "No filesystem snapshot found for chat" });
+      throw new ConvexError({ code: 'NotFound', message: 'No filesystem snapshot found for chat' });
     }
     const earliestMessages = await ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byChatId", (q) => q.eq("chatId", share.chatId))
-      .order("asc")
+      .query('chatMessagesStorageState')
+      .withIndex('byChatId', (q) => q.eq('chatId', share.chatId))
+      .order('asc')
       .take(100);
-    let earliestMessageWithSnapshot: Doc<"chatMessagesStorageState"> | null = null;
+    let earliestMessageWithSnapshot: Doc<'chatMessagesStorageState'> | null = null;
     for (const storageState of earliestMessages) {
       if (storageState.snapshotId !== undefined) {
         earliestMessageWithSnapshot = storageState;
@@ -853,34 +853,34 @@ export const eraseMessageHistory = internalMutation({
     }
     if (earliestMessageWithSnapshot === null) {
       throw new ConvexError({
-        code: "NotFound",
-        message: "No message with snapshot found for chat after looking at the first 100 message states",
+        code: 'NotFound',
+        message: 'No message with snapshot found for chat after looking at the first 100 message states',
       });
     }
 
     // Get the latest part with the same lastMessageRank
     const latestEarlyStorageState = await ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byChatId", (q) =>
+      .query('chatMessagesStorageState')
+      .withIndex('byChatId', (q) =>
         q
-          .eq("chatId", share.chatId)
-          .eq("subchatIndex", chat.lastSubchatIndex)
-          .eq("lastMessageRank", earliestMessageWithSnapshot.lastMessageRank),
+          .eq('chatId', share.chatId)
+          .eq('subchatIndex', chat.lastSubchatIndex)
+          .eq('lastMessageRank', earliestMessageWithSnapshot.lastMessageRank),
       )
-      .order("desc")
+      .order('desc')
       .first();
     if (latestEarlyStorageState === null) {
       throw new ConvexError({
-        code: "NotFound",
+        code: 'NotFound',
         message: `No storage state found with lastMessageRank ${earliestMessageWithSnapshot.lastMessageRank}`,
       });
     }
 
     // Replace the latestEarlyStorageState's filesystem snapshot with the most recent filesystem snapshot
     console.log(
-      "Replacing filesystem snapshot for chat from",
+      'Replacing filesystem snapshot for chat from',
       latestEarlyStorageState.snapshotId,
-      "to",
+      'to',
       mostRecentFilesystemSnapshot,
     );
     if (!dryRun) {
@@ -888,7 +888,7 @@ export const eraseMessageHistory = internalMutation({
     }
 
     // Rewind the chat to look at the lastMessageRank of the earliestMessageWithSnapshot
-    console.log("Rewinding chat to lastMessageRank", earliestMessageWithSnapshot.lastMessageRank);
+    console.log('Rewinding chat to lastMessageRank', earliestMessageWithSnapshot.lastMessageRank);
     if (!dryRun) {
       await ctx.db.patch(share.chatId, {
         lastMessageRank: earliestMessageWithSnapshot.lastMessageRank,
@@ -896,7 +896,7 @@ export const eraseMessageHistory = internalMutation({
     }
 
     if (dryRun) {
-      console.log("Dry run, did not update chat or filesystem snapshot");
+      console.log('Dry run, did not update chat or filesystem snapshot');
     }
   },
 });

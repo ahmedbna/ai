@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useStore } from '@nanostores/react';
 import { Check } from 'lucide-react';
 
-import { convexTeamsStore } from '~/lib/stores/convexTeams';
-import { cn } from '~/lib/utils';
-import { Button } from '~/components/ui/button';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '~/components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover';
+import { convexTeamsStore } from '@/lib/stores/convexTeams';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 // Reusable icon for the team selector, similar to the original implementation
 function TeamIcon() {

@@ -1,5 +1,5 @@
-import RateLimiter, { MINUTE } from "@convex-dev/rate-limiter";
-import { components } from "./_generated/api";
+import RateLimiter, { MINUTE } from '@convex-dev/rate-limiter';
+import { components } from './_generated/api';
 
 function resendProxyEmailsPerMinute() {
   const fromEnv = process.env.RESEND_PROXY_EMAILS_PER_MINUTE;
@@ -8,7 +8,7 @@ function resendProxyEmailsPerMinute() {
 
 export const rateLimiter = new RateLimiter(components.rateLimiter, {
   resendProxy: {
-    kind: "token bucket",
+    kind: 'token bucket',
     // Permit 20 requests per minute => ~900k emails per month => ~$650/month on Resend's scale plan.
     rate: resendProxyEmailsPerMinute(),
     period: MINUTE,

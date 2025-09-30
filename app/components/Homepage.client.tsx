@@ -1,18 +1,19 @@
 import { Chat } from './chat/Chat';
 import { ChefAuthProvider, useChefAuth } from './chat/ChefAuthWrapper';
 import { useRef } from 'react';
-import { useConvexChatHomepage } from '~/lib/stores/startup';
-import { Toaster } from '~/components/ui/Toaster';
-import { setPageLoadChatId } from '~/lib/stores/chatId';
+import { useConvexChatHomepage } from '@/lib/stores/startup';
+import { Toaster } from '@/components/ui/Toaster';
+import { setPageLoadChatId } from '@/lib/stores/chatId';
 import type { Message } from '@ai-sdk/react';
-import type { PartCache } from '~/lib/hooks/useMessageParser';
-import { UserProvider } from '~/components/UserProvider';
+import type { PartCache } from '@/lib/hooks/useMessageParser';
+import { UserProvider } from '@/components/UserProvider';
 import { useQuery } from 'convex/react';
 import { api } from '@convex/_generated/api';
 import { ApiKeyCard } from './settings/ApiKeyCard';
 import { Spinner } from '@ui/Spinner';
 import { useAuth } from '@workos-inc/authkit-react';
 import { Button } from '@ui/Button';
+import { Loading } from './Loading';
 
 export function Homepage() {
   // Set up a temporary chat ID early in app initialization. We'll
@@ -61,11 +62,7 @@ const ChatWrapper = ({ initialId }: { initialId: string }) => {
   }
 
   if (apiKey === undefined || chefAuthState.kind === 'loading') {
-    return (
-      <div className="h-full w-full flex items-center justify-center">
-        <Spinner />
-      </div>
-    );
+    return <Loading />;
   }
 
   if (apiKey === null || chefAuthState.kind !== 'fullyLoggedIn') {

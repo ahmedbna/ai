@@ -1,12 +1,12 @@
-import { v } from "convex/values";
-import { internalMutation, internalQuery, type MutationCtx } from "./_generated/server";
-import { internal } from "./_generated/api";
-import type { Id } from "./_generated/dataModel";
+import { v } from 'convex/values';
+import { internalMutation, internalQuery, type MutationCtx } from './_generated/server';
+import { internal } from './_generated/api';
+import type { Id } from './_generated/dataModel';
 
-const delayInMs = parseFloat(process.env.DEBUG_FILE_CLEANUP_DELAY_MS ?? "500");
-const debugFileCleanupBatchSize = parseInt(process.env.DEBUG_FILE_CLEANUP_BATCH_SIZE ?? "100");
-const chatCleanupBatchSize = parseInt(process.env.CHAT_CLEANUP_BATCH_SIZE ?? "10");
-const storageStateCleanupBatchSize = parseInt(process.env.STORAGE_STATE_CLEANUP_BATCH_SIZE ?? "50");
+const delayInMs = parseFloat(process.env.DEBUG_FILE_CLEANUP_DELAY_MS ?? '500');
+const debugFileCleanupBatchSize = parseInt(process.env.DEBUG_FILE_CLEANUP_BATCH_SIZE ?? '100');
+const chatCleanupBatchSize = parseInt(process.env.CHAT_CLEANUP_BATCH_SIZE ?? '10');
+const storageStateCleanupBatchSize = parseInt(process.env.STORAGE_STATE_CLEANUP_BATCH_SIZE ?? '50');
 
 export const deleteDebugFilesForInactiveChats = internalMutation({
   args: {
@@ -16,7 +16,7 @@ export const deleteDebugFilesForInactiveChats = internalMutation({
     daysInactive: v.number(),
   },
   handler: async (ctx, { forReal, cursor, shouldScheduleNext, daysInactive }) => {
-    const { page, isDone, continueCursor } = await ctx.db.query("debugChatApiRequestLog").paginate({
+    const { page, isDone, continueCursor } = await ctx.db.query('debugChatApiRequestLog').paginate({
       numItems: debugFileCleanupBatchSize,
       cursor: cursor ?? null,
     });
@@ -25,9 +25,9 @@ export const deleteDebugFilesForInactiveChats = internalMutation({
         return;
       }
       const storageState = await ctx.db
-        .query("chatMessagesStorageState")
-        .withIndex("byChatId", (q) => q.eq("chatId", doc.chatId))
-        .order("desc")
+        .query('chatMessagesStorageState')
+        .withIndex('byChatId', (q) => q.eq('chatId', doc.chatId))
+        .order('desc')
         .first();
       if (storageState === null) {
         throw new Error(`Chat ${doc.chatId} not found in chatMessagesStorageState`);
@@ -64,7 +64,7 @@ export const deleteAllOldChatStorageStates = internalMutation({
   },
   handler: async (ctx, { forReal, cursor, shouldScheduleNext }) => {
     // Paginate over the chats table
-    const { page, isDone, continueCursor } = await ctx.db.query("chats").paginate({
+    const { page, isDone, continueCursor } = await ctx.db.query('chats').paginate({
       numItems: chatCleanupBatchSize,
       cursor: cursor ?? null,
     });
@@ -90,15 +90,15 @@ export const deleteAllOldChatStorageStates = internalMutation({
 // TODO: Delete all storage states and files that are older than numRewindableMessages
 export const deleteOldChatStorageStates = internalMutation({
   args: {
-    chatId: v.id("chats"),
+    chatId: v.id('chats'),
     forReal: v.boolean(),
     cursor: v.optional(v.string()),
     shouldScheduleNext: v.boolean(),
   },
   handler: async (ctx, { chatId, forReal, cursor, shouldScheduleNext }) => {
     const { page, isDone, continueCursor } = await ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byChatId", (q) => q.eq("chatId", chatId))
+      .query('chatMessagesStorageState')
+      .withIndex('byChatId', (q) => q.eq('chatId', chatId))
       .paginate({
         numItems: storageStateCleanupBatchSize,
         cursor: cursor ?? null,
@@ -143,15 +143,15 @@ export const deleteOldChatStorageStates = internalMutation({
 // Delete all the storage states for non-latest parts of a lastMessageRank
 export const deleteOldStorageStatesForLastMessageRank = internalMutation({
   args: {
-    chatId: v.id("chats"),
+    chatId: v.id('chats'),
     lastMessageRank: v.number(),
     forReal: v.boolean(),
   },
   handler: async (ctx, { chatId, lastMessageRank, forReal }) => {
     const storageStates = await ctx.db
-      .query("chatMessagesStorageState")
-      .withIndex("byChatId", (q) => q.eq("chatId", chatId).eq("subchatIndex", 0).eq("lastMessageRank", lastMessageRank))
-      .order("asc")
+      .query('chatMessagesStorageState')
+      .withIndex('byChatId', (q) => q.eq('chatId', chatId).eq('subchatIndex', 0).eq('lastMessageRank', lastMessageRank))
+      .order('asc')
       .collect();
     // Nothing to delete if there is only one record for the chatId and lastMessageRank
     if (storageStates.length <= 1) {
@@ -175,19 +175,19 @@ export const deleteOldStorageStatesForLastMessageRank = internalMutation({
   },
 });
 
-async function deleteFileIfUnreferenced(ctx: MutationCtx, storageId: Id<"_storage">, forReal: boolean) {
+async function deleteFileIfUnreferenced(ctx: MutationCtx, storageId: Id<'_storage'>, forReal: boolean) {
   // Check the storage id is not referenced in any tables
   const chatRef = await ctx.db
-    .query("chats")
-    .withIndex("bySnapshotId", (q) => q.eq("snapshotId", storageId))
+    .query('chats')
+    .withIndex('bySnapshotId', (q) => q.eq('snapshotId', storageId))
     .first();
   if (chatRef) {
     console.log(`Skipping storage ${storageId} because it is referenced by chat ${chatRef._id}`);
     return false;
   }
   const chatHistorySnapshotRef = await ctx.db
-    .query("chatMessagesStorageState")
-    .withIndex("bySnapshotId", (q) => q.eq("snapshotId", storageId))
+    .query('chatMessagesStorageState')
+    .withIndex('bySnapshotId', (q) => q.eq('snapshotId', storageId))
     .first();
   if (chatHistorySnapshotRef) {
     console.log(
@@ -196,8 +196,8 @@ async function deleteFileIfUnreferenced(ctx: MutationCtx, storageId: Id<"_storag
     return false;
   }
   const chatHistoryStorageRef = await ctx.db
-    .query("chatMessagesStorageState")
-    .withIndex("byStorageId", (q) => q.eq("storageId", storageId))
+    .query('chatMessagesStorageState')
+    .withIndex('byStorageId', (q) => q.eq('storageId', storageId))
     .first();
   if (chatHistoryStorageRef) {
     console.log(
@@ -206,16 +206,16 @@ async function deleteFileIfUnreferenced(ctx: MutationCtx, storageId: Id<"_storag
     return false;
   }
   const shareSnapshotRef = await ctx.db
-    .query("shares")
-    .withIndex("bySnapshotId", (q) => q.eq("snapshotId", storageId))
+    .query('shares')
+    .withIndex('bySnapshotId', (q) => q.eq('snapshotId', storageId))
     .first();
   if (shareSnapshotRef) {
     console.log(`Skipping storage ${storageId} because it is referenced by share snapshot ${shareSnapshotRef._id}`);
     return false;
   }
   const shareChatHistorySnapshotRef = await ctx.db
-    .query("shares")
-    .withIndex("byChatHistoryId", (q) => q.eq("chatHistoryId", storageId))
+    .query('shares')
+    .withIndex('byChatHistoryId', (q) => q.eq('chatHistoryId', storageId))
     .first();
   if (shareChatHistorySnapshotRef) {
     console.log(
@@ -225,16 +225,16 @@ async function deleteFileIfUnreferenced(ctx: MutationCtx, storageId: Id<"_storag
   }
 
   const socialShareRef = await ctx.db
-    .query("socialShares")
-    .withIndex("byThumbnailImageStorageId", (q) => q.eq("thumbnailImageStorageId", storageId))
+    .query('socialShares')
+    .withIndex('byThumbnailImageStorageId', (q) => q.eq('thumbnailImageStorageId', storageId))
     .first();
   if (socialShareRef) {
     console.log(`Skipping storage ${storageId} because it is referenced by social share ${socialShareRef._id}`);
     return false;
   }
   const debugChatApiRequestLogRef = await ctx.db
-    .query("debugChatApiRequestLog")
-    .withIndex("byStorageId", (q) => q.eq("promptCoreMessagesStorageId", storageId))
+    .query('debugChatApiRequestLog')
+    .withIndex('byStorageId', (q) => q.eq('promptCoreMessagesStorageId', storageId))
     .first();
   if (debugChatApiRequestLogRef) {
     console.log(
@@ -256,12 +256,12 @@ export const deleteOrphanedFiles = internalMutation({
     forReal: v.boolean(),
     shouldScheduleNext: v.boolean(),
     cursor: v.optional(v.string()),
-    migrationId: v.optional(v.id("migrations")),
+    migrationId: v.optional(v.id('migrations')),
   },
   handler: async (ctx, { forReal, shouldScheduleNext, cursor, migrationId }) => {
     if (!migrationId) {
-      migrationId = await ctx.db.insert("migrations", {
-        name: "deleteOrphanedFiles",
+      migrationId = await ctx.db.insert('migrations', {
+        name: 'deleteOrphanedFiles',
         forReal,
         isDone: false,
         cursor: null,
@@ -269,7 +269,7 @@ export const deleteOrphanedFiles = internalMutation({
         numDeleted: 0,
       });
     }
-    const { page, isDone, continueCursor } = await ctx.db.system.query("_storage").paginate({
+    const { page, isDone, continueCursor } = await ctx.db.system.query('_storage').paginate({
       numItems: storageStateCleanupBatchSize,
       cursor: cursor ?? null,
     });
@@ -310,7 +310,7 @@ export const deleteOrphanedFiles = internalMutation({
 export const getReferencedFiles = internalQuery({
   args: {},
   handler: async (ctx) => {
-    const storageStates = await ctx.db.query("chatMessagesStorageState").collect();
+    const storageStates = await ctx.db.query('chatMessagesStorageState').collect();
     for (const storageState of storageStates) {
       if (storageState.storageId !== null) {
         const url = await ctx.storage.getUrl(storageState.storageId);
@@ -329,7 +329,7 @@ export const getReferencedFiles = internalQuery({
         }
       }
     }
-    const shares = await ctx.db.query("shares").collect();
+    const shares = await ctx.db.query('shares').collect();
     for (const share of shares) {
       if (share.snapshotId) {
         const url = await ctx.storage.getUrl(share.snapshotId);
@@ -339,7 +339,7 @@ export const getReferencedFiles = internalQuery({
       }
     }
 
-    const socialShares = await ctx.db.query("socialShares").collect();
+    const socialShares = await ctx.db.query('socialShares').collect();
     for (const socialShare of socialShares) {
       if (socialShare.thumbnailImageStorageId) {
         const url = await ctx.storage.getUrl(socialShare.thumbnailImageStorageId);
@@ -350,7 +350,7 @@ export const getReferencedFiles = internalQuery({
         }
       }
     }
-    const debugChatApiRequestLogs = await ctx.db.query("debugChatApiRequestLog").collect();
+    const debugChatApiRequestLogs = await ctx.db.query('debugChatApiRequestLog').collect();
     for (const debugChatApiRequestLog of debugChatApiRequestLogs) {
       if (debugChatApiRequestLog.promptCoreMessagesStorageId) {
         const url = await ctx.storage.getUrl(debugChatApiRequestLog.promptCoreMessagesStorageId);

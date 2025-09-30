@@ -1,6 +1,6 @@
-// ~/lib/common/apiKey.ts
+// @/lib/common/apiKey.ts
 import type { Doc } from '@convex/_generated/dataModel';
-import { type ModelSelection } from '~/utils/constants';
+import { type ModelSelection } from '@/utils/constants';
 
 export interface ApiKeyInfo {
   provider: 'anthropic' | 'openai' | 'xai' | 'google';
