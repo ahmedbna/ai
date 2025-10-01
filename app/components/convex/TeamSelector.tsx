@@ -47,7 +47,7 @@ export const TeamSelector = React.memo(function TeamSelector({
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className='w-[250px] p-0' align='start'>
+      <PopoverContent className='w-[300px] p-0' align='start'>
         <Command>
           <CommandInput placeholder='Search teams...' />
           <CommandList>
@@ -66,6 +66,10 @@ export const TeamSelector = React.memo(function TeamSelector({
                     setSelectedTeamSlug(currentValue);
                     setOpen(false);
                   }}
+                  className={cn(
+                    'flex items-center rounded-md gap-2 cursor-pointer aria-selected:bg-green-500 aria-selected:text-accent-foreground hover:bg-secondary',
+                    selectedTeamSlug === team.slug && 'bg-secondary',
+                  )}
                 >
                   <Check className={cn('mr-2 h-4 w-4', selectedTeamSlug === team.slug ? 'opacity-100' : 'opacity-0')} />
                   <div className='truncate'>{team.name}</div>

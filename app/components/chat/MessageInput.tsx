@@ -273,7 +273,7 @@ export const MessageInput = memo(function MessageInput({
                 ? numMessages !== undefined && numMessages > 0
                   ? 'Request changes by sending another message…'
                   : 'Send a prompt for a new feature…'
-                : 'What app do you want to serve?'
+                : `What's your idea?`
             }
             disabled={disabled}
             highlights={HIGHLIGHTS}
