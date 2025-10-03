@@ -500,7 +500,7 @@ export class ActionRunner {
 
           // Start the default preview if it's not already running
           if (!workbenchStore.isDefaultPreviewRunning()) {
-            await this.#shellTerminal.startCommand('vite --open');
+            await this.#shellTerminal.startCommand('npx expo start --web');
             result += '\n\nDev server started successfully!';
           }
 
