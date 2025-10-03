@@ -554,31 +554,33 @@ export const exampleQuery = query({
 ## Example of using Convex storage within a chat app
 
 This example creates a mutation to generate a short-lived upload URL and a mutation to save an image message to the database. This mutation is called from the client, which uses the generated upload URL to upload an image to Convex storage. Then,
-it gets the storage id from the response of the upload and saves it to the database with the \`sendImage\` mutation. On the frontend, it uses the \`list\` query to get the messages from the database and display them in the UI. In this query, the
+it gets the storage id from the response of the upload and saves it to the database with the \`sendMedia\` mutation. On the frontend, it uses the \`list\` query to get the messages from the database and display them in the UI. In this query, the
 backend grabs the url from the storage system table and returns it to the client which shows the images in the UI. You should use this pattern for any file upload. To keep track of files, you should save the storage id in the database.
 
-Path: \`convex/messages.ts\`
+Path: \`convex/media.ts\`
 \`\`\`ts
-import { v } from "convex/values";
-import { query } from "./_generated/server";
+import { v } from 'convex/values';
+import { query } from './_generated/server';
+import { mutation } from './_generated/server';
+import { getAuthUserId } from '@convex-dev/auth/server';
 
-export const list = query({
+export const get = query({
   args: {},
   handler: async (ctx) => {
-    const messages = await ctx.db.query("messages").collect();
+    const media = await ctx.db.query('media').collect();
+
     return Promise.all(
-      messages.map(async (message) => ({
-        ...message,
-        // If the message is an "image" its "body" is an \`Id<"_storage">\`
-        ...(message.format === "image"
-          ? { url: await ctx.storage.getUrl(message.body) }
-          : {}),
-      })),
+      media.map(async (file) => ({
+        const url = await ctx.storage.getUrl(file.storageId);
+        
+        return {
+          ...file,
+          url,
+        }
+      }))
     );
   },
 });
-
-import { mutation } from "./_generated/server";
 
 export const generateUploadUrl = mutation({
   handler: async (ctx) => {
@@ -586,124 +588,103 @@ export const generateUploadUrl = mutation({
   },
 });
 
-export const sendImage = mutation({
-  args: { storageId: v.id("_storage"), author: v.string() },
-  handler: async (ctx, args) => {
-    await ctx.db.insert("messages", {
-      body: args.storageId,
-      author: args.author,
-      format: "image",
-    });
+export const sendMedia = mutation({
+  args: {
+    storageId: v.id('_storage'),
   },
-});
-
-export const sendMessage = mutation({
-  args: { body: v.string(), author: v.string() },
   handler: async (ctx, args) => {
-    const { body, author } = args;
-    await ctx.db.insert("messages", { body, author, format: "text" });
+    const userId = await getAuthUserId(ctx);
+
+    if (!userId) {
+      throw new Error('Not authenticated');
+    }
+
+    await ctx.db.insert('media', { userId, storageId: args.storageId });
   },
 });
 \`\`\`
 
-Path: \`src/App.tsx\`
+Path: \`app/(tabs)/index.tsx\`
 \`\`\`ts
-import { FormEvent, useRef, useState } from "react";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "../convex/_generated/api";
+import { useState } from 'react';
+import { useMutation, useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { View } from '@/components/ui/view';
+import { Button } from '@/components/ui/button';
+import { MediaAsset, MediaPicker } from '@/components/ui/media-picker';
+import { Gallery } from '@/components/ui/gallery';
 
-export default function App() {
-  const messages = useQuery(api.messages.list) || [];
+export default function MediaScreen() {
+  const bottom = useBottomTabBarHeight();
 
-  const [newMessageText, setNewMessageText] = useState("");
-  const sendMessage = useMutation(api.messages.sendMessage);
-
-  const [name] = useState(() => "User " + Math.floor(Math.random() * 10000));
-  async function handleSendMessage(event: FormEvent) {
-    event.preventDefault();
-    if (newMessageText) {
-      await sendMessage({ body: newMessageText, author: name });
-    }
-    setNewMessageText("");
-  }
-
+  const media = useQuery(api.media.get) || [];
+  const sendMedia = useMutation(api.media.sendMedia);
   const generateUploadUrl = useMutation(api.messages.generateUploadUrl);
-  const sendImage = useMutation(api.messages.sendImage);
 
-  const imageInput = useRef<HTMLInputElement>(null);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [selectedMedia, setSelectedMedia] = useState<MediaAsset | null>(null);
 
-  async function handleSendImage(event: FormEvent) {
-    event.preventDefault();
+  const handleSendImage = async () => {
+    if (!selectedMedia) return;
 
-    // Step 1: Get a short-lived upload URL
-    const postUrl = await generateUploadUrl();
-    // Step 2: POST the file to the URL
-    const result = await fetch(postUrl, {
-      method: "POST",
-      headers: { "Content-Type": selectedImage!.type },
-      body: selectedImage,
-    });
-    const json = await result.json();
-    if (!result.ok) {
-      throw new Error(\`Upload failed: \${JSON.stringify(json)}\`);
+    try {
+      // Step 1: Get a short-lived upload URL
+      const postUrl = await generateUploadUrl();
+
+      // Step 2: Fetch the file from the URI and convert to blob
+      const response = await fetch(selectedMedia.uri);
+      const blob = await response.blob();
+
+      // Determine the correct MIME type
+      const mimeType =
+        selectedMedia.type === 'video' ? 'video/mp4' : 'image/jpeg';
+
+      // Step 3: POST the file to the URL
+      const result = await fetch(postUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': mimeType },
+        body: blob,
+      });
+
+      const json = await result.json();
+
+      if (!result.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const { storageId } = json;
+
+      // Step 4: Save the newly allocated storage id to the database
+      await sendMedia({ storageId });
+
+      setSelectedMedia(null);
+    } catch (error) {
+      console.error('Error uploading media:', error);
+      // Optionally show an error message to the user
     }
-    const { storageId } = json;
-    // Step 3: Save the newly allocated storage id to the database
-    await sendImage({ storageId, author: name });
+  };
 
-    setSelectedImage(null);
-    imageInput.current!.value = "";
-  }
+  const galleryItems = media.map((item) => ({
+    id: item._id.toString(),
+    uri: item.url,
+  }));
 
   return (
-    <main>
-      <h1>Convex Chat</h1>
-      <p className="badge">
-        <span>{name}</span>
-      </p>
-      <ul>
-        {messages.map((message) => (
-          <li key={message._id}>
-            <span>{message.author}:</span>
-            {message.format === "image" ? (
-              <Image message={message} />
-            ) : (
-              <span>{message.body}</span>
-            )}
-            <span>{new Date(message._creationTime).toLocaleTimeString()}</span>
-          </li>
-        ))}
-      </ul>
-      <form onSubmit={handleSendMessage}>
-        <input
-          value={newMessageText}
-          onChange={(event) => setNewMessageText(event.target.value)}
-          placeholder="Write a message…"
-        />
-        <input type="submit" value="Send" disabled={!newMessageText} />
-      </form>
-      <form onSubmit={handleSendImage}>
-        <input
-          type="file"
-          accept="image/*"
-          ref={imageInput}
-          onChange={(event) => setSelectedImage(event.target.files![0])}
-          className="ms-2 btn btn-primary"
-          disabled={selectedImage !== null}
-        />
-        <input
-          type="submit"
-          value="Send Image"
-          disabled={selectedImage === null}
-        />
-      </form>
-    </main>
+    <View
+      style={{ flex: 1, paddingBottom: bottom, paddingHorizontal: 20, gap: 16 }}
+    >
+      <MediaPicker
+        mediaType='all'
+        multiple={false}
+        maxSelection={1}
+        onSelectionChange={(assets) => setSelectedMedia(assets[0])}
+      />
+      <Button disabled={!selectedMedia} onPress={handleSendImage}>
+        Send
+      </Button>
+      <Gallery items={galleryItems} />
+    </View>
   );
-}
-
-function Image({ message }: { message: { url: string } }) {
-  return <img src={message.url} height="300px" width="auto" />;
 }
 \`\`\`
 
@@ -899,7 +880,9 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { authTables } from "@convex-dev/auth/server";
 
-const applicationTables = {
+export default defineSchema({
+  ...authTables,
+
   channels: defineTable({
     name: v.string(),
   }),
@@ -909,11 +892,6 @@ const applicationTables = {
     authorId: v.optional(v.id("users")),
     content: v.string(),
   }).index("by_channel_and_author", ["channelId", "authorId"]),
-};
-
-export default defineSchema({
-  ...authTables,
-  ...applicationTables,
 });
 \`\`\`
 
@@ -930,9 +908,9 @@ Convex has the following components:
 - \`presence\`: A component for managing presence functionality, i.e., a live-updating list of users in a "room" including their status for when they were last online.
 ${options.enableResend ? resendComponent : ''}
 
-Convex has but does not support the following components in Chef: 
+Convex has but does not support the following components in BNA: 
 DO NOT use the \`lookupDocs\` tool to lookup documentation for these or install them.
-Chef does not have documentation for them. Tell the user that they are unsupported now but will be supported in the future.
+BNA does not have documentation for them. Tell the user that they are unsupported now but will be supported in the future.
 - Workflow
 - AI Agent
 - Persistent Text Streaming

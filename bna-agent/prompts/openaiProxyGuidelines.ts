@@ -7,7 +7,7 @@ export function openaiProxyGuidelines(options: SystemPromptOptions) {
   }
   return stripIndents`
   <bundled_openai_guidelines>
-    Apps in the Chef environment come with a small amount of gpt-4.1-nano
+    Apps in the BNA environment come with a small amount of gpt-4.1-nano
     and gpt-4o-mini tokens to use for building apps! Prefer using gpt-4.1-nano
     but let the user know that gpt-4o-mini is also available.
 

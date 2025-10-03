@@ -56,18 +56,24 @@ export const WORK_DIR = `/home/${WORK_DIR_NAME}`;
 export const PREWARM_PATHS = [
   `${WORK_DIR}/package.json`,
   `${WORK_DIR}/convex/schema.ts`,
-  `${WORK_DIR}/src/App.tsx`,
-  `${WORK_DIR}/src/index.css`,
-  `${WORK_DIR}/src/tailwind.config.js`,
+  `${WORK_DIR}/app/_layout.tsx`,
+  `${WORK_DIR}/app/(tabs)/_layout.tsx`,
 ];
 
 // A list of files that we block the LLM from modifying
 export const EXCLUDED_FILE_PATHS = [
   'convex/auth.ts',
   'convex/http.ts',
-  'src/main.tsx',
-  'src/SignInForm.tsx',
-  'src/SignOutButton.tsx',
-  'vite.config.ts',
+  'app.json',
+  'metro.config.js',
+  'babel.config.js',
+  'eslint.config.js',
+  'expo-env.d.ts',
   'package.json',
+  // Prevent modifying your UI components
+  'components/ui/text.tsx',
+  'components/ui/button.tsx',
+  'components/ui/input.tsx',
+  'components/ui/card.tsx',
+  // Add all your other UI components here
 ];

@@ -667,7 +667,7 @@ export default defineSchema({
 });
 ```
 
-#### src/App.tsx
+#### app/(tabs)/index.tsx
 ```typescript
 export default function App() {
   return <div>Hello World</div>;

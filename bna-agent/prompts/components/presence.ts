@@ -11,7 +11,7 @@ only receive updates when a user joins or leaves the room.
 
 The most common use case for this component is via the usePresence hook, which
 takes care of sending heartbeart messages to the server and gracefully
-disconnecting a user when the tab is closed.
+disconnecting a user when the screen is closed.
 
 See \`example\` for an example of how to incorporate this hook into your
 application.
@@ -19,7 +19,7 @@ application.
 ## Installation
 
 \`\`\`bash
-npm install @convex-dev/presence
+npx expo install @convex-dev/presence expo-crypto
 \`\`\`
 
 ## Usage
@@ -96,28 +96,222 @@ export const disconnect = mutation({
 });
 \`\`\`
 
-A \`Presence\` React component can be instantiated from your client code like this:
+A \`Presence\` Expo React Native component can be instantiated from your client code like this:
 
-\`src/App.tsx\`
+\`app/(tabs)/index.tsx\`
 
 \`\`\`tsx
-import { api } from "../convex/_generated/api";
-import usePresence from "@convex-dev/presence/react";
-import FacePile from "@convex-dev/presence/facepile";
+import React, { useState } from 'react';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { usePresence } from '@convex-dev/presence/react-native';
+import { View } from '@/components/ui/view';
+import { Spinner } from '@/components/ui/spinner';
+import { Text } from '@/components/ui/text';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { TouchableOpacity } from 'react-native';
 
-export default function App(): React.ReactElement {
+export default function HomeScreen() {
   const userId = useQuery(api.presence.getUserId);
-  
-  return (
-    <main>
-      {userId && <PresenceIndicator userId={userId} />}
-    </main>
-  );
+
+  if (userId === undefined) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Spinner />
+      </View>
+    );
+  }
+
+  if (userId === null) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Please log in to see your profile.</Text>
+      </View>
+    );
+  }
+
+  return <PresenceIndicator userId={userId} />;
 }
 
 function PresenceIndicator({ userId }: { userId: string }) {
-  const presenceState = usePresence(api.presence, "my-chat-room", userId);
+  const presenceState = usePresence(api.presence, 'my-chat-room', userId);
   return <FacePile presenceState={presenceState ?? []} />;
+}
+
+interface PresenceState {
+  userId: string;
+  online: boolean;
+  lastDisconnected: number;
+  data?: Record<string, unknown>;
+  name?: string;
+  image?: string;
+}
+
+interface FacePileProps {
+  presenceState: PresenceState[];
+  maxVisible?: number;
+}
+
+function FacePile({ presenceState }: FacePileProps) {
+  return (
+    <View
+      style={{
+        position: 'relative',
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}
+    >
+      <View
+        style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 8 }}
+      >
+        {presenceState.map((presence, idx) => (
+          <AvatarItem
+            key={presence.userId}
+            presence={presence}
+            index={idx}
+            total={presenceState.length}
+          />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+function getEmojiForUserId(userId: string): string {
+  let hash = 0;
+  for (let i = 0; i < userId.length; i++) {
+    hash = (hash << 5) - hash + userId.charCodeAt(i);
+    hash |= 0;
+  }
+  const emojis = ['😊', '😃', '😎', '🤓', '😇', '🤖', '👻', '🐶', '🐱', '🐰'];
+  return emojis[Math.abs(hash) % emojis.length];
+}
+
+function getTimeAgo(timestamp: number): string {
+  const now = Date.now();
+  const diff = Math.floor((now - timestamp) / 1000);
+
+  if (diff < 60) return 'Last seen just now';
+  if (diff < 3600) return \`Last seen \${Math.floor(diff / 60)}\ min ago\`;
+  if (diff < 86400) {
+    const hours = Math.floor(diff / 3600);
+    return \`Last seen \${hours}\ hour\${hours === 1 ? '' : 's'}\ ago\`;
+  }
+  const days = Math.floor(diff / 86400);
+  return \`Last seen \${days}\ day\${days === 1 ? '' : 's'}\ ago\`;
+}
+
+function AvatarItem({
+  presence,
+  index,
+  total,
+}: {
+  presence: PresenceState;
+  index: number;
+  total: number;
+}) {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const borderColor = useThemeColor({}, 'border');
+  const onlineBorder = useThemeColor({}, 'text');
+  const cardBg = useThemeColor({}, 'card');
+
+  return (
+    <View
+      style={{
+        marginLeft: -8,
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: total - index,
+      }}
+    >
+      <TouchableOpacity
+        onPress={() => setShowTooltip(!showTooltip)}
+        activeOpacity={0.7}
+      >
+        <Avatar
+          size={32}
+          style={{
+            borderColor: presence.online ? onlineBorder : borderColor,
+            borderWidth: 2,
+            elevation: 2,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.1,
+            shadowRadius: 2,
+          }}
+        >
+          {presence.image ? (
+            <AvatarImage
+              source={{ uri: presence.image }}
+              style={{
+                width: '100%',
+                height: '100%',
+                opacity: presence.online ? 1 : 0.4,
+              }}
+            />
+          ) : (
+            <AvatarFallback textStyle={{ opacity: presence.online ? 1 : 0.4 }}>
+              {getEmojiForUserId(presence.userId)}
+            </AvatarFallback>
+          )}
+        </Avatar>
+      </TouchableOpacity>
+
+      {showTooltip && (
+        <TouchableOpacity
+          style={{ position: 'absolute', top: 40, left: -50, zIndex: 100 }}
+          activeOpacity={1}
+          onPress={() => setShowTooltip(false)}
+        >
+          <View
+            style={{
+              padding: 8,
+              borderRadius: 6,
+              minWidth: 120,
+              elevation: 4,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.15,
+              shadowRadius: 4,
+              backgroundColor: cardBg,
+            }}
+          >
+            <Text style={{ fontWeight: '500', fontSize: 12, marginBottom: 4 }}>
+              {presence.name || presence.userId}
+            </Text>
+            <Text variant='caption' style={{ fontSize: 10 }}>
+              {presence.online
+                ? 'Online now'
+                : getTimeAgo(presence.lastDisconnected)}
+            </Text>
+
+            {presence.data && Object.keys(presence.data).length > 0 && (
+              <View style={{ marginTop: 8 }}>
+                <View
+                  style={{
+                    height: 1,
+                    marginVertical: 4,
+                    backgroundColor: borderColor,
+                  }}
+                />
+                {Object.entries(presence.data).map(([key, value]) => (
+                  <Text
+                    key={key}
+                    variant='caption'
+                    style={{ fontSize: 10, marginTop: 2 }}
+                  >
+                    <Text style={{ fontWeight: '600' }}>{key}: </Text>
+                    {String(value)}
+                  </Text>
+                ))}
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
 }
 \`\`\`
 
@@ -133,7 +327,5 @@ export default function usePresence(
 ): PresenceState[] | undefined
 \`\`\`
 
-ALWAYS use the \`FacePile\` UI component included with this package unless the user
-explicitly requests to use a custom presence UI. You can copy this code and use the
-\`usePresence\` hook directly to implement your own styling.
+You can copy this code and use the \`usePresence\` hook directly to implement your own styling.
 `;

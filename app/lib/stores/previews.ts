@@ -183,7 +183,7 @@ export class PreviewsStore {
     try {
       iframe.contentWindow?.postMessage(
         {
-          type: 'chefPreviewRequest',
+          type: 'bnaPreviewRequest',
           request: 'screenshot',
         },
         targetOrigin,

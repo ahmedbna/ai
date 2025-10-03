@@ -17,10 +17,10 @@ export function outputInstructions(options: SystemPromptOptions) {
 
         User: "Create a collaborative todo list app"
         Assistant: "Sure. I'll start by:
-        1. Update the Vite template to render the TODO app with dummy data.
+        1. Update the Expo React Native template to render the TODO app with dummy data.
         2. Create a 'todos' table in the Convex schema.
         3. Implement queries and mutations to add, edit, list, and delete todos.
-        4. Update the React app to use the Convex functions.
+        4. Update the Expo React Native app to use the Convex functions.
 
         Let's start now.
 
@@ -113,7 +113,7 @@ function artifactInstructions(_options: SystemPromptOptions) {
         <user_query>Write a Convex function that computes the factorial of a number.</user_query>
         <assistant_response>
           Certainly, I can help you create a query that calculates the factorial of a number.
-          <boltArtifact id="factorial-function" title="JavaScript Factorial Function">
+          <boltArtifact id="factorial-function" title="Factorial Function">
             <boltAction type="file" filePath="convex/functions.ts">function factorial(n) {
               ...
             }
@@ -125,12 +125,12 @@ function artifactInstructions(_options: SystemPromptOptions) {
       <example>
         <user_query>Build a multiplayer snake game</user_query>
         <assistant_response>
-          Certainly! I'd be happy to help you build a snake game using Convex and HTML5 Canvas. This will be a basic implementation
+          Certainly! I'd be happy to help you build a snake game using Convex and Expo React Native. This will be a basic implementation
           that you can later expand upon. Let's create the game step by step.
-          <boltArtifact id="snake-game" title="Snake Game in HTML and JavaScript">
+          <boltArtifact id="snake-game" title="Snake Game in Expo React Native with Convex">
             <boltAction type="file" filePath="convex/schema.ts">...</boltAction>
             <boltAction type="file" filePath="convex/functions.ts">...</boltAction>
-            <boltAction type="file" filePath="src/App.tsx">...</boltAction>
+            <boltAction type="file" filePath="app/(tabs)/index.tsx">...</boltAction>
             ...
           </boltArtifact>
           Now you can play the Snake game by opening the provided local server URL in your browser. Use the arrow keys to control the
@@ -156,7 +156,7 @@ function toolsInstructions(options: SystemPromptOptions) {
       using the deploy tool. This tool call will execute a few steps:
       1. Deploy the \`convex/\` folder to the Convex backend. If this fails, you MUST fix the errors with another artifact
         and then try again.
-      2. Start the Vite development server and open a preview for the user.
+      2. Start the Expo development server and open a preview for the user.
 
       This tool call is the ONLY way to deploy changes and start a development server. The environment automatically
       provisions a Convex deployment for the app and sets up Convex Auth, so you can assume these are all ready to go.
@@ -183,7 +183,7 @@ function toolsInstructions(options: SystemPromptOptions) {
     </deploy_tool>
 
     <npmInstall_tool>
-      You can install additional dependencies for the project with npm using the \`npmInstall\` tool.
+      You can install additional dependencies for the project with npm and npx expo install using the \`npmInstall\` tool.
 
       This tool should not be used to install dependencies that are already listed in the \`package.json\` file
       as they are already installed.

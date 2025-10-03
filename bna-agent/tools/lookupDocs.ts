@@ -14,7 +14,7 @@ export const lookupDocsParameters = z.object({
 
 export function lookupDocsTool(): Tool {
   return {
-    description: `Lookup documentation for a list of features. Valid features to lookup are: \`proseMirror\` and \`presence\``,
+    description: `Lookup documentation for a list of features. Valid features to lookup are: \`presence\``,
     parameters: lookupDocsParameters,
   };
 }
@@ -23,9 +23,9 @@ export type LookupDocsParameters = z.infer<typeof lookupDocsParameters>;
 
 // Documentation content that can be looked up
 export const docs = {
-  proseMirror: proseMirrorComponentReadmePrompt,
+  // proseMirror: proseMirrorComponentReadmePrompt,
+  // resend: resendComponentReadmePrompt,
   presence: presenceComponentReadmePrompt,
-  resend: resendComponentReadmePrompt,
 } as const;
 
 export type DocKey = keyof typeof docs;

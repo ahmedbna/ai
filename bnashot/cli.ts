@@ -42,11 +42,11 @@ interface GenerateOptions {
 }
 
 const generateCommand = new Command('generate')
-  .description('Generate an app using Chef AI')
-  .argument('<prompt>', 'The prompt to send to Chef')
+  .description('Generate an Expo React Native app using BNA AI')
+  .argument('<prompt>', 'The prompt to send to BNA (will generate an Expo app)')
   // URL group - mutually exclusive options
   .addOption(
-    new Option('--chef-url <url>', 'Custom Chef URL')
+    new Option('--chef-url <url>', 'Custom BNA URL')
       .conflicts(['prod', 'dev', 'local-build'])
       .argParser((value: string) => {
         try {
@@ -58,7 +58,7 @@ const generateCommand = new Command('generate')
       }),
   )
   .addOption(
-    new Option('--prod', 'Use production Chef at chef.convex.dev').conflicts(['chef-url', 'dev', 'local-build']),
+    new Option('--prod', 'Use production BNA at chef.convex.dev').conflicts(['chef-url', 'dev', 'local-build']),
   )
   .addOption(
     new Option('--dev', 'Use local dev server at http://127.0.0.1:5173').conflicts(['chef-url', 'prod', 'local-build']),
@@ -94,7 +94,7 @@ const generateCommand = new Command('generate')
       // Default to local-build behavior
       chefUrl = 'http://localhost:3000';
     }
-    log(`Looking for Chef at ${chefUrl}`);
+    log(`Looking for BNA at ${chefUrl}`);
 
     // Check for required environment variables
     const email = process.env.CHEF_EVAL_USER_EMAIL;
@@ -146,9 +146,13 @@ const generateCommand = new Command('generate')
     }
 
     if (finalOutputDir) {
-      log(`Generated app in ${finalOutputDir}`);
+      log(`Generated Expo app in ${finalOutputDir}`);
+      log(`  cd ${finalOutputDir}`);
+      log(`  npx expo start --web`);
+      log(`\nOr for native:`);
+      log(`  npx expo start`);
     } else {
-      log('Tip: Use --output-dir to save the generated code');
+      log('Tip: Use --output-dir to save the generated Expo app');
     }
   });
 
@@ -162,11 +166,11 @@ interface DownloadOptions {
 }
 
 const downloadCommand = new Command('download')
-  .description('Download an app using Chef AI')
+  .description('Download an app using BNA AI')
   .argument('chatUuid', 'The UUID of the chat to download')
   // URL group - mutually exclusive options
   .addOption(
-    new Option('--chef-site-url <url>', 'Chef site URL').conflicts(['prod', 'dev']).argParser((value: string) => {
+    new Option('--chef-site-url <url>', 'BNA site URL').conflicts(['prod', 'dev']).argParser((value: string) => {
       try {
         new URL(value);
         return value;
@@ -175,8 +179,8 @@ const downloadCommand = new Command('download')
       }
     }),
   )
-  .addOption(new Option('--prod', 'Use production Chef database').conflicts(['chef-backend-url', 'dev']))
-  .addOption(new Option('--dev', 'Use dev Chef database configured in .env.local').conflicts(['chef-site-url', 'prod']))
+  .addOption(new Option('--prod', 'Use production BNA database').conflicts(['chef-backend-url', 'dev']))
+  .addOption(new Option('--dev', 'Use dev BNA database configured in .env.local').conflicts(['chef-site-url', 'prod']))
   .addOption(new Option('--messages-file <file>', 'File to write the parsed (JSON) messages to'))
   .addOption(new Option('--messages-raw-file <file>', 'File to write the compressed messages to'))
   .action(async (chatUuid: string, options: DownloadOptions) => {
@@ -200,7 +204,7 @@ const downloadCommand = new Command('download')
       log('Please set CONVEX_URL in your .env.local file or run with --chef-site-url or --prod');
       process.exit(1);
     }
-    log(`Looking for Chef at ${chefSiteUrl}`);
+    log(`Looking for BNA at ${chefSiteUrl}`);
     const chefAdminToken = process.env.CHEF_ADMIN_TOKEN;
     if (!chefAdminToken) {
       log('Error: Missing required environment variables');
@@ -212,7 +216,7 @@ const downloadCommand = new Command('download')
       method: 'POST',
       body: JSON.stringify({ chatUuid }),
       headers: {
-        'X-Chef-Admin-Token': chefAdminToken,
+        'X-BNA-Admin-Token': chefAdminToken,
       },
     });
     if (!response.ok) {
@@ -241,6 +245,6 @@ const downloadCommand = new Command('download')
 
 const program = new Command();
 
-program.name('bnashot').description('Chef AI CLI').addCommand(generateCommand).addCommand(downloadCommand);
+program.name('bnashot').description('BNA AI CLI').addCommand(generateCommand).addCommand(downloadCommand);
 
 program.parse();

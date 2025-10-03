@@ -66,7 +66,7 @@ export function solutionConstraints(options: SystemPromptOptions) {
 
         Then, you can use the \`loggedInUser\` query in your React component like this:
 
-        \`\`\`tsx "src/App.tsx"
+        \`\`\`tsx "app/(tabs)/index.tsx"
         const user = useQuery(api.auth.loggedInUser);
         \`\`\`
 
@@ -84,53 +84,79 @@ export function solutionConstraints(options: SystemPromptOptions) {
           .index("email", ["email"])
           .index("phone", ["phone"]);
         \`\`\`
+
+        But the project start with new user schema that looks like:
+        \`\`\`ts
+         users: defineTable({
+          email: v.optional(v.string()),
+          phone: v.optional(v.string()),
+          name: v.optional(v.string()),
+          bio: v.optional(v.string()),
+          gender: v.optional(v.string()),
+          birthday: v.optional(v.number()),
+          image: v.optional(v.union(v.string(), v.null())),
+          emailVerificationTime: v.optional(v.float64()),
+          phoneVerificationTime: v.optional(v.float64()),
+          isAnonymous: v.optional(v.boolean()),
+          githubId: v.optional(v.number()),
+        })
+          .index('email', ['email'])
+          .index('phone', ['phone']),
+        \`\`\`
       </auth_server_guidelines>
 
       <client_guidelines>
-        Here is an example of using Convex from a React app:
+        Here is an example of using Convex from an Expo React Native app:
         \`\`\`tsx
-        import React, { useState } from "react";
-        import { useMutation, useQuery } from "convex/react";
-        import { api } from "../convex/_generated/api";
+        import React from 'react';
+        import { useMutation, useQuery } from 'convex/react';
+        import { api } from '@/convex/_generated/api';
+        import { Text } from '@/components/ui/text';
+        import { View } from '@/components/ui/view';
+        import { Card } from '@/components/ui/card';
+        import { Button } from '@/components/ui/button';
+        import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
-        export default function App() {
-          const messages = useQuery(api.messages.list) || [];
+        export default function CounterScreen() {
+          const bottom = useBottomTabBarHeight();
+          const counter = useQuery(api.counter.get);
+          const increment = useMutation(api.counter.increment);
+          const decrement = useMutation(api.counter.decrement);
+          const reset = useMutation(api.counter.reset);
 
-          const [newMessageText, setNewMessageText] = useState("");
-          const sendMessage = useMutation(api.messages.send);
+          const handleIncrement = async () => {
+            await increment();
+          };
 
-          const [name] = useState(() => "User " + Math.floor(Math.random() * 10000));
-          async function handleSendMessage(event) {
-            event.preventDefault();
-            await sendMessage({ body: newMessageText, author: name });
-            setNewMessageText("");
-          }
+          const handleDecrement = async () => {
+            await decrement();
+          };
+
+          const handleReset = async () => {
+            await reset();
+          };
+
           return (
-            <main>
-              <h1>Convex Chat</h1>
-              <p className="badge">
-                <span>{name}</span>
-              </p>
-              <ul>
-                {messages.map((message) => (
-                  <li key={message._id}>
-                    <span>{message.author}:</span>
-                    <span>{message.body}</span>
-                    <span>{new Date(message._creationTime).toLocaleTimeString()}</span>
-                  </li>
-                ))}
-              </ul>
-              <form onSubmit={handleSendMessage}>
-                <input
-                  value={newMessageText}
-                  onChange={(event) => setNewMessageText(event.target.value)}
-                  placeholder="Write a message…"
-                />
-                <button type="submit" disabled={!newMessageText}>
-                  Send
-                </button>
-              </form>
-            </main>
+            <View style={{ flex: 1, paddingBottom: bottom, paddingHorizontal: 20 }}>
+              <Text variant='heading'>Counter App</Text>
+
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Card style={{ minWidth: 200, alignItems: 'center', padding: 20 }}>
+                  <Text variant='caption'>Current Count</Text>
+                  <Text variant='heading' style={{ fontSize: 64, marginVertical: 20 }}>
+                    {counter ?? 0}
+                  </Text>
+                </Card>
+
+                <View style={{ marginTop: 30, gap: 10, width: '100%' }}>
+                  <Button onPress={handleIncrement}>Increment (+1)</Button>
+                  <Button onPress={handleDecrement}>Decrement (-1)</Button>
+                  <Button onPress={handleReset} variant='outline'>
+                    Reset to 0
+                  </Button>
+                </View>
+              </View>
+            </View>
           );
         }
         \`\`\`
@@ -152,8 +178,6 @@ export function solutionConstraints(options: SystemPromptOptions) {
           profile?.avatarId ? { storageId: profile.avatarId } : "skip"
         );
         \`\`\`
-
-        If you want to use a UI element, you MUST create it. DO NOT use external libraries like Shadcn/UI.
 
         When writing a UI component and you want to use a Convex function, you MUST import the \`api\` object. For example:
 
@@ -179,19 +203,19 @@ export function solutionConstraints(options: SystemPromptOptions) {
 function templateInfo() {
   return stripIndents`
   <template_info>
-    The Chef WebContainer environment starts with a full-stack app template fully loaded at '/home/project',
+    The BNA WebContainer environment starts with a full-stack expo react native app template fully loaded at '/home/project',
     the current working directory. Its dependencies are specified in the 'package.json' file and already
     installed in the 'node_modules' directory. You MUST use this template. This template uses the following
     technologies:
-    - Vite + React for the frontend
-    - TailwindCSS for styling
+    - Expo + React Native for the frontend
+    - Inline styles for styling or StyleSheet.create() - No Tailwind, no className
     - Convex for the database, functions, scheduling, HTTP handlers, and search.
     - Convex Auth for authentication.
 
     Here are some important files within the template:
 
     <directory path="convex/">
-      The 'convex/' directory contains the code deployed to the Convex backend.
+      The \`convex/\` directory contains the code deployed to the Convex backend.
     </directory>
 
     <file path="convex/auth.config.ts">
@@ -202,8 +226,8 @@ function templateInfo() {
     <file path="convex/auth.ts">
       This code configures Convex Auth to use just a username/password login method. Do NOT modify this
       file. If the user asks to support other login methods, tell them that this isn't currently possible
-      within Chef. They can download the code and do it themselves.
-      IMPORTANT: Do NOT modify the \`convex/auth.ts\`, \`src/SignInForm.tsx\`, or \`src/SignOutButton.tsx\` files under any circumstances. These files are locked, and
+      within BNA. They can download the code and do it themselves.
+      IMPORTANT: Do NOT modify the \`convex/auth.ts\` or any file inside auth folder \`components/auth/*\` files under any circumstances. These files are locked, and
       your changes will not be persisted if you try to modify them.
     </file>
 
@@ -216,27 +240,55 @@ function templateInfo() {
 
     <file path="convex/schema.ts">
       This file contains the schema for the Convex backend. It starts with just 'authTables' for setting
-      up authentication. ONLY modify the 'applicationTables' object in this file: Do NOT modify the
-      'authTables' object. Always include \`...authTables\` in the \`defineSchema\` call when modifying
+      up authentication. Do NOT modify the 'authTables' object. Always include \`...authTables\` in the \`defineSchema\` call when modifying
       this file. The \`authTables\` object is imported with \`import { authTables } from "@convex-dev/auth/server";\`.
     </file>
 
-    <file path="src/App.tsx">
-      This is the main React component for the app. It starts with a simple login form and a button to add a
-      random number to a list. It uses "src/SignInForm.tsx" and "src/SignOutButton.tsx" for the login and
-      logout functionality. Add new React components to their own files in the 'src' directory to avoid
-      cluttering the main file.
+    <file path="app/_layout.tsx">
+      This file is the root layout and entry point for the Expo Router app. It sets up the core providers and configuration:
+      - ConvexReactClient: Connects to the Convex backend using EXPO_PUBLIC_CONVEX_URL
+      - ConvexAuthProvider: Handles authentication with secure storage on iOS/Android (using expo-secure-store)
+      - ThemeProvider: Manages app theming (light/dark mode)
+      - GestureHandlerRootView: Enables gesture handling for animations and interactions
+      - Stack navigator: Defines the navigation structure with (tabs) as the main screen
+      
+      IMPORTANT: Do NOT modify the \`app/_layout.tsx\` file under any circumstances.
+      For tab-specific changes, modify \`app/(tabs)/_layout.tsx\` instead.
     </file>
 
-    <file path="src/main.tsx">
-      This file is the entry point for the app and sets up the 'ConvexAuthProvider'.
-
-      IMPORTANT: Do NOT modify the \`src/main.tsx\` file under any circumstances.
+    <file path="app/(tabs)/_layout.tsx">
+      This is the main Expo React Native tab layout component for the app. It uses Convex authentication to show different screens based on auth state:
+      - AuthLoading: Shows a spinner while checking authentication status
+      - Unauthenticated: Displays the Auth component (login/signup form)
+      - Authenticated: Shows the main tab navigation with three tabs (Home, Profile)
+      
+      The tab bar uses a blur effect on iOS and includes haptic feedback. It uses custom icon components from lucide-react-native.
+      The Auth component is located in \`components/auth/auth.tsx\` (or \`@/components/auth/auth\`).
+      Add new React components to their own files in the \`components/\` directory to keep the code organized.
     </file>
 
-    <file path="index.html">
-      This file is the entry point for Vite and includes the <head> and <body> tags.
+    <file path="app/(tabs)/index.tsx">
+      This is the Home tab screen component in the Expo React Native app.
+      Modify this file to add content to the Home tab. For new features, create separate components in the \`components/\` directory.
     </file>
+
+    <directory path="components/auth/">
+      The \`components/auth/\` directory contains authentication-related React components for the frontend UI:
+      - Auth component: Handles the login/signup form display
+      - SignOutButton component: Provides logout functionality for authenticated users
+      
+      IMPORTANT: Do NOT modify, delete, or reorganize files in this directory unless explicitly requested.
+      These components are critical for the authentication flow and integrate with ConvexAuthProvider.
+    </directory>
+
+    <directory path="components/ui/">
+      The \`components/ui/\` directory contains pre-built, reusable UI components for the app: Text, View, ScrollView, Spinner, Icon, etc.
+      
+      CRITICAL: Do NOT modify, delete, edit, or reorganize ANY files in this directory under ANY circumstances.
+      These are pre-built, tested UI components that should remain untouched.
+      If you need custom styling or behavior, create new components in other \`components/\` directory that wrap or extend these components.
+      Do NOT suggest changes to files in this directory even if requested.
+    </directory>
   </template_info>
   `;
 }

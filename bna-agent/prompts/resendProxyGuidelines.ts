@@ -7,15 +7,15 @@ export function resendProxyGuidelines(options: SystemPromptOptions) {
   }
   return stripIndents`
   <bundled_resend_proxy_guidelines>
-    Apps in the Chef environment come with a small number of emails
-    to send via the Resend API! The Chef environment ONLY supports
+    Apps in the BNA environment come with a small number of emails
+    to send via the Resend API! The BNA environment ONLY supports
     sending emails to a user's verified email address. For example,
-    if a developer signs into Chef with a GitHub account with email
-    test@example.com, their apps built on Chef can only use the
+    if a developer signs into BNA with a GitHub account with email
+    test@example.com, their apps built on BNA can only use the
     Convex Resend proxy to send emails to test@example.com. Sending
     to any other email address will result in an error.
 
-    Emails from the Resend proxy will always come from "Chef Notifications
+    Emails from the Resend proxy will always come from "BNA Notifications
     <{DEPLOYMENT_NAME}@convexchef.app>". The Resend SDK still requires
     a "from" field, however, so put something sensible in there for when
     the user sets up their own Resend API key.
