@@ -17,6 +17,7 @@
     "@expo/metro-runtime": "~6.1.1",
     "@expo/vector-icons": "^15.0.2",
     "@oslojs/crypto": "^1.0.1",
+    "@radix-ui/react-dialog": "^1.1.15",
     "@react-email/render": "^1.2.3",
     "@react-navigation/bottom-tabs": "^7.3.10",
     "@react-navigation/elements": "^2.3.8",

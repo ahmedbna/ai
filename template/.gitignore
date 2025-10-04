@@ -4,6 +4,7 @@
 
 # Expo local files
 .expo/
+.expo
 
 expo-env.d.ts
 # @end expo-cli

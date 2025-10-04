@@ -1,12 +1,18 @@
 import React from 'react';
-import { Tabs } from 'expo-router';
+import {
+  Badge,
+  Icon,
+  Label,
+  NativeTabs,
+} from 'expo-router/unstable-native-tabs';
+// import { Tabs } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { Home, Stars, UserCircle2 } from 'lucide-react-native';
 import { Platform, StyleSheet } from 'react-native';
 import { PlatformPressable } from '@react-navigation/elements';
 import { Authenticated, Unauthenticated, AuthLoading } from 'convex/react';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { Icon } from '@/components/ui/icon';
+// import { Icon } from '@/components/ui/icon';
 import { View } from '@/components/ui/view';
 import { Auth } from '@/components/auth/auth';
 import { Spinner } from '@/components/ui/spinner';
@@ -28,7 +34,19 @@ export default function TabLayout() {
         <Auth />
       </Unauthenticated>
       <Authenticated>
-        <Tabs
+        <NativeTabs>
+          <NativeTabs.Trigger name='index'>
+            <Label>Home</Label>
+            <Icon sf='house.fill' drawable='ic_menu_mylocation' />
+          </NativeTabs.Trigger>
+          <NativeTabs.Trigger name='profile'>
+            <Label>Profile</Label>
+            <Icon sf='person.fill' drawable='ic_menu_manage' />
+            <Badge>!</Badge>
+          </NativeTabs.Trigger>
+        </NativeTabs>
+
+        {/* <Tabs
           screenOptions={{
             tabBarActiveTintColor: primary,
             headerShown: false,
@@ -86,7 +104,7 @@ export default function TabLayout() {
               ),
             }}
           />
-        </Tabs>
+        </Tabs> */}
       </Authenticated>
     </View>
   );

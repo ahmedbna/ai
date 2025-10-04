@@ -1,3 +1,5 @@
+// app/lib/runtime/action-runner.ts
+
 import type { WebContainer } from '@webcontainer/api';
 import { path as nodePath } from 'bna-agent/utils/path';
 import { atom, map, type MapStore, type WritableAtom } from 'nanostores';
@@ -482,11 +484,15 @@ export class ActionRunner {
           const runCodegenAndTypecheck = async (onOutput?: (output: string) => void) => {
             // Convex codegen does a convex directory typecheck, then tsc does a full-project typecheck.
             let output = await run(['convex', 'codegen'], outputLabels.convexTypecheck, onOutput);
-            output += await run(
-              ['tsc', '--noEmit', '-p', 'tsconfig.app.json'],
-              outputLabels.frontendTypecheck,
-              onOutput,
-            );
+
+            // Simply remove the '-p' argument.
+            // `tsc` will automatically find the `tsconfig.json` file in the root.
+            output += await run(['tsc', '--noEmit'], outputLabels.frontendTypecheck, onOutput);
+            // output += await run(
+            //   ['tsc', '--noEmit', '-p', 'tsconfig.app.json'],
+            //   outputLabels.frontendTypecheck,
+            //   onOutput,
+            // );
             return output;
           };
 

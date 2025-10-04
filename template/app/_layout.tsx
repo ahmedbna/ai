@@ -2,10 +2,10 @@ import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ConvexReactClient } from 'convex/react';
-import * as SecureStore from 'expo-secure-store';
 import { ConvexAuthProvider } from '@convex-dev/auth/react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider } from '@/theme/theme-provider';
+import * as SecureStore from 'expo-secure-store';
 import 'react-native-reanimated';
 
 const convex = new ConvexReactClient(process.env.EXPO_PUBLIC_CONVEX_URL!, {
