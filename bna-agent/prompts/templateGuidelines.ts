@@ -23,27 +23,32 @@ export const templateGuidelines = () => {
         You have access to the following production-ready, pre-installed UI components at components/ui/. These components are:
         accordion, action sheet, alert dialog, alert, audio player, audio recorder, audio waveform, avatar, avoid keyboard, badge, bottom sheet, button, camera preview, camera, card, carousel, checkbox, collapsible, color picker, combobox, date picker, file picker, gallery, hello wave, icon, image, input otp, input, link, media picker, mode toggle, onboarding, parallax scrollview, picker, popover, progress, radio, scroll view, searchbar, separator, share, sheet, skeleton, spinner, switch, table, tabs, text, toast, toggle, video, view
 
+        **CRITICAL: Always check for existing components before creating new ones.**
+
         ## Usage Workflow
-        1. **Check if component exists**: Use componentLookupTool tool
+        1. **Check if component exists**: Use lookupComponentsTool tool - Example: \`lookupComponentsTool({ docs: ["ui:button", "ui:dialog"] })\`
         2. **Import**: \`import { Component } from '@/components/ui/component-name'\`
         3. **Use with proper props**: Follow the examples from documentation
         4. **NEVER modify**: Files in \`components/ui/\` are locked
+
+        **UI Components**: Use "ui:" prefix (e.g., ui:button, ui:input, ui:accordion)
 
         ## Critical Rules
         - ALWAYS lookup component docs before using
         - NEVER create custom versions of existing components
         - NEVER modify files in \`components/ui/\` directory
         - ALWAYS use provided props and variants
+        - Only create custom components if no suitable component exists
 
         ## Example: Using Dialog
         \`\`\`tsx
-        // ❌ DON'T create custom modal
+        // DON'T create custom modal
         const CustomModal = () => { /* ... */ }
 
-        // ✅ DO use Bottom Sheet component
+        // DO use Bottom Sheet component
         \`\`\`
 
-        When you need a UI component, FIRST use componentLookupTool tool to get full documentation including:
+        When you need a UI component, FIRST use lookupComponentsTool tool to get full documentation including:
         - All props and their types
         - Multiple usage examples
       </ui_components_library>

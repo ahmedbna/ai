@@ -12,7 +12,7 @@ interface ComponentExample {
   code: string;
 }
 
-interface ComponentDoc {
+export interface ComponentDoc {
   description: string;
   importPath: string;
   exports: string[];
