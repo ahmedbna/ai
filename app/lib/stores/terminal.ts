@@ -1,3 +1,5 @@
+// app/lib/stores/terminal.ts
+
 import type { WebContainer, WebContainerProcess } from '@webcontainer/api';
 import { atom, type WritableAtom } from 'nanostores';
 import type { ITerminal, TerminalInitializationOptions } from '@/types/terminal';

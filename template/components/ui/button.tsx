@@ -1,7 +1,7 @@
 import { Icon } from '@/components/ui/icon';
 import { ButtonSpinner, SpinnerVariant } from '@/components/ui/spinner';
 import { Text } from '@/components/ui/text';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { useColor } from '@/hooks/useColor';
 import { CORNERS, FONT_SIZE, HEIGHT } from '@/theme/globals';
 import * as Haptics from 'expo-haptics';
 import { LucideProps } from 'lucide-react-native';
@@ -66,17 +66,14 @@ export const Button = forwardRef<View, ButtonProps>(
     },
     ref
   ) => {
-    const primaryColor = useThemeColor({}, 'primary');
-    const primaryForegroundColor = useThemeColor({}, 'primaryForeground');
-    const secondaryColor = useThemeColor({}, 'secondary');
-    const secondaryForegroundColor = useThemeColor({}, 'secondaryForeground');
-    const destructiveColor = useThemeColor({}, 'red');
-    const destructiveForegroundColor = useThemeColor(
-      {},
-      'destructiveForeground'
-    );
-    const greenColor = useThemeColor({}, 'green');
-    const borderColor = useThemeColor({}, 'border');
+    const primaryColor = useColor('primary');
+    const primaryForegroundColor = useColor('primaryForeground');
+    const secondaryColor = useColor('secondary');
+    const secondaryForegroundColor = useColor('secondaryForeground');
+    const destructiveColor = useColor('red');
+    const destructiveForegroundColor = useColor({}, 'destructiveForeground');
+    const greenColor = useColor('green');
+    const borderColor = useColor('border');
 
     // Animation values for liquid glass effect
     const scale = useSharedValue(1);
@@ -89,7 +86,6 @@ export const Button = forwardRef<View, ButtonProps>(
         alignItems: 'center',
         justifyContent: 'center',
       };
-
       // Size variants
       switch (size) {
         case 'sm':
@@ -298,11 +294,11 @@ export const Button = forwardRef<View, ButtonProps>(
             alignSelf: 'stretch',
           }
         : flexValue !== null
-        ? {
-            flex: flexValue,
-            maxHeight: size === 'sm' ? 44 : size === 'lg' ? 54 : HEIGHT,
-          }
-        : {};
+          ? {
+              flex: flexValue,
+              maxHeight: size === 'sm' ? 44 : size === 'lg' ? 54 : HEIGHT,
+            }
+          : {};
     };
 
     // Updated getStyleWithoutFlex function

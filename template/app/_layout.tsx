@@ -5,6 +5,10 @@ import { ConvexReactClient } from 'convex/react';
 import { ConvexAuthProvider } from '@convex-dev/auth/react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ThemeProvider } from '@/theme/theme-provider';
+import { Authenticated, Unauthenticated, AuthLoading } from 'convex/react';
+import { View } from '@/components/ui/view';
+import { Spinner } from '@/components/ui/spinner';
+import { Auth } from '@/components/auth/auth';
 import * as SecureStore from 'expo-secure-store';
 import 'react-native-reanimated';
 
@@ -30,10 +34,26 @@ export default function RootLayout() {
               : undefined
           }
         >
-          <Stack>
-            <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
-            <Stack.Screen name='+not-found' />
-          </Stack>
+          <AuthLoading>
+            <View
+              style={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Spinner size='lg' variant='circle' />
+            </View>
+          </AuthLoading>
+          <Unauthenticated>
+            <Auth />
+          </Unauthenticated>
+          <Authenticated>
+            <Stack>
+              <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+              <Stack.Screen name='+not-found' />
+            </Stack>
+          </Authenticated>
         </ConvexAuthProvider>
 
         <StatusBar style='auto' />

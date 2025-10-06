@@ -17,16 +17,18 @@ import { EmailOTP } from './email-otp';
 import { Dimensions } from 'react-native';
 import { Button } from '@/components/ui/button';
 import { useAuthActions } from '@convex-dev/auth/react';
+import { useColor } from '@/hooks/useColor';
 
 const { width: screenWidth } = Dimensions.get('window');
 
 const tabWidth = (screenWidth - 44) / 3; // 16 padding on each side
 
 export const Auth = () => {
+  const background = useColor('background');
   const { signIn } = useAuthActions();
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: background }}>
       <ScrollView
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 96 }}
@@ -92,13 +94,16 @@ export const Auth = () => {
           </TabsContent>
         </Tabs>
 
-        <View style={{ padding: 16 }}>
-          <Button onPress={() => void signIn('anonymous')}>
+        <View style={{ padding: 24 }}>
+          <Button
+            variant='destructive'
+            onPress={() => void signIn('anonymous')}
+          >
             Login anonymously
           </Button>
         </View>
 
-        <View style={{ padding: 16 }}>
+        <View style={{ paddingHorizontal: 36 }}>
           <Text variant='caption' style={{ textAlign: 'center' }}>
             By clicking continue, you agree to our{' '}
             <Link href='https://ui.ahmedbna.com'>

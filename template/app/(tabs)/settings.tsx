@@ -4,22 +4,25 @@ import { View } from '@/components/ui/view';
 import { Text } from '@/components/ui/text';
 import { Spinner } from '@/components/ui/spinner';
 import { SignOutButton } from '@/components/auth/singout';
+import { ModeToggle } from '@/components/ui/mode-toggle';
+import { useColor } from '@/hooks/useColor';
 
-export default function HomeScreen() {
-  const userId = useQuery(api.auth.loggedInUser);
+export default function SettingsScreen() {
+  const background = useColor('background');
+  const user = useQuery(api.auth.loggedInUser);
 
-  if (userId === undefined) {
+  if (user === undefined) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Spinner />
+        <Spinner variant='circle' />
       </View>
     );
   }
 
-  if (userId === null) {
+  if (user === null) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Please log in to see your profile.</Text>
+        <Text>Not Authenticated</Text>
       </View>
     );
   }
@@ -30,10 +33,16 @@ export default function HomeScreen() {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 20,
+        gap: 36,
+        backgroundColor: background,
       }}
     >
-      <Text variant='title'>{`Your User Id: ${userId}`}</Text>
+      <ModeToggle />
+
+      <View style={{ alignItems: 'center' }}>
+        <Text variant='title'>Your User ID</Text>
+        <Text variant='caption'>{user._id}</Text>
+      </View>
 
       <SignOutButton />
     </View>

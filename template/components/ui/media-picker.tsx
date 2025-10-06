@@ -1,7 +1,7 @@
 import { Button, ButtonSize, ButtonVariant } from '@/components/ui/button';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
-import { useThemeColor } from '@/hooks/useThemeColor';
+import { useColor } from '@/hooks/useColor';
 import { CORNERS, FONT_SIZE } from '@/theme/globals';
 import { Image as ExpoImage } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
@@ -101,12 +101,12 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
     const prevSelectedAssetsRef = useRef<MediaAsset[]>(selectedAssets);
 
     // Theme colors
-    const cardColor = useThemeColor({}, 'card');
-    const borderColor = useThemeColor({}, 'border');
-    const textColor = useThemeColor({}, 'text');
-    const mutedColor = useThemeColor({}, 'mutedForeground');
-    const primaryColor = useThemeColor({}, 'primary');
-    const secondary = useThemeColor({}, 'secondary');
+    const cardColor = useColor('card');
+    const borderColor = useColor('border');
+    const textColor = useColor('text');
+    const mutedColor = useColor('mutedForeground');
+    const primaryColor = useColor('primary');
+    const secondary = useColor('secondary');
 
     // Request permissions on mount
     useEffect(() => {
@@ -146,8 +146,8 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
           mediaType === 'image'
             ? [MediaLibrary.MediaType.photo]
             : mediaType === 'video'
-            ? [MediaLibrary.MediaType.video]
-            : [MediaLibrary.MediaType.photo, MediaLibrary.MediaType.video];
+              ? [MediaLibrary.MediaType.video]
+              : [MediaLibrary.MediaType.photo, MediaLibrary.MediaType.video];
 
         const { assets: galleryAssets } = await MediaLibrary.getAssetsAsync({
           first: 100,
@@ -179,8 +179,8 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
             mediaType === 'image'
               ? ImagePicker.MediaTypeOptions.Images
               : mediaType === 'video'
-              ? ImagePicker.MediaTypeOptions.Videos
-              : ImagePicker.MediaTypeOptions.All,
+                ? ImagePicker.MediaTypeOptions.Videos
+                : ImagePicker.MediaTypeOptions.All,
           allowsMultipleSelection: multiple,
           quality: quality === 'high' ? 1 : quality === 'medium' ? 0.7 : 0.3,
           selectionLimit: multiple ? maxSelection : 1,
@@ -361,8 +361,8 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
                 mediaType === 'all'
                   ? 'Media'
                   : mediaType === 'image'
-                  ? 'Images'
-                  : 'Videos'
+                    ? 'Images'
+                    : 'Videos'
               }`}
           </Button>
         )}
@@ -397,8 +397,8 @@ export const MediaPicker = forwardRef<RNView, MediaPickerProps>(
                       mediaType === 'all'
                         ? 'Media'
                         : mediaType === 'image'
-                        ? 'Images'
-                        : 'Videos'
+                          ? 'Images'
+                          : 'Videos'
                     }`}
                 </Text>
                 <View style={styles.modalActions}>

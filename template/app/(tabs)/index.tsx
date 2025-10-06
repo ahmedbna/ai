@@ -1,44 +1,26 @@
-import { ModeToggle } from '@/components/ui/mode-toggle';
-import { ScrollView } from '@/components/ui/scroll-view';
 import { Text } from '@/components/ui/text';
 import { View } from '@/components/ui/view';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useColor } from '@/hooks/useColor';
 
 export default function HomeScreen() {
-  const bottom = useBottomTabBarHeight();
+  const background = useColor('background');
 
   return (
-    <ScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={{ paddingBottom: bottom, paddingHorizontal: 20 }}
-      showsVerticalScrollIndicator={false}
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: background,
+      }}
     >
-      <View
+      <Text
+        variant='heading'
         style={{
-          paddingTop: 64,
+          textAlign: 'center',
         }}
       >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}
-        >
-          <Text variant='heading'>BNA UI</Text>
-
-          <ModeToggle />
-        </View>
-      </View>
-
-      <View
-        style={{
-          paddingVertical: 40,
-          alignItems: 'center',
-        }}
-      >
-        <Text variant='title'>Built with ❤️ by BNA</Text>
-      </View>
-    </ScrollView>
+        Built with ❤️ by BNA
+      </Text>
+    </View>
   );
 }
