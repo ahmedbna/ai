@@ -96,7 +96,7 @@ export const Camera = forwardRef<CameraRef, CameraProps>(
       timerOptions = [0, 3, 10],
       facing: initialFacing = 'back',
     },
-    ref
+    ref,
   ) => {
     const cameraRef = useRef<CameraView>(null);
     const recordingInterval = useRef<number | null>(null);
@@ -147,7 +147,7 @@ export const Camera = forwardRef<CameraRef, CameraProps>(
         runOnJS(setZoomFactorText)(text);
         runOnJS(setZoomProgress)(currentValue * 100);
       },
-      []
+      [],
     );
 
     const animatedContainerStyle = useAnimatedStyle(() => ({
@@ -187,7 +187,7 @@ export const Camera = forwardRef<CameraRef, CameraProps>(
         // Just animate the indicator.
         zoomTextAnim.value = withSequence(
           withTiming(1, { duration: 200 }),
-          withDelay(1000, withTiming(0, { duration: 200 }))
+          withDelay(1000, withTiming(0, { duration: 200 })),
         );
       });
 
@@ -200,13 +200,13 @@ export const Camera = forwardRef<CameraRef, CameraProps>(
         baseZoom.value = newZoom; // Keep this for double tap, as it's an instant change
         zoomTextAnim.value = withSequence(
           withTiming(1, { duration: 200 }),
-          withDelay(1000, withTiming(0, { duration: 200 }))
+          withDelay(1000, withTiming(0, { duration: 200 })),
         );
       });
 
     const composedGestures = Gesture.Simultaneous(
       pinchGesture,
-      doubleTapGesture
+      doubleTapGesture,
     );
 
     useImperativeHandle(ref, () => ({
@@ -250,6 +250,7 @@ export const Camera = forwardRef<CameraRef, CameraProps>(
     const startTimer = (seconds: number) => {
       setTimerSeconds(seconds);
       setIsTimerActive(true);
+      // @ts-ignore
       timerInterval.current = setInterval(() => {
         setTimerSeconds((prev) => {
           if (prev <= 1) {
@@ -300,6 +301,7 @@ export const Camera = forwardRef<CameraRef, CameraProps>(
       try {
         setIsRecording(true);
         setRecordingTime(0);
+        // @ts-ignore
         recordingInterval.current = setInterval(() => {
           setRecordingTime((prev) => {
             if (prev >= maxVideoDuration) {
@@ -386,7 +388,7 @@ export const Camera = forwardRef<CameraRef, CameraProps>(
       baseZoom.value = nextZoom;
       zoomTextAnim.value = withSequence(
         withTiming(1, { duration: 200 }),
-        withDelay(1000, withTiming(0, { duration: 200 }))
+        withDelay(1000, withTiming(0, { duration: 200 })),
       );
     };
 
@@ -692,8 +694,8 @@ export const Camera = forwardRef<CameraRef, CameraProps>(
                         mode === 'picture'
                           ? handleCapture
                           : isRecording
-                          ? handleStopRecording
-                          : handleCapture
+                            ? handleStopRecording
+                            : handleCapture
                       }
                       disabled={isCapturing || isTimerActive}
                       activeOpacity={0.8}
@@ -724,7 +726,7 @@ export const Camera = forwardRef<CameraRef, CameraProps>(
         </View>
       </Animated.View>
     );
-  }
+  },
 );
 
 Camera.displayName = 'Camera';

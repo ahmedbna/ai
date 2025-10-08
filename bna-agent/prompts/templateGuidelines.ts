@@ -18,6 +18,110 @@ export const templateGuidelines = () => {
 
       ${generateDirectoryStructure()}
 
+      ## CRITICAL: Theme and Styling Requirements
+
+      <theme_requirements>
+        **ALWAYS use the useColor hook for colors - NEVER hardcode color values directly in styles**
+
+        ### Correct Usage
+        \`\`\`typescript
+        import { useColor } from '@/hooks/useColor';
+
+        export function MyComponent() {
+          const background = useColor('background');
+          const primary = useColor('primary');
+          const border = useColor('border');
+          
+          return (
+            <View style={{ backgroundColor: background, borderColor: border }}>
+              <Text style={{ color: primary }}>Themed text</Text>
+            </View>
+          );
+        }
+        \`\`\`
+
+        ### Incorrect Usage
+        \`\`\`typescript
+        // NEVER do this:
+        <View style={{ borderColor: '#333' }}>
+        <View style={{ backgroundColor: '#FFFFFF' }}>
+        <Text style={{ color: '#000000' }}>
+        \`\`\`
+
+        ### Available Color Tokens
+        - \`background\` - Main screen background
+        - \`foreground\` - Main text color
+        - \`primary\` - Primary brand color
+        - \`primaryForeground\` - Text on primary elements
+        - \`secondary\` - Secondary UI elements
+        - \`secondaryForeground\` - Text on secondary elements
+        - \`accent\` - Accent color for highlights
+        - \`accentForeground\` - Text on accent elements
+        - \`card\` - Card backgrounds
+        - \`cardForeground\` - Text on cards
+        - \`muted\` - Muted/disabled states
+        - \`mutedForeground\` - Text on muted elements
+        - \`destructive\` - Delete/error actions
+        - \`destructiveForeground\` - Text on destructive elements
+        - \`border\` - Border color
+        - \`input\` - Input field borders
+        - \`ring\` - Focus ring color
+        - \`blue\`, \`green\`, \`red\`, \`orange\`, \`yellow\`, \`pink\`, \`purple\`, \`teal\`, \`indigo\` - Accent colors
+
+        ### Required for Every New Screen
+        **MANDATORY: Every new screen component MUST include background color using useColor**
+
+        \`\`\`typescript
+        import { View } from '@/components/ui/view';
+        import { useColor } from '@/hooks/useColor';
+
+        export default function NewScreen() {
+          const background = useColor('background');
+          
+          return (
+            <View style={{ flex: 1, backgroundColor: background }}>
+              {/* Your screen content */}
+            </View>
+          );
+        }
+        \`\`\`
+
+        ### Custom Colors
+        If you need custom colors not in the theme:
+        1. Add them to \`theme/colors.ts\` in both \`lightColors\` and \`darkColors\`
+        2. Then use them via \`useColor('yourCustomColor')\`
+
+        **NEVER hardcode hex/rgb values directly in component styles**
+      </theme_requirements>
+
+      <deprecated_apis>
+        **CRITICAL: Do NOT use deprecated or incompatible APIs**
+
+        ### NEVER Use These:
+        \`\`\`typescript
+        // DEPRECATED - Causes errors with NativeTabs
+        import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+        const bottom = useBottomTabBarHeight();
+
+        // NEVER use hardcoded colors
+        style={{ backgroundColor: '#FFFFFF' }}
+        style={{ color: '#000000' }}
+        \`\`\`
+
+        ### Use Instead:
+        \`\`\`typescript
+        // For colors - use useColor hook
+        import { useColor } from '@/hooks/useColor';
+        const background = useColor('background');
+
+        // For bottom spacing - use useSafeAreaInsets if needed
+        import { useSafeAreaInsets } from 'react-native-safe-area-context';
+        const insets = useSafeAreaInsets();
+        // Use insets.bottom for bottom safe area padding or insets.top for top safe area padding 
+        <View style={{ paddingBottom: insets.bottom }} /> or <View style={{ paddingTop: insets.top }} />
+      
+        \`\`\`
+      </deprecated_apis>
 
       <ui_components_library>
         You have access to the following production-ready, pre-installed UI components at components/ui/. These components are:
@@ -218,15 +322,18 @@ export const templateGuidelines = () => {
       ## Development Guidelines
 
       ### Styling
+      - **MANDATORY: Use useColor hook for ALL colors - NEVER hardcode hex/rgb values**
       - Use inline styles or StyleSheet.create() for all styling
       - DO NOT use Tailwind CSS or className props
       - Access theme colors using the useColor hook from '@/hooks/useColor'
       - Example: \`const primary = useColor('primary');\`
+      - **Every screen MUST set backgroundColor using useColor('background')**
 
       ### Navigation
       - Use expo-router for navigation: \`import { router } from 'expo-router';\`
       - Navigate with \`router.push('/screen-name')\`
       - Access route params with \`useLocalSearchParams()\`
+      - **DO NOT use useBottomTabBarHeight() - incompatible with NativeTabs**
 
       ### Components
       - Create new components in \`components/\` directory
@@ -247,9 +354,10 @@ export const templateGuidelines = () => {
 
       ### Adding a New Tab
       1. Create screen file: \`app/(tabs)/screen-name.tsx\`
-      2. Update \`app/(tabs)/_layout.web.tsx\` with new Tabs.Screen
-      3. Update \`app/(tabs)/_layout.tsx\` with new NativeTabs.Trigger
-      4. Ensure \`name\` prop matches filename exactly
+      2. **Add background color**: \`const background = useColor('background')\`
+      3. Update \`app/(tabs)/_layout.web.tsx\` with new Tabs.Screen
+      4. Update \`app/(tabs)/_layout.tsx\` with new NativeTabs.Trigger
+      5. Ensure \`name\` prop matches filename exactly
 
       ### Creating a New Database Table
       1. Edit \`convex/schema.ts\`
@@ -262,8 +370,10 @@ export const templateGuidelines = () => {
       2. Modify \`lightColors\` and \`darkColors\` objects
       3. Use hex colors or rgba values
       4. Test in both light and dark modes
+      5. Access new colors via \`useColor('yourNewColor')\`
 
       Remember: This template is your starting point. Build upon it without modifying locked files (auth, UI components, root layout).
+      **ALWAYS use useColor for colors and add background color to every new screen.**
     </template_info>
   `;
 };
@@ -406,7 +516,9 @@ function generateDirectoryStructure(): string {
     6. **Use expo-router hooks**: \`useLocalSearchParams()\`, \`useRouter()\`
     7. **Never create routes outside app/ directory**
     8. **You MUST update BOTH \`_layout.tsx\` AND \`_layout.web.tsx\` files when adding tabs**
-    9. **Max number of Tabs is five no more
+    9. **Max number of Tabs is five no more**
+    10. **ALWAYS use useColor hook for colors - NEVER hardcode color values**
+    11. **Every new screen MUST set background color using useColor('background')**
 
     ---
 
@@ -420,12 +532,17 @@ function generateDirectoryStructure(): string {
     \`\`\`typescript
     // app/(tabs)/profile.tsx
     import React from 'react';
-    import { View, Text } from 'react-native';
+    import { View } from '@/components/ui/view';
+    import { Text } from '@/components/ui/text';
+    import { useColor } from '@/hooks/useColor';
 
     export default function ProfileScreen() {
+      const background = useColor('background');
+      const foreground = useColor('foreground');
+      
       return (
-        <View>
-          <Text>Profile Screen</Text>
+        <View style={{ flex: 1, backgroundColor: background }}>
+          <Text style={{ color: foreground }}>Profile Screen</Text>
         </View>
       );
     }
@@ -585,12 +702,17 @@ function generateDirectoryStructure(): string {
     \`\`\`typescript
     // 1. Create app/(tabs)/search.tsx
     import React from 'react';
-    import { View, Text } from 'react-native';
+    import { View } from '@/components/ui/view';
+    import { Text } from '@/components/ui/text';
+    import { useColor } from '@/hooks/useColor';
 
     export default function SearchScreen() {
+      const background = useColor('background');
+      const foreground = useColor('foreground');
+      
       return (
-        <View>
-          <Text>Search Screen</Text>
+        <View style={{ flex: 1, backgroundColor: background }}>
+          <Text style={{ color: foreground }}>Search Screen</Text>
         </View>
       );
     }
@@ -699,29 +821,133 @@ function generateDirectoryStructure(): string {
     };
     \`\`\`
 
-    ### Step 2: Choose a Color Scheme Based on App Type
+    ### Step 2: Using Theme Colors in Components
 
-    ### Step 3: Generate Harmonious Dark Mode Colors
-
-    Dark mode colors should be carefully chosen to maintain readability and reduce eye strain:
-    
-    ## Using Theme Colors in Components
-
-    Components can access theme colors using the \`useColor\` hook:
+    **CRITICAL: ALWAYS use the useColor hook - NEVER hardcode colors**
 
     \`\`\`typescript
     import { useColor } from '@/hooks/useColor';
+    import { View } from '@/components/ui/view';
+    import { Text } from '@/components/ui/text';
 
     export function MyComponent() {
-      const primary = useColor('primary');
       const background = useColor('background');
+      const primary = useColor('primary');
+      const border = useColor('border');
+      const foreground = useColor('foreground');
       
       return (
-        <View style={{ backgroundColor: background }}>
-          <Text style={{ color: primary }}>Themed text</Text>
+        <View style={{ 
+          flex: 1,
+          backgroundColor: background,
+          borderColor: border,
+          borderWidth: 1 
+        }}>
+          <Text style={{ color: foreground }}>Themed text</Text>
+          <Text style={{ color: primary }}>Primary colored text</Text>
         </View>
       );
     }
     \`\`\`
+
+    ### Step 3: Adding Custom Colors
+
+    If you need additional colors:
+
+    \`\`\`typescript
+    // 1. Add to theme/colors.ts
+    const lightColors = {
+      // ... existing colors
+      customBrand: '#FF6B6B',
+      customAccent: '#4ECDC4',
+    };
+
+    const darkColors = {
+      // ... existing colors
+      customBrand: '#FF8787',
+      customAccent: '#6FFFE9',
+    };
+    \`\`\`
+
+    \`\`\`typescript
+    // 2. Use in your component
+    import { useColor } from '@/hooks/useColor';
+
+    export function CustomComponent() {
+      const customBrand = useColor('customBrand');
+      const customAccent = useColor('customAccent');
+      
+      return (
+        <View style={{ backgroundColor: customBrand }}>
+          <Text style={{ color: customAccent }}>Custom themed content</Text>
+        </View>
+      );
+    }
+    \`\`\`
+
+    ## Color Usage Best Practices
+
+    ### DO:
+    - Always use \`useColor()\` hook for colors
+    - Set background color on every screen
+    - Add both light and dark variants when creating custom colors
+    - Use semantic color names (primary, secondary, muted, etc.)
+    - Test in both light and dark modes
+
+    ### DON'T:
+    - Never hardcode hex values: \`style={{ color: '#000000' }}\`
+    - Never hardcode rgb values: \`style={{ backgroundColor: 'rgb(255, 0, 0)' }}\`
+    - Never skip background color on screens
+    - Never use deprecated APIs like \`useBottomTabBarHeight()\`
+    - Never modify locked files (auth, ui components, root layout)
+
+    ## Complete Screen Template
+
+    **Use this template for every new screen:**
+
+    \`\`\`typescript
+    import React from 'react';
+    import { StyleSheet } from 'react-native';
+    import { View } from '@/components/ui/view';
+    import { Text } from '@/components/ui/text';
+    import { ScrollView } from '@/components/ui/scroll-view';
+    import { useColor } from '@/hooks/useColor';
+
+    export default function NewScreen() {
+      // Get theme colors
+      const background = useColor('background');
+      const foreground = useColor('foreground');
+      const primary = useColor('primary');
+      const border = useColor('border');
+      
+      return (
+        <View style={[styles.container, { backgroundColor: background }]}>
+          <ScrollView>
+            <Text style={{ color: foreground }}>Your content here</Text>
+            {/* More components */}
+          </ScrollView>
+        </View>
+      );
+    }
+
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        padding: 16,
+      },
+    });
+    \`\`\`
+
+    ## Summary Checklist
+
+    When creating or modifying screens:
+    - Import \`useColor\` hook
+    - Get \`background\` color using \`useColor('background')\`
+    - Set \`backgroundColor\` on root View
+    - Use \`useColor()\` for all other colors
+    - Never hardcode hex/rgb values
+    - Update both \`_layout.tsx\` and \`_layout.web.tsx\` for new tabs
+    - Avoid deprecated APIs like \`useBottomTabBarHeight()\`
+    - Test in both light and dark modes
   `;
 }

@@ -82,7 +82,7 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(
       style,
       onIndexChange,
     },
-    ref
+    ref,
   ) => {
     const scrollViewRef = useRef<ScrollView>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -132,7 +132,7 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(
           });
         }
       },
-      [snapToInterval, children.length]
+      [snapToInterval, children.length],
     );
 
     // Navigation functions
@@ -150,7 +150,7 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(
           }
         }
       },
-      [children.length, scrollToIndex, currentIndex]
+      [children.length, scrollToIndex, currentIndex],
     );
 
     const goToNext = useCallback(() => {
@@ -159,8 +159,8 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(
         nextIndex < children.length
           ? nextIndex
           : loop
-          ? 0
-          : currentIndexRef.current;
+            ? 0
+            : currentIndexRef.current;
       if (targetIndex !== currentIndexRef.current) {
         setCurrentIndex(targetIndex);
         setIsUserInteracting(true);
@@ -180,8 +180,8 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(
         prevIndex >= 0
           ? prevIndex
           : loop
-          ? children.length - 1
-          : currentIndexRef.current;
+            ? children.length - 1
+            : currentIndexRef.current;
       if (targetIndex !== currentIndexRef.current) {
         setCurrentIndex(targetIndex);
         setIsUserInteracting(true);
@@ -204,7 +204,7 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(
         goToPrevious,
         getCurrentIndex: () => currentIndex,
       }),
-      [goToSlide, goToNext, goToPrevious, currentIndex]
+      [goToSlide, goToNext, goToPrevious, currentIndex],
     );
 
     // Start auto play - Fixed to actually scroll the view
@@ -213,6 +213,7 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(
 
       clearTimers();
 
+      // @ts-ignore
       autoPlayTimerRef.current = setInterval(() => {
         const nextIndex = currentIndexRef.current + 1;
         const targetIndex =
@@ -277,7 +278,7 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(
           }
         }
       },
-      [currentIndex, snapToInterval, children.length, isUserInteracting]
+      [currentIndex, snapToInterval, children.length, isUserInteracting],
     );
 
     // Handle momentum scroll end
@@ -293,12 +294,13 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(
 
         // Re-enable auto play after user interaction ends
         if (autoPlay) {
+          // @ts-ignore
           scrollTimeoutRef.current = setTimeout(() => {
             setIsUserInteracting(false);
           }, 1000);
         }
       },
-      [snapToInterval, children.length, autoPlay, currentIndex]
+      [snapToInterval, children.length, autoPlay, currentIndex],
     );
 
     // Touch handlers
@@ -430,7 +432,7 @@ export const Carousel = forwardRef<CarouselRef, CarouselProps>(
         )}
       </View>
     );
-  }
+  },
 );
 
 // Carousel Content Component

@@ -113,7 +113,7 @@ const ReanimatedProgress = ({
     .onChange((event) => {
       translateX.value = Math.max(
         0,
-        Math.min(barWidth, translateX.value + event.changeX)
+        Math.min(barWidth, translateX.value + event.changeX),
       );
     })
     .onEnd(() => {
@@ -187,7 +187,7 @@ export const Video = forwardRef<VideoView, VideoProps>(
       subtitles = [],
       ...props
     },
-    ref
+    ref,
   ) => {
     const textColor = useColor('text');
     const cardColor = useColor('card');
@@ -238,7 +238,7 @@ export const Video = forwardRef<VideoView, VideoProps>(
           else setIsVideoEnded(false);
 
           const activeSubtitle = subtitles.find(
-            (s) => time >= s.start && time <= s.end
+            (s) => time >= s.start && time <= s.end,
           );
           setCurrentSubtitle(activeSubtitle?.text || '');
 
@@ -269,6 +269,7 @@ export const Video = forwardRef<VideoView, VideoProps>(
         clearTimeout(hideControlsTimeout.current);
       if (isPlaying) {
         // Only hide controls if video is playing
+        // @ts-ignore
         hideControlsTimeout.current = setTimeout(hideControls, 3000);
       }
     }, [controlsOpacity, isPlaying]);
@@ -285,13 +286,14 @@ export const Video = forwardRef<VideoView, VideoProps>(
 
       if (hidePlayIconTimeout.current)
         clearTimeout(hidePlayIconTimeout.current);
+      // @ts-ignore
       hidePlayIconTimeout.current = setTimeout(() => {
         playIconOpacity.value = withTiming(
           0,
           { duration: 200 },
           (isFinished) => {
             if (isFinished) runOnJS(setShowPlayIcon)(false);
-          }
+          },
         );
       }, 1000);
     }, [playIconOpacity]);
@@ -340,9 +342,10 @@ export const Video = forwardRef<VideoView, VideoProps>(
         // Reset the hide controls timer
         if (hideControlsTimeout.current)
           clearTimeout(hideControlsTimeout.current);
+        // @ts-ignore
         hideControlsTimeout.current = setTimeout(hideControls, 3000);
       },
-      [player, duration, isVideoEnded, hideControls]
+      [player, duration, isVideoEnded, hideControls],
     );
 
     const handleSeekStart = useCallback(() => {
@@ -439,7 +442,7 @@ export const Video = forwardRef<VideoView, VideoProps>(
         )}
       </GestureHandlerRootView>
     );
-  }
+  },
 );
 
 Video.displayName = 'Video';
