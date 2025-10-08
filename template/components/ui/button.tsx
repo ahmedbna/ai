@@ -64,14 +64,14 @@ export const Button = forwardRef<View, ButtonProps>(
       textStyle,
       ...props
     },
-    ref
+    ref,
   ) => {
     const primaryColor = useColor('primary');
     const primaryForegroundColor = useColor('primaryForeground');
     const secondaryColor = useColor('secondary');
     const secondaryForegroundColor = useColor('secondaryForeground');
     const destructiveColor = useColor('red');
-    const destructiveForegroundColor = useColor({}, 'destructiveForeground');
+    const destructiveForegroundColor = useColor('destructiveForeground');
     const greenColor = useColor('green');
     const borderColor = useColor('border');
 
@@ -384,7 +384,7 @@ export const Button = forwardRef<View, ButtonProps>(
         )}
       </TouchableOpacity>
     );
-  }
+  },
 );
 
 // Add display name for better debugging

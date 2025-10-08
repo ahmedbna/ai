@@ -86,15 +86,49 @@ export const templateGuidelines = () => {
       </file>
 
       <file path="app/_layout.tsx">
-        This file is the root layout and entry point for the Expo Router app. It sets up the core providers and configuration:
+        This file is the **Root Layout (app/_layout.tsx)** and entry point for the Expo Router app. It sets up the core providers and configuration:
         - ConvexReactClient: Connects to the Convex backend using EXPO_PUBLIC_CONVEX_URL
         - ConvexAuthProvider: Handles authentication with secure storage on iOS/Android (using expo-secure-store)
         - ThemeProvider: Manages app theming (light/dark mode)
         - GestureHandlerRootView: Enables gesture handling for animations and interactions
         - Stack navigator: Defines the navigation structure with (tabs) as the main screen
+        - Auth component automatically shown for unauthenticated users
+        - All authentication routing and state management is handled
+        - Authenticated, Unauthenticated, and AuthLoading states
         
         IMPORTANT: Do NOT modify the \`app/_layout.tsx\` file under any circumstances.
         For tab-specific changes, modify \`app/(tabs)/_layout.tsx\` and \`app/(tabs)/_layout.web.tsx\` instead.
+
+        CRITICAL: Authentication is FULLY IMPLEMENTED in this template at \`app/_layout.tsx\`. DO NOT create custom auth flows, login screens, or authentication logic.
+
+        import { View } from '@/components/ui/view';
+        import { Authenticated, Unauthenticated, AuthLoading } from 'convex/react';
+
+        export default function RootLayout() {
+          return (
+            <View>
+              <AuthLoading>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Spinner size='lg' variant='circle' />
+                </View>
+              </AuthLoading>
+              <Unauthenticated>
+                <Auth />
+              </Unauthenticated>
+              <Authenticated>
+                <Stack>
+                  <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
+                  <Stack.Screen name='+not-found' />
+                </Stack>
+              </Authenticated>
+            </View>
+          )}
       </file>
 
       <file path="app/(tabs)/_layout.tsx">
@@ -137,9 +171,25 @@ export const templateGuidelines = () => {
       </file>
 
       <directory path="components/auth/">
-        The \`components/auth/\` directory contains authentication-related React components for the frontend UI:
-        - Auth component: Handles the login/signup form display
+        The  **Auth Components (components/auth/)** directory contains authentication-related React components for the frontend UI:
+        - Auth component: Handles the login/signup/singout form display
         - SignOutButton component: Provides logout functionality for authenticated users
+        - SignOutButton component: Ready-to-use logout functionality
+        - DO NOT modify or recreate these components
+
+        **How to use Sign Out Button:**
+        \`\`\`typescript
+        import { SignOutButton } from '@/components/auth/singout';
+
+        // In your component:
+        <SignOutButton />
+        \`\`\`
+
+        The SignOutButton component:
+        - Automatically shows only when user is authenticated
+        - Handles sign out and navigation cleanup
+        - Uses destructive variant with logout icon
+        - No additional configuration needed
         
         IMPORTANT: Do NOT modify, delete, or reorganize files in this directory unless explicitly requested.
         These components are critical for the authentication flow and integrate with ConvexAuthProvider.
@@ -189,7 +239,7 @@ export const templateGuidelines = () => {
       - Access in components: \`const data = useQuery(api.myFile.myQuery);\`
 
       ### Authentication
-      - Check auth status with \`const { isAuthenticated, isLoading } = useAuthInfo();\`
+      - If you want to check auth status with \`import { useConvexAuth } from 'convex/react'; const { isAuthenticated, isLoading } = useConvexAuth();\`
       - Sign out with the SignOut component from \`@/components/auth/singout\`
       - DO NOT modify auth configuration files
 

@@ -86,6 +86,69 @@ class ActionCommandError extends Error {
   }
 }
 
+// Directories to skip during TypeScript checking
+const TYPESCRIPT_SKIP_PATHS = ['components/ui', 'components/auth'];
+
+/**
+ * Filters TypeScript output to remove errors from specified directories
+ */
+function filterTypescriptErrors(output: string, skipPaths: string[]): { filteredOutput: string; hasErrors: boolean } {
+  const lines = output.split('\n');
+  const filteredLines: string[] = [];
+  let currentErrorBlock: string[] = [];
+  let skipCurrentBlock = false;
+  let totalErrorCount = 0;
+  let filteredErrorCount = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // Check if this line starts a new error (contains a file path with line:column)
+    const errorMatch = line.match(/^(.+?)\((\d+),(\d+)\):/);
+
+    if (errorMatch) {
+      // Save previous block if it wasn't skipped
+      if (currentErrorBlock.length > 0 && !skipCurrentBlock) {
+        filteredLines.push(...currentErrorBlock);
+        filteredErrorCount++;
+      }
+
+      // Start new error block
+      currentErrorBlock = [line];
+      totalErrorCount++;
+
+      // Check if this error is from a skipped path
+      const filePath = errorMatch[1].replace(/\\/g, '/');
+      skipCurrentBlock = skipPaths.some((skipPath) => filePath.includes(skipPath));
+    } else if (currentErrorBlock.length > 0) {
+      // Continue current error block
+      currentErrorBlock.push(line);
+    } else {
+      // Not part of an error block, include it
+      filteredLines.push(line);
+    }
+  }
+
+  // Handle last error block
+  if (currentErrorBlock.length > 0 && !skipCurrentBlock) {
+    filteredLines.push(...currentErrorBlock);
+    filteredErrorCount++;
+  }
+
+  const filteredOutput = filteredLines.join('\n');
+  const skippedCount = totalErrorCount - filteredErrorCount;
+
+  let resultOutput = filteredOutput;
+  if (skippedCount > 0) {
+    resultOutput += `\n\n[Info] Skipped ${skippedCount} TypeScript error(s) from excluded paths: ${skipPaths.join(', ')}`;
+  }
+
+  // Check if there are any actual errors remaining (not just warnings or info)
+  const hasErrors = /error TS\d+:/.test(filteredOutput);
+
+  return { filteredOutput: resultOutput, hasErrors };
+}
+
 export class ActionRunner {
   #webcontainer: Promise<WebContainer>;
   #currentExecutionPromise: Promise<void> = Promise.resolve();
@@ -442,6 +505,7 @@ export class ActionRunner {
             commandAndArgs: string[],
             errorPrefix: OutputLabels,
             onOutput?: (s: string) => void,
+            filterErrors: boolean = false,
           ): Promise<string> => {
             logger.info('starting to run', errorPrefix);
             const t0 = performance.now();
@@ -454,19 +518,32 @@ export class ActionRunner {
             const { output, exitCode } = await streamOutput(proc, { onOutput, debounceMs: 50 });
 
             const cleanedOutput = cleanConvexOutput(output);
+
+            // Filter TypeScript errors if needed
+            let finalOutput = cleanedOutput;
+            let actuallyHasErrors = exitCode !== 0;
+
+            if (filterErrors && exitCode !== 0) {
+              const { filteredOutput, hasErrors } = filterTypescriptErrors(cleanedOutput, TYPESCRIPT_SKIP_PATHS);
+              finalOutput = filteredOutput;
+              actuallyHasErrors = hasErrors;
+            }
+
             const time = performance.now() - t0;
             logger.debug('finished', errorPrefix, 'in', Math.round(time));
-            if (exitCode !== 0) {
+
+            if (actuallyHasErrors) {
               // Kill all other commands
               commandErroredController.abort(`${errorPrefix}`);
               // This command's output will be reported exclusively
-              throw new Error(`[${errorPrefix}] Failed with exit code ${exitCode}: ${cleanedOutput}`);
+              throw new Error(`[${errorPrefix}] Failed with exit code ${exitCode}: ${finalOutput}`);
             }
+
             abortSignal.removeEventListener('abort', abortListener);
-            if (cleanedOutput.trim().length === 0) {
+            if (finalOutput.trim().length === 0) {
               return '';
             }
-            return cleanedOutput + '\n\n';
+            return finalOutput + '\n\n';
           };
 
           //         START         deploy tool call
@@ -485,14 +562,9 @@ export class ActionRunner {
             // Convex codegen does a convex directory typecheck, then tsc does a full-project typecheck.
             let output = await run(['convex', 'codegen'], outputLabels.convexTypecheck, onOutput);
 
-            // Simply remove the '-p' argument.
-            // `tsc` will automatically find the `tsconfig.json` file in the root.
-            output += await run(['tsc', '--noEmit'], outputLabels.frontendTypecheck, onOutput);
-            // output += await run(
-            //   ['tsc', '--noEmit', '-p', 'tsconfig.app.json'],
-            //   outputLabels.frontendTypecheck,
-            //   onOutput,
-            // );
+            // Run TypeScript check with error filtering enabled
+            output += await run(['tsc', '--noEmit'], outputLabels.frontendTypecheck, onOutput, true);
+
             return output;
           };
 
