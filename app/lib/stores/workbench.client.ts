@@ -26,7 +26,6 @@ import { parsePartId, type PartId, type MessageId } from 'bna-agent/partId.js';
 import { generateReadmeContent } from '@/lib/download/readmeContent';
 import { setupMjsContent } from '@/lib/download/setupMjsContent';
 import type { ConvexProject } from 'bna-agent/types';
-import { cursorRulesContent } from '@/lib/download/cursorRulesContent';
 import type { ConvexToolName } from '@/lib/common/types';
 
 const { saveAs } = fileSaver;
@@ -590,7 +589,7 @@ export class WorkbenchStore {
       description.value ?? 'project',
       args.convexProject?.deploymentName ?? null,
     );
-    const readmePath = hasReadme ? `CHEF_README.md` : 'README.md';
+    const readmePath = hasReadme ? `BNA_README.md` : 'README.md';
     zip.file(readmePath, readmeContent);
     if (!hasSetupMjs) {
       zip.file('setup.mjs', setupMjsContent);
@@ -598,9 +597,6 @@ export class WorkbenchStore {
     if (!hasEnvLocalFile && args.convexProject) {
       const convexDeploymentEnvVar = `dev:${args.convexProject.deploymentName} # team: ${args.convexProject.teamSlug} project: ${args.convexProject.projectSlug}`;
       zip.file('.env.local', `CONVEX_DEPLOYMENT=${convexDeploymentEnvVar}`);
-    }
-    if (!hasCursorRules) {
-      zip.file('.cursor/rules/convex_rules.mdc', cursorRulesContent);
     }
     // Generate the zip file and save it
     const content = await zip.generateAsync({ type: 'blob' });

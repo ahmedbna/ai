@@ -10,6 +10,7 @@ import { editToolParameters } from './tools/edit.js';
 import { loggingSafeParse } from './utils/zodUtil.js';
 import { npmInstallToolParameters } from './tools/npmInstall.js';
 import { path } from './utils/path.js';
+import { EXCLUDED_FILE_PATHS } from './constants.js';
 
 const MAX_RELEVANT_FILES = 16;
 
@@ -188,6 +189,10 @@ export class ChatContextManager {
     let numFiles = 0;
 
     for (const [path] of sortedByLastUsed) {
+      if (EXCLUDED_FILE_PATHS.some((excluded) => path.includes(excluded))) {
+        continue;
+      }
+
       if (sizeEstimate > maxRelevantFilesSize) {
         break;
       }

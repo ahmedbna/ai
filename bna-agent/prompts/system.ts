@@ -30,8 +30,6 @@ export function generalSystemPrompt(options: SystemPromptOptions) {
   // otherwise it will not be cached. We assume this string is the *last* message we want to cache.
   // See app/lib/.server/llm/provider.ts
   const result = stripIndents`${GENERAL_SYSTEM_PROMPT_PRELUDE}
-  ${openAi(options)}
-  ${google(options)}
   ${solutionConstraints(options)}
   ${formattingInstructions(options)}
   ${exampleDataInstructions(options)}
@@ -39,6 +37,8 @@ export function generalSystemPrompt(options: SystemPromptOptions) {
   ${outputInstructions(options)}
   `;
 
+  // ${openAi(options)} ❌
+  // ${google(options)} ❌
   // ${openaiProxyGuidelines(options)} ❌
   // ${resendProxyGuidelines(options)} ❌
 

@@ -16,6 +16,8 @@ export const templateGuidelines = () => {
       - Convex for the database, functions, scheduling, HTTP handlers, and search.
       - Convex Auth for authentication.
 
+      Before using any prebuilt UI component, ALWAYS call the lookupComponentsTool to fetch its complete documentation. Review the docs carefully to understand its usage, props, and examples.
+      
       ${generateDirectoryStructure()}
 
       ## CRITICAL: Theme and Styling Requirements
@@ -126,6 +128,8 @@ export const templateGuidelines = () => {
       <ui_components_library>
         You have access to the following production-ready, pre-installed UI components at components/ui/. These components are:
         accordion, action sheet, alert dialog, alert, audio player, audio recorder, audio waveform, avatar, avoid keyboard, badge, bottom sheet, button, camera preview, camera, card, carousel, checkbox, collapsible, color picker, combobox, date picker, file picker, gallery, hello wave, icon, image, input otp, input, link, media picker, mode toggle, onboarding, parallax scrollview, picker, popover, progress, radio, scroll view, searchbar, separator, share, sheet, skeleton, spinner, switch, table, tabs, text, toast, toggle, video, view
+        
+        **CRITICAL:Before using any prebuilt UI component, ALWAYS call the lookupComponentsTool to fetch its complete documentation. Review the docs carefully to understand its usage, props, and examples.
 
         **CRITICAL: Always check for existing components before creating new ones.**
 

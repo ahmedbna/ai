@@ -294,6 +294,23 @@ Note: \`paginationOpts\` is an object with the following properties:
 - System fields are automatically added to all documents and are prefixed with an underscore. The
   two system fields that are automatically added to all documents are \`_creationTime\` which has
   the validator \`v.number()\` and \`_id\` which has the validator \`v.id(tableName)\`.
+- DO NOT remove or modify any of the user existing schema fields. You may add new fields if necessary, but the original fields must remain exactly as defined.
+
+ users: defineTable({
+    email: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    name: v.optional(v.string()),
+    bio: v.optional(v.string()),
+    gender: v.optional(v.string()),
+    birthday: v.optional(v.number()),
+    image: v.optional(v.union(v.string(), v.null())),
+    emailVerificationTime: v.optional(v.float64()),
+    phoneVerificationTime: v.optional(v.float64()),
+    isAnonymous: v.optional(v.boolean()),
+    githubId: v.optional(v.number()),
+  })
+    .index('email', ['email'])
+    .index('phone', ['phone']),
 
 ### Index definitions
 
@@ -557,6 +574,40 @@ This example creates a mutation to generate a short-lived upload URL and a mutat
 it gets the storage id from the response of the upload and saves it to the database with the \`sendMedia\` mutation. On the frontend, it uses the \`list\` query to get the messages from the database and display them in the UI. In this query, the
 backend grabs the url from the storage system table and returns it to the client which shows the images in the UI. You should use this pattern for any file upload. To keep track of files, you should save the storage id in the database.
 
+import { v } from 'convex/values';
+import { authTables } from '@convex-dev/auth/server';
+import { defineSchema, defineTable } from 'convex/server';
+
+export default defineSchema({
+  ...authTables,
+
+  users: defineTable({
+    email: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    name: v.optional(v.string()),
+    bio: v.optional(v.string()),
+    gender: v.optional(v.string()),
+    birthday: v.optional(v.number()),
+    image: v.optional(v.union(v.string(), v.null())),
+    emailVerificationTime: v.optional(v.float64()),
+    phoneVerificationTime: v.optional(v.float64()),
+    isAnonymous: v.optional(v.boolean()),
+    githubId: v.optional(v.number()),
+  })
+    .index('email', ['email'])
+    .index('phone', ['phone']),
+
+  media: defineTable({
+    userId: v.id('users'),
+    storageId: v.id('_storage'),
+
+  })
+    .index('userId', ['userId']),
+});
+
+
+Add the media file to convex with functions 
+
 Path: \`convex/media.ts\`
 \`\`\`ts
 import { v } from 'convex/values';
@@ -609,14 +660,12 @@ Path: \`app/(tabs)/index.tsx\`
 import { useState } from 'react';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { View } from '@/components/ui/view';
 import { Button } from '@/components/ui/button';
 import { MediaAsset, MediaPicker } from '@/components/ui/media-picker';
 import { Gallery } from '@/components/ui/gallery';
 
 export default function MediaScreen() {
-  const bottom = useBottomTabBarHeight();
 
   const media = useQuery(api.media.get) || [];
   const sendMedia = useMutation(api.media.sendMedia);
@@ -671,7 +720,7 @@ export default function MediaScreen() {
 
   return (
     <View
-      style={{ flex: 1, paddingBottom: bottom, paddingHorizontal: 20, gap: 16 }}
+      style={{ flex: 1, paddingHorizontal: 20, gap: 16 }}
     >
       <MediaPicker
         mediaType='all'
@@ -893,6 +942,75 @@ export default defineSchema({
     content: v.string(),
   }).index("by_channel_and_author", ["channelId", "authorId"]),
 });
+\`\`\`
+
+
+### Using Convex React Hooks in Expo React Native
+
+Convex provides React hooks that connect your frontend to your backend functions.
+These are designed to work seamlessly with Expo and React Native.
+
+The three core hooks are:
+
+- \`useQuery\` — reads data reactively.
+- \`useMutation\` — performs writes or updates.
+- \`useAction\` — runs long or external tasks (e.g., API calls, AI requests).
+
+#### Example usage
+
+\`\`\`tsx
+import React from "react";
+import { View } from "@/components/ui/view";
+import { Text } from "@/components/ui/text";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import { api } from "@/convex/_generated/api";
+import { useQuery, useMutation, useAction } from "convex/react";
+
+export default function HomeScreen() {
+  // 1. Read data with useQuery
+  const user = useQuery(api.users.get);
+  const data = useQuery(api.functions.myQuery, { a: "Hello world", b: 4 });
+
+  // 2. Perform database mutations
+  const doSomething = useMutation(api.functions.doSomething);
+  const doAnotherThing = useMutation(api.functions.doAnotherThing);
+
+  // 3. Execute external actions
+  const doSomeAction = useAction(api.functions.doSomeAction);
+
+  // 4. Handle loading & null states
+  if (data === undefined || user === undefined) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Spinner />
+      </View>
+    );
+  }
+
+  if (data === null) {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Text>Data not found</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={{ padding: 16 }}>
+      <Text>{data.a}</Text>
+      <Button onPress={async () => await doSomething()}>
+        Run Mutation 1
+      </Button>
+      <Button onPress={async () => await doAnotherThing({ a: "Hi", b: 4 })}>
+        Run Mutation 2
+      </Button>
+      <Button onPress={async () => await doSomeAction({ a: "Test", b: 4 })}>
+        Run Action
+      </Button>
+    </View>
+  );
+}
 \`\`\`
 
 # Convex Components

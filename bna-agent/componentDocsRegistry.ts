@@ -1,4 +1,4 @@
-// bna-agent/tools/componentDocsRegistry.ts
+// bna-agent/componentDocsRegistry.ts
 // This file automatically generates the docs object from your componentDocs
 
 import { componentDocs } from './componentDocs.js';
@@ -47,14 +47,22 @@ export function formatComponentDoc(doc: ComponentDoc, componentName: string): st
 
 /**
  * Generates the complete docs registry from componentDocs
+ * Creates entries for both lowercase and original casing
  */
 export function generateDocsRegistry() {
   const registry: Record<string, string> = {};
 
   // Auto-generate UI component docs
   for (const [componentName, doc] of Object.entries(componentDocs)) {
-    const key = toDocKey(componentName);
-    registry[key] = formatComponentDoc(doc, componentName);
+    const lowercaseKey = toDocKey(componentName);
+    const formattedDoc = formatComponentDoc(doc, componentName);
+
+    // Add lowercase version (e.g., "ui:avatar")
+    registry[lowercaseKey] = formattedDoc;
+
+    // Also add original casing version (e.g., "ui:Avatar")
+    const originalCaseKey = `ui:${componentName}`;
+    registry[originalCaseKey] = formattedDoc;
   }
 
   return registry;
@@ -67,6 +75,30 @@ export const docsRegistry = generateDocsRegistry();
 export const availableDocKeys = Object.keys(docsRegistry);
 
 // Get list of UI components (without categorization)
+// Returns only lowercase versions for cleaner display
 export function getUIComponentKeys(): string[] {
-  return availableDocKeys.filter((key) => key.startsWith('ui:'));
+  const keys = availableDocKeys.filter((key) => key.startsWith('ui:'));
+  // Return only lowercase versions to avoid duplicates
+  const uniqueKeys = new Set<string>();
+  keys.forEach((key) => {
+    uniqueKeys.add(key.toLowerCase());
+  });
+  return Array.from(uniqueKeys);
+}
+
+// Helper function to normalize doc key lookup (case-insensitive)
+export function normalizeDocKey(key: string): string | null {
+  const lowerKey = key.toLowerCase();
+
+  // Check if lowercase version exists
+  if (lowerKey in docsRegistry) {
+    return lowerKey;
+  }
+
+  // Check if original case exists
+  if (key in docsRegistry) {
+    return key;
+  }
+
+  return null;
 }

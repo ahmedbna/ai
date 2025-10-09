@@ -116,10 +116,8 @@ export function solutionConstraints(options: SystemPromptOptions) {
         import { View } from '@/components/ui/view';
         import { Card } from '@/components/ui/card';
         import { Button } from '@/components/ui/button';
-        import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
         export default function CounterScreen() {
-          const bottom = useBottomTabBarHeight();
           const counter = useQuery(api.counter.get);
           const increment = useMutation(api.counter.increment);
           const decrement = useMutation(api.counter.decrement);
@@ -138,7 +136,7 @@ export function solutionConstraints(options: SystemPromptOptions) {
           };
 
           return (
-            <View style={{ flex: 1, paddingBottom: bottom, paddingHorizontal: 20 }}>
+            <View style={{ flex: 1, paddingHorizontal: 20 }}>
               <Text variant='heading'>Counter App</Text>
 
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
