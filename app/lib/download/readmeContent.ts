@@ -7,7 +7,7 @@ export function generateReadmeContent(description: string, convexDeploymentName:
 - **UI Components**: [BNA UI](https://ui.ahmedbna.com)
 - **Backend**: [Convex](https://convex.dev)
 - **Authentication**: [Convex Auth](https://auth.convex.dev/)
-- **Built with**: [BNA AI](https://ai.ahmedbna.com)
+- **Built with**: [BNA](https://ai.ahmedbna.com)
 
 ${convexDeploymentName ? `## 🔗 Deployment\n\nThis project is connected to the Convex deployment: [\`${convexDeploymentName}\`](https://dashboard.convex.dev/d/${convexDeploymentName})\n` : ''}
 ## 📁 Project Structure

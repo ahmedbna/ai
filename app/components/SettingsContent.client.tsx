@@ -5,9 +5,9 @@ import { ProfileCard } from '@/components/settings/ProfileCard';
 import { UsageCard } from '@/components/settings/UsageCard';
 import { Toaster } from '@/components/ui/Toaster';
 import { UserProvider } from '@/components/UserProvider';
-import Particles from './ui/particles';
+import Particles from '@/components/ui/particles';
 import { ArrowLeft, House } from 'lucide-react';
-import { Button } from './ui/button';
+import { Button } from '@/components/ui/button';
 
 export function SettingsContent() {
   return (

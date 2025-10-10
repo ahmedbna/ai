@@ -132,7 +132,7 @@ export function MissingApiKey({ provider, requireKey, resetDisableChatMessage }:
             <>
               You&apos;ve chosen to always use your own API keys, but haven&apos;t set a{' '}
               <span className='font-semibold'>{displayModelProviderName(provider)}</span> API key yet. You may choose to
-              use a different model provider, use BNA AI tokens instead of your own API keys, or add an API key for{' '}
+              use a different model provider, use BNA tokens instead of your own API keys, or add an API key for{' '}
               <span className='font-semibold'>{displayModelProviderName(provider)}</span>.
             </>
           )}
@@ -145,9 +145,9 @@ export function MissingApiKey({ provider, requireKey, resetDisableChatMessage }:
           onConfirm={handleUseConvexTokens}
           variant='primary'
           confirmText='Confirm'
-          dialogTitle={'Change BNA AI token preference'}
+          dialogTitle={'Change BNA token preference'}
           dialogBody={
-            'Confirming will disable your preference to always use your own API keys. Instead, BNA AI will prefer using BNA AI tokens when built-in quota is available.'
+            'Confirming will disable your preference to always use your own API keys. Instead, BNA will prefer using BNA tokens when built-in quota is available.'
           }
         />
       )}
@@ -177,7 +177,7 @@ export function MissingApiKey({ provider, requireKey, resetDisableChatMessage }:
               </svg>
             }
           >
-            Use BNA AI Tokens instead
+            Use BNA Tokens instead
           </Button>
         </div>
       ) : (

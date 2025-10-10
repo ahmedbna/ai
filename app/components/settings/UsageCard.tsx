@@ -29,17 +29,17 @@ export function UsageCard() {
     <div className='rounded-lg border bg-bolt-elements-background-depth-1 shadow-sm'>
       <div className='p-6'>
         <div className='mb-4 flex items-center justify-between'>
-          <h2 className='text-xl font-semibold text-content-primary'>BNA AI Usage</h2>
+          <h2 className='text-xl font-semibold text-content-primary'>BNA Usage</h2>
           <div className='ml-auto'>
             <TeamSelector selectedTeamSlug={selectedTeamSlug} setSelectedTeamSlug={setSelectedTeamSlug} />
           </div>
         </div>
-        <p className='mb-1 text-sm text-content-secondary'>Your Convex team comes with tokens included for BNA AI.</p>
+        <p className='mb-1 text-sm text-content-secondary'>Your Convex team comes with tokens included for BNA.</p>
         <p className='mb-1 text-sm text-content-secondary'>
           On paid Convex subscriptions, additional usage will be subject to metered billing.
         </p>
         <p className='mb-4 text-sm text-content-secondary'>
-          On free plans, BNA AI will not be usable once you hit the limit for the current billing period.
+          On free plans, BNA will not be usable once you hit the limit for the current billing period.
         </p>
         <div className='space-y-4'>
           <div className='w-80 max-w-80'>

@@ -24,7 +24,7 @@ export default function Landing() {
         </div>
         <div className='flex flex-col gap-6 px-4 py-6 text-lg text-neutral-9 dark:text-neutral-2'>
           <p>
-            BNA AI is open-source, check out the GitHub repo{' '}
+            BNA is open-source, check out the GitHub repo{' '}
             <a
               href='https://github.com/get-convex/chef'
               className='font-semibold text-bolt-elements-button-primary-backgroundHover hover:underline dark:text-white'
@@ -54,7 +54,7 @@ export default function Landing() {
             .
           </p>
           <p>
-            As mentioned above, BNA AI&apos;s capabilities are enabled by being built on top of{' '}
+            As mentioned above, BNA&apos;s capabilities are enabled by being built on top of{' '}
             <a
               href='https://convex.dev'
               className='font-semibold text-bolt-elements-button-primary-backgroundHover hover:underline dark:text-white'
@@ -62,11 +62,11 @@ export default function Landing() {
               Convex
             </a>
             , the open-source reactive database designed to make life easy for web app developers. The
-            &ldquo;magic&rdquo; in BNA AI is just the fact that it&apos;s using Convex&apos;s APIs, which are an ideal
-            fit for codegen.
+            &ldquo;magic&rdquo; in BNA is just the fact that it&apos;s using Convex&apos;s APIs, which are an ideal fit
+            for codegen.
           </p>
           <p>
-            Development of the BNA AI is led by the Convex team. We{' '}
+            Development of the BNA is led by the Convex team. We{' '}
             <a
               href='https://github.com/get-convex/chef/blob/main/CONTRIBUTING.md'
               className='font-semibold text-bolt-elements-button-primary-backgroundHover hover:underline dark:text-white'

@@ -4,7 +4,7 @@ import type { MetaFunction } from '@vercel/remix';
 import { Spinner } from '@ui/Spinner';
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Loading | BNA AI' }];
+  return [{ title: 'Loading | BNA' }];
 };
 
 const dashboardHost = import.meta.env.VITE_DASHBOARD_HOST || 'https://dashboard.convex.dev';

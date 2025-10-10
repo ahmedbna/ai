@@ -677,7 +677,7 @@ export default function DebugAllPromptsForChat({ chatInitialId, onClose, isDebug
             </div>
             <div>
               <span className='font-semibold text-gray-900 dark:text-gray-100'>{formatNumber(totals.chefTokens)}</span>{' '}
-              total BNA AI tokens (${totalPrice})
+              total BNA tokens (${totalPrice})
             </div>
           </div>
         </div>

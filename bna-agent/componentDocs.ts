@@ -1,4 +1,4 @@
-// Complete UI component documentation for AI builder
+// bna-agent/componentDocs.ts
 
 interface PropDefinition {
   type: string;

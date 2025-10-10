@@ -6,7 +6,6 @@ import { useStore } from '@nanostores/react';
 import { chatStore } from '@/lib/stores/chatId';
 import { Spinner } from '@ui/Spinner';
 import { useEffect, useState } from 'react';
-import { Button } from '@ui/Button';
 import { useUsage } from '@/lib/stores/usage';
 import { Donut } from '@ui/Donut';
 import { Loading } from '@ui/Loading';
@@ -19,6 +18,7 @@ import { useLaunchDarkly } from '@/lib/hooks/useLaunchDarkly';
 import { useQuery } from 'convex/react';
 import { api } from '@convex/_generated/api';
 import { CheckCircle2, CircleAlert, Clipboard, MessageSquareReply } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type StreamStatus = 'streaming' | 'submitted' | 'ready' | 'error';
 
@@ -160,6 +160,8 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
     }
   }
 
+  console.log('streamStatus', streamStatus);
+
   return (
     <AnimatePresence>
       <motion.div
@@ -188,12 +190,8 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
                         modelSelection={props.modelSelection}
                       /> */}
                       {streamStatus === 'error' && (
-                        <Button
-                          type='button'
-                          className='ml-2 h-auto'
-                          onClick={props.resendMessage}
-                          icon={<MessageSquareReply className='size-4' />}
-                        >
+                        <Button size='sm' className='ml-2' onClick={props.resendMessage}>
+                          <MessageSquareReply className='size-5' />
                           Resend
                         </Button>
                       )}
@@ -321,19 +319,16 @@ function LittleUsage({
             <UsageDonut tokenUsage={loading ? null : { used, quota }} label={detailedLabel} hidden={false} />
             <p className='mt-1 text-xs text-content-secondary'>
               {isPaidPlan
-                ? `BNA AI tokens power code generation. Your team's BNA AI tokens reset to ${displayChefTokenNumber(quota)} on your regular billing cycle. Unused tokens from the previous month are not carried over. Additional BNA AI tokens cost $10 per 1M tokens.`
-                : 'BNA AI tokens power code generation. Tokens reset on the first of each month and tokens from the previous month are not carried over.'}
+                ? `BNA tokens power code generation. Your team's BNA tokens reset to ${displayChefTokenNumber(quota)} on your regular billing cycle. Unused tokens from the previous month are not carried over. Additional BNA tokens cost $10 per 1M tokens.`
+                : 'BNA tokens power code generation. Tokens reset on the first of each month and tokens from the previous month are not carried over.'}
             </p>
             <ul className='mt-2 space-y-2 text-sm text-content-primary'>
               {isPaidPlan ? null : (
                 <li className='mt-2 border-t pt-2'>
-                  <Button
-                    href={`https://dashboard.convex.dev/t/${teamSlug}/settings/billing?source=chef`}
-                    target='_blank'
-                    variant='unstyled'
-                    className='underline hover:text-content-link'
-                  >
-                    Upgrade your plan
+                  <Button asChild variant='link'>
+                    <a href={`https://dashboard.convex.dev/t/${teamSlug}/settings/billing?source=chef`} target='_blank'>
+                      Upgrade your plan
+                    </a>
                   </Button>{' '}
                   to get more tokens.
                 </li>
@@ -345,7 +340,7 @@ function LittleUsage({
                       {referralStats.left === 5
                         ? 'Refer a friend '
                         : `Refer up to ${referralStats.left} more new users `}
-                      to get 85K additional BNA AI tokens per month.
+                      to get 85K additional BNA tokens per month.
                     </p>
                     {referralStats.left > 0 && <Referrals referralCode={referralCode} />}
                   </div>
@@ -354,21 +349,18 @@ function LittleUsage({
               <li className='mt-2 border-t pt-2 text-xs text-content-secondary'>
                 {usingApiKey ? (
                   usagePercentage >= 100 ? (
-                    "You're using an API key so can keep building without using BNA AI tokens."
+                    "You're using an API key so can keep building without using BNA tokens."
                   ) : (
-                    "You have an API key set for the model you're using so you'll be able to keep building after running out of BNA AI tokens."
+                    "You have an API key set for the model you're using so you'll be able to keep building after running out of BNA tokens."
                   )
                 ) : (
                   <>
-                    <Button
-                      href='/settings'
-                      target='_blank'
-                      variant='unstyled'
-                      className='underline hover:text-content-link'
-                    >
-                      Add your own API key
+                    <Button variant='link'>
+                      <a href='/settings' target='_blank'>
+                        Add your own API key
+                      </a>
                     </Button>{' '}
-                    in settings to avoid spending BNA AI tokens.
+                    in settings to avoid spending BNA tokens.
                   </>
                 )}
               </li>
@@ -395,13 +387,9 @@ function Referrals({ referralCode }: { referralCode: string }) {
           value={`https://convex.dev/try-chef/${referralCode}`}
           className='w-full flex-1 rounded-md border bg-bolt-elements-background-depth-2 px-3 py-1.5 text-sm text-content-primary'
         />
-        <Button
-          variant='neutral'
-          size='xs'
-          onClick={() => copyToClipboard(`https://convex.dev/try-chef/${referralCode}`)}
-          tip='Copy link'
-          icon={<Clipboard className='size-4' />}
-        />
+        <Button onClick={() => copyToClipboard(`https://convex.dev/try-chef/${referralCode}`)}>
+          <Clipboard className='size-4' />
+        </Button>
       </div>
     </div>
   );

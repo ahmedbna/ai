@@ -13,7 +13,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
-import { Spinner } from '../ui/spinner';
+import { Spinner } from '@/components/ui/spinner';
 
 type Props = {
   open: boolean;

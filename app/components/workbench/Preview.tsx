@@ -57,8 +57,8 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
 
   const [url, setUrl] = useState<string | undefined>();
   const [iframeUrl, setIframeUrl] = useState<string | undefined>();
-  const [isDeviceModeOn, setIsDeviceModeOn] = useState(false);
-  const [widthPercent, setWidthPercent] = useState<number>(37.5);
+  const [isDeviceModeOn, setIsDeviceModeOn] = useState(true);
+  const [widthPercent, setWidthPercent] = useState<number>(44);
 
   const resizingState = useRef({
     isResizing: false,
@@ -224,7 +224,8 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
       {isPortDropdownOpen && (
         <div className='z-iframe-overlay absolute size-full' onClick={() => setIsPortDropdownOpen(false)} />
       )}
-      <div className='flex items-center gap-2 bg-bolt-elements-background-depth-2 p-2'>
+
+      {/* <div className='flex items-center gap-2 bg-bolt-elements-background-depth-2 p-2'>
         <div className='flex items-center gap-2'>
           <IconButton icon={<UpdateIcon />} onClick={reloadPreview} disabled={isLoading} />
         </div>
@@ -292,13 +293,13 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
 
           {showClose && <IconButton icon={<CrossCircledIcon />} onClick={onClose} title='Close' />}
         </div>
-      </div>
+      </div> */}
 
       <div className='flex flex-1 items-center justify-center overflow-auto border-t'>
         <div
           style={{
             width: isDeviceModeOn ? `${widthPercent}%` : '100%',
-            height: '100%',
+            height: '95%',
             overflow: 'visible',
             background: 'var(--bolt-elements-background-depth-1)',
             position: 'relative',
@@ -323,7 +324,7 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
                   allow='accelerometer; ambient-light-sensor; autoplay; bluetooth; camera; clipboard-write; compute-pressure; display-capture; fullscreen; gamepad; geolocation; gyroscope; hid; identity-credentials-get; idle-detection; local-fonts; magnetometer; microphone; midi; otp-credentials; payment; picture-in-picture; publickey-credentials-create; publickey-credentials-get; screen-wake-lock; serial; speaker-selection; usb; web-share; window-management; xr-spatial-tracking'
                   allowFullScreen={true}
                   loading='lazy'
-                  style={{ opacity: isLoading ? 0 : 1, transition: 'opacity 0.2s' }}
+                  style={{ opacity: isLoading ? 0 : 1, transition: 'opacity 0.2s', borderRadius: 24 }}
                 />
               </>
             ) : (
@@ -339,7 +340,7 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
             </div>
           )}
 
-          {isDeviceModeOn && (
+          {/* {isDeviceModeOn && (
             <>
               <div
                 onMouseDown={(e) => startResizing(e, 'left')}
@@ -389,7 +390,7 @@ export const Preview = memo(function Preview({ showClose, onClose }: { showClose
                 <GripIcon />
               </div>
             </>
-          )}
+          )} */}
         </div>
       </div>
     </div>

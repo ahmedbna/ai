@@ -29,7 +29,7 @@ import { useMutation } from 'convex/react';
 import { api } from '@convex/_generated/api';
 import { subchatIndexStore, useIsSubchatLoaded } from '@/lib/stores/subchats';
 import { Projects } from './Projects';
-import Particles from '../ui/particles';
+import Particles from '@/components/ui/particles';
 
 interface BaseChatProps {
   // Refs
@@ -158,7 +158,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
               {!chatStarted && (
                 <div id='intro' className='mx-auto mb-8 px-4 pt-36 text-center md:mt-16 lg:px-0'>
                   <p className='pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-4xl font-black leading-none text-transparent dark:from-white dark:to-slate-900/10 md:text-6xl'>
-                    BNA AI
+                    BNA
                   </p>
 
                   <span className='pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-3xl font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10'>
@@ -303,7 +303,7 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
               {maintenanceMode && (
                 <div className='mx-auto my-4 max-w-chat'>
                   <div className='relative rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700 dark:border-red-600 dark:bg-red-900 dark:text-red-200'>
-                    <p className='font-bold'>BNA AI is temporarily unavailable</p>
+                    <p className='font-bold'>BNA is temporarily unavailable</p>
                     <p className='text-sm'>
                       We&apos;re experiencing high load and will be back soon. Thank you for your patience.
                     </p>

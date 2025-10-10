@@ -67,9 +67,9 @@ export function ApiKeyCard() {
       <div className='p-6'>
         <h2 className='mb-2 text-xl font-semibold text-content-primary'>API Keys</h2>
 
-        <p className='max-w-prose text-sm text-content-secondary'>Add your own API keys to use with BNA AI.</p>
+        <p className='max-w-prose text-sm text-content-secondary'>Add your own API keys to use with BNA.</p>
         {/* <p className='mb-4 max-w-prose text-sm text-content-secondary'>
-          By default, BNA AI will use tokens built into your Convex plan.
+          By default, BNA will use tokens built into your Convex plan.
         </p> */}
         <div className='mt-6 space-y-4'>
           {/* <AlwaysUseKeyCheckbox

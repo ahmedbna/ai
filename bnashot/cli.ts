@@ -42,7 +42,7 @@ interface GenerateOptions {
 }
 
 const generateCommand = new Command('generate')
-  .description('Generate an Expo React Native app using BNA AI')
+  .description('Generate an Expo React Native app using BNA')
   .argument('<prompt>', 'The prompt to send to BNA (will generate an Expo app)')
   // URL group - mutually exclusive options
   .addOption(
@@ -166,7 +166,7 @@ interface DownloadOptions {
 }
 
 const downloadCommand = new Command('download')
-  .description('Download an app using BNA AI')
+  .description('Download an app using BNA')
   .argument('chatUuid', 'The UUID of the chat to download')
   // URL group - mutually exclusive options
   .addOption(
@@ -245,6 +245,6 @@ const downloadCommand = new Command('download')
 
 const program = new Command();
 
-program.name('bnashot').description('BNA AI CLI').addCommand(generateCommand).addCommand(downloadCommand);
+program.name('bnashot').description('BNA CLI').addCommand(generateCommand).addCommand(downloadCommand);
 
 program.parse();

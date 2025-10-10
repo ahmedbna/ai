@@ -38,7 +38,7 @@ import { useAuth } from '@workos-inc/authkit-react';
 import { useConvex } from 'convex/react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { ArrowUp, Pause, Square } from 'lucide-react';
+import { ArrowUp, Home, Pause, Square } from 'lucide-react';
 import { Spinner } from '@/components/ui/spinner';
 
 const PROMPT_LENGTH_WARNING_THRESHOLD = 2000;
@@ -51,13 +51,13 @@ type Highlight = {
 const HIGHLIGHTS: Highlight[] = [
   {
     text: 'ai chat',
-    tooltip: 'Unless otherwise configured, BNA AI will prototype with GPT‑4o mini or GPT‑4.1 nano (limits apply).',
+    tooltip: 'Unless otherwise configured, BNA will prototype with GPT‑4o mini or GPT‑4.1 nano (limits apply).',
   },
   {
     text: 'collaborative text editor',
     tooltip: (
       <>
-        BNA AI will use the{' '}
+        BNA will use the{' '}
         <TooltipLink href='https://www.convex.dev/components/prosemirror-sync'>Collaborative Text Editor</TooltipLink>{' '}
         Convex <TooltipLink href='https://www.convex.dev/components'>component</TooltipLink>.
       </>
@@ -67,7 +67,7 @@ const HIGHLIGHTS: Highlight[] = [
     text: 'upload',
     tooltip: (
       <>
-        BNA AI will use Convex’s built-in{' '}
+        BNA will use Convex’s built-in{' '}
         <TooltipLink href='https://docs.convex.dev/file-storage'>file upload capabilities</TooltipLink>.
       </>
     ),
@@ -76,7 +76,7 @@ const HIGHLIGHTS: Highlight[] = [
     text: 'full text search',
     tooltip: (
       <>
-        BNA AI will use Convex’s built-in{' '}
+        BNA will use Convex’s built-in{' '}
         <TooltipLink href='https://docs.convex.dev/search/text-search'>full text search</TooltipLink> capabilities.
       </>
     ),
@@ -85,7 +85,7 @@ const HIGHLIGHTS: Highlight[] = [
     text: 'presence',
     tooltip: (
       <>
-        BNA AI will use the <TooltipLink href='https://www.convex.dev/components/presence'>Presence</TooltipLink>{' '}
+        BNA will use the <TooltipLink href='https://www.convex.dev/components/presence'>Presence</TooltipLink>{' '}
         Convex&nbsp;<TooltipLink href='https://www.convex.dev/components'>component</TooltipLink>.
       </>
     ),
@@ -273,12 +273,20 @@ export const MessageInput = memo(function MessageInput({
                 ? numMessages !== undefined && numMessages > 0
                   ? 'Request changes by sending another message…'
                   : 'Send a prompt for a new feature…'
-                : `What's your idea?`
+                : `Build Different.`
             }
             disabled={disabled}
             highlights={HIGHLIGHTS}
           />
           <div className='flex flex-wrap items-center gap-2 p-2 text-sm'>
+            {chatStarted && (
+              <Button asChild size='icon' variant='outline' className='h-8 w-8'>
+                <a href='/'>
+                  <Home />
+                </a>
+              </Button>
+            )}
+
             {chefAuthState.kind === 'fullyLoggedIn' && (
               <ModelSelector modelSelection={modelSelection} setModelSelection={setModelSelection} size='sm' />
             )}
@@ -605,7 +613,7 @@ const NewLineShortcut = memo(function NewLineShortcut() {
 const CharacterWarning = memo(function CharacterWarning() {
   return (
     <Tooltip
-      tip='BNA AI performs better with shorter prompts. Consider making your prompt more concise or breaking it into smaller chunks.'
+      tip='BNA performs better with shorter prompts. Consider making your prompt more concise or breaking it into smaller chunks.'
       side='bottom'
     >
       <div className='flex cursor-help items-center text-xs text-content-warning'>

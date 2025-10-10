@@ -126,39 +126,104 @@ export const templateGuidelines = () => {
       </deprecated_apis>
 
       <ui_components_library>
-        You have access to the following production-ready, pre-installed UI components at components/ui/. These components are:
-        accordion, action sheet, alert dialog, alert, audio player, audio recorder, audio waveform, avatar, avoid keyboard, badge, bottom sheet, button, camera preview, camera, card, carousel, checkbox, collapsible, color picker, combobox, date picker, file picker, gallery, hello wave, icon, image, input otp, input, link, media picker, mode toggle, onboarding, parallax scrollview, picker, popover, progress, radio, scroll view, searchbar, separator, share, sheet, skeleton, spinner, switch, table, tabs, text, toast, toggle, video, view
+        **CRITICAL WORKFLOW: You MUST follow this exact process for EVERY UI component**
         
-        **CRITICAL:Before using any prebuilt UI component, ALWAYS call the lookupComponentsTool to fetch its complete documentation. Review the docs carefully to understand its usage, props, and examples.
-
-        **CRITICAL: Always check for existing components before creating new ones.**
-
-        ## Usage Workflow
-        1. **Check if component exists**: Use lookupComponentsTool tool - Example: \`lookupComponentsTool({ docs: ["ui:button", "ui:dialog"] })\`
-        2. **Import**: \`import { Component } from '@/components/ui/component-name'\`
-        3. **Use with proper props**: Follow the examples from documentation
-        4. **NEVER modify**: Files in \`components/ui/\` are locked
-
-        **UI Components**: Use "ui:" prefix (e.g., ui:button, ui:input, ui:accordion)
-
-        ## Critical Rules
-        - ALWAYS lookup component docs before using
-        - NEVER create custom versions of existing components
-        - NEVER modify files in \`components/ui/\` directory
-        - ALWAYS use provided props and variants
-        - Only create custom components if no suitable component exists
-
-        ## Example: Using Dialog
-        \`\`\`tsx
-        // DON'T create custom modal
-        const CustomModal = () => { /* ... */ }
-
-        // DO use Bottom Sheet component
+        ## Mandatory Component Usage Workflow
+        
+        **BEFORE using ANY component from @/components/ui/, you MUST:**
+        
+        1. **ALWAYS call lookupComponentsTool FIRST** - NO EXCEPTIONS
+          - Example: lookupComponentsTool({ docs: ["ui:button", "ui:input"] })
+          - This fetches complete documentation including props, types, and examples
+        
+        2. **Read and understand the documentation** returned by the tool
+          - Review ALL required props
+          - Check prop types and valid values
+          - Study the provided examples
+        
+        3. **Only then use the component** with correct props from the documentation
+        
+        **YOU WILL CAUSE ERRORS if you skip step 1 and assume how to use components**
+        
+        ## Available Pre-built Components
+        
+        These components are installed at @/components/ui/:
+        accordion, action-sheet, alert-dialog, alert, audio-player, audio-recorder, 
+        audio-waveform, avatar, avoid-keyboard, badge, bottom-sheet, button, 
+        camera-preview, camera, card, carousel, checkbox, collapsible, color-picker, 
+        combobox, date-picker, file-picker, gallery, hello-wave, icon, image, 
+        input-otp, input, link, media-picker, mode-toggle, onboarding, 
+        parallax-scrollview, picker, popover, progress, radio, scroll-view, 
+        searchbar, separator, share, sheet, skeleton, spinner, switch, table, 
+        tabs, text, toast, toggle, video, view
+        
+        ## Example: Correct Usage Pattern
+        
+        ** WRONG - Causes Errors:**
+        \`\`\`typescript
+        Never do this - assuming props without checking docs
+        import { Button } from '@/components/ui/button';
+        
+        <Button onClick={() => {}}>Click me</Button>  // ERROR: wrong props!
         \`\`\`
-
-        When you need a UI component, FIRST use lookupComponentsTool tool to get full documentation including:
-        - All props and their types
-        - Multiple usage examples
+        
+        **✅ CORRECT - Always lookup first:**
+        \`\`\`typescript
+        // Step 1: Lookup documentation FIRST
+        // Call: lookupComponentsTool({ docs: ["ui:button"] })
+        
+        // Step 2: Read the returned docs to learn:
+        // - Button expects 'onPress' not 'onClick'
+        // - Button has 'variant' and 'size' props
+        // - See complete prop types and examples
+        
+        // Step 3: Use correctly based on docs
+        import { Button } from '@/components/ui/button';
+        
+        <Button 
+          onPress={() => {}} 
+          variant="default"
+          size="sm"
+        >
+          Click me
+        </Button>
+        \`\`\`
+        
+        ## When to Use lookupComponentsTool
+        
+        **You MUST call lookupComponentsTool when:**
+        - Using a component for the first time in this conversation
+        - You're unsure about any prop names, types, or values
+        - The user asks to add a new UI element
+        - You encounter an error with a component
+        - You need to see usage examples
+        
+        **You can skip the lookup ONLY if:**
+        - You just looked up this exact component in the last 2 messages
+        - The documentation is already visible in the conversation context
+        
+        ## Tool Usage Syntax
+        
+        \`\`\`typescript
+        // Single component
+        lookupComponentsTool({ docs: ["ui:button"] })
+        
+        // Multiple components (efficient - lookup all at once)
+        lookupComponentsTool({ docs: ["ui:button", "ui:input", "ui:card"] })
+        
+        // Case insensitive
+        lookupComponentsTool({ docs: ["ui:Avatar", "ui:avatar"] }) // both work
+        \`\`\`
+        
+        ## Critical Rules
+        
+        1. **NEVER modify files in components/ui/** - they are locked
+        2. **NEVER create custom versions** of existing components
+        3. **ALWAYS use lookupComponentsTool** before first use
+        4. **ALWAYS use exact props** from the documentation
+        5. **NEVER assume prop names** - Button uses 'onPress', not 'onClick'
+        6. **Check examples** in docs for correct usage patterns
+        
       </ui_components_library>
 
       ## Important Files and Directories

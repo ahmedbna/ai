@@ -26,7 +26,7 @@ import type { TerminalInitializationOptions } from '@/types/terminal';
 import { getAbsolutePath } from 'bna-agent/utils/workDir';
 import { PlusIcon, Cross2Icon, DownloadIcon } from '@radix-ui/react-icons';
 import { CommandLineIcon } from '@heroicons/react/24/outline';
-import { Button } from '@ui/Button';
+import { Button } from '@/components/ui/button';
 
 interface WorkspaceProps {
   chatStarted?: boolean;
@@ -203,23 +203,26 @@ export const Workbench = memo(function Workbench({
                   {selectedView === 'code' && (
                     <div className='flex overflow-y-auto'>
                       <BackupStatusIndicator />
+
                       <div className='w-4' />
-                      <PanelHeaderButton
-                        className='mr-1 text-sm'
+
+                      <Button
+                        size='sm'
+                        variant={workbenchStore.showTerminal.get() ? 'secondary' : 'ghost'}
                         onClick={() => {
                           workbenchStore.toggleTerminal(!workbenchStore.showTerminal.get());
                         }}
                       >
                         <CommandLineIcon className='size-4' />
                         Toggle Terminal
-                      </PanelHeaderButton>
+                      </Button>
                     </div>
                   )}
 
-                  <PanelHeaderButton className='mr-1 text-sm' onClick={handleDownload}>
+                  <Button size='sm' variant='secondary' onClick={handleDownload} className='ml-1'>
                     <DownloadIcon />
                     Download Code
-                  </PanelHeaderButton>
+                  </Button>
 
                   {/* {selectedView === 'preview' && (
                     <PanelHeaderButton
@@ -233,11 +236,11 @@ export const Workbench = memo(function Workbench({
                     </PanelHeaderButton>
                   )} */}
 
-                  <Button variant='neutral'>
+                  {/* <Button variant='neutral'>
                     <a href='/'>
                       <Cross2Icon />
                     </a>
-                  </Button>
+                  </Button> */}
                   {/* <IconButton
                     icon={<Cross2Icon />}
                     className="-mr-1"

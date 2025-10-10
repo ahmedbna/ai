@@ -13,8 +13,8 @@ import { ApiKeyCard } from './settings/ApiKeyCard';
 import { Spinner } from '@ui/Spinner';
 import { useAuth } from '@workos-inc/authkit-react';
 import { Loading } from './Loading';
-import Particles from './ui/particles';
-import { Button } from './ui/button';
+import Particles from '@/components/ui/particles';
+import { Button } from '@/components/ui/button';
 
 export function Homepage() {
   // Set up a temporary chat ID early in app initialization. We'll
@@ -49,7 +49,7 @@ const ChatWrapper = ({ initialId }: { initialId: string }) => {
         <div className='absolute inset-0 z-10 flex flex-col items-center  gap-4'>
           <div className='mx-auto mb-4 px-4 pt-36 text-center md:mt-16 lg:px-0'>
             <p className='pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-4xl font-black leading-none text-transparent dark:from-white dark:to-slate-900/10 md:text-6xl'>
-              BNA AI
+              BNA
             </p>
 
             <span className='pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-3xl font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10'>

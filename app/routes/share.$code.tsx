@@ -9,16 +9,16 @@ import type { Preloaded } from 'convex/react';
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data?.shareQuery) {
-    return [{ title: 'Not Found | BNA AI' }];
+    return [{ title: 'Not Found | BNA' }];
   }
 
   const share = preloadedQueryResult(data.shareQuery as Preloaded<typeof api.socialShare.getSocialShare>);
 
   const { description, thumbnailUrl, author } = share;
   const authorText = author ? `by ${author.username}` : '';
-  const title = description ? `${description} ${authorText} | BNA AI` : `Shared Project ${authorText} | BNA AI`;
+  const title = description ? `${description} ${authorText} | BNA` : `Shared Project ${authorText} | BNA`;
   const ogTitle = description || 'Shared Project';
-  const ogDesc = `Cooked with BNA AI ${authorText}`;
+  const ogDesc = `Cooked with BNA ${authorText}`;
 
   return [
     { title },
@@ -26,7 +26,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     { property: 'og:title', content: ogTitle },
     { property: 'og:description', content: ogDesc },
     { property: 'og:type', content: 'website' },
-    { property: 'og:site_name', content: 'BNA AI' },
+    { property: 'og:site_name', content: 'BNA' },
     {
       property: 'og:image',
       content: thumbnailUrl || 'https://chef.convex.dev/social_preview_share.png',

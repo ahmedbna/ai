@@ -224,7 +224,7 @@ export function ShareButton() {
                         {referralStats?.left !== 0 && (
                           <div className='space-y-1'>
                             <p className='text-xs text-content-secondary group-hover:text-content-secondary/80'>
-                              Links on this page include your referral code: signups will grant you 85,000 free BNA AI
+                              Links on this page include your referral code: signups will grant you 85,000 free BNA
                               tokens each
                               {referralStats?.left === 5 || !referralStats
                                 ? ' (limit 5)'

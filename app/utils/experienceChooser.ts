@@ -1,7 +1,7 @@
 import { UAParser } from 'ua-parser-js';
 
 /**
- * The full BNA AI experience doesn't work in Safari.
+ * The full BNA experience doesn't work in Safari.
  * The biggest limitation is the preview iframe: if this popped out, it seems like Safari
  * could be supported.
  * - https://webcontainers.io/guides/browser-support#web-platform-requirements

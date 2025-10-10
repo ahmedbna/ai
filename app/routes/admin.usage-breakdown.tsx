@@ -10,7 +10,7 @@ import { UsageBreakdownView } from '@/components/debug/UsageBreakdownView';
 import { getConvexSiteUrl } from '@/lib/convexSiteUrl';
 
 export const meta: MetaFunction = () => {
-  return [{ title: 'Prompt Debug | BNA AI Admin' }];
+  return [{ title: 'Prompt Debug | BNA Admin' }];
 };
 
 export default function PromptDebug() {

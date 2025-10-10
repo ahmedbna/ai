@@ -561,13 +561,13 @@ export const Chat = memo(
           );
         }
         toast.error(message);
-        captureMessage('User tried to send message but BNA AI is too busy');
+        captureMessage('User tried to send message but BNA is too busy');
         return;
       }
 
       // Continue with rate limiting logic if needed
       if (retries.numFailures >= MAX_RETRIES || now < retries.nextRetry) {
-        let message: string | ReactNode = 'BNA AI is too busy cooking right now. ';
+        let message: string | ReactNode = 'BNA is too busy cooking right now. ';
         if (retries.numFailures >= MAX_RETRIES) {
           message = (
             <>
@@ -585,7 +585,7 @@ export const Chat = memo(
           );
         }
         toast.error(message);
-        captureMessage('User tried to send message but BNA AI is too busy');
+        captureMessage('User tried to send message but BNA is too busy');
         return;
       }
 

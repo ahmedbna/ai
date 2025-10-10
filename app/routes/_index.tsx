@@ -7,7 +7,7 @@ import { Homepage } from '@/components/Homepage.client';
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'BNA AI' },
+    { title: 'BNA' },
     { name: 'description', content: 'Idea to fullstack mobile apps in secondes with AI' },
     {
       property: 'og:image',

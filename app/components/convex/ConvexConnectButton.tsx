@@ -40,7 +40,7 @@ export function ConvexConnectButton() {
 
   return (
     <div className='flex flex-col gap-2'>
-      <p className='mb-2 text-sm text-content-secondary'>Select a Convex team to connect your BNA AI app to.</p>
+      <p className='mb-2 text-sm text-content-secondary'>Select a Convex team to connect your BNA app to.</p>
       <div className='flex items-center gap-2'>
         <TeamSelector
           selectedTeamSlug={selectedTeamSlug}
