@@ -373,26 +373,19 @@ export const MessageInput = memo(function MessageInput({
                   (!isStreaming && input.length === 0) ||
                   !selectedTeamSlug ||
                   chefAuthState.kind === 'loading' ||
-                  sendMessageInProgress ||
                   disabled
                 }
-                // tip={
-                //   chefAuthState.kind === 'unauthenticated'
-                //     ? 'Please sign in to continue'
-                //     : !selectedTeamSlug
-                //       ? 'Please select a team to continue'
-                //       : undefined
-                // }
                 onClick={handleClickButton}
                 className='mr-1 flex size-8 items-center justify-center rounded-full p-0'
                 aria-label={isStreaming ? 'Stop' : 'Send'}
               >
-                {sendMessageInProgress ? (
+                {/* Only show spinner briefly when initiating send */}
+                {sendMessageInProgress && !isStreaming ? (
                   <Spinner />
-                ) : !isStreaming ? (
-                  <ArrowUp className='size-6' />
+                ) : isStreaming ? (
+                  <Square fill='currentColor' className='size-4' />
                 ) : (
-                  <Square fill='#000' className='size-0.5' />
+                  <ArrowUp className='size-6' />
                 )}
               </Button>
             </div>

@@ -194,6 +194,16 @@ function toolsInstructions(options: SystemPromptOptions) {
       lookup documentation for a component before using the \`npmInstall\` tool to install dependencies.
     </lookupDocs_tool>
 
+    <lookupComponents_tool>
+      You can look up detailed documentation for prebuilt UI components using the \`lookupComponents\` tool.
+      ALWAYS use this tool before creating any new UI component from scratch or assuming how a component works.
+      This ensures your implementation follows the correct API, props, and usage patterns defined in the component registry.
+
+      - Use the format \`ui:componentname\` (case-insensitive), e.g. \`ui:Button\`, \`ui:avatar\`, \`ui:Card\`.
+      - If the documentation for a requested component is missing, the tool will list all available components.
+      - ALWAYS check component docs first to save tokens, avoid duplicate code, and ensure UI consistency.
+    </lookupComponents_tool>
+
     <addEnvironmentVariables_tool>
       You can prompt the user to add environment variables to their Convex deployment using the \`addEnvironmentVariables\`
       tool, which will open the dashboard to the "Environment Variables" tab with the environment variable names prepopulated.

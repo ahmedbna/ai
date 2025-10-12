@@ -3,6 +3,7 @@ import { stripIndents } from '../utils/stripIndent.js';
 
 export const templateGuidelines = () => {
   return stripIndents`
+   <solution_constraints>
     <template_info>
     
       ## Template Configuration
@@ -18,7 +19,573 @@ export const templateGuidelines = () => {
 
       Before using any prebuilt UI component, ALWAYS call the lookupComponentsTool to fetch its complete documentation. Review the docs carefully to understand its usage, props, and examples.
       
-      ${generateDirectoryStructure()}
+      # Expo Router File-Based Routing Guide
+
+      ## Getting Started
+
+      This is the provided Expo React Native template to start with. It includes:
+      - **Expo Router** for file-based navigation
+      - **TypeScript** for type safety
+      - **Pre-built UI components** with theming support
+      - **Authentication setup** with Convex
+      - **Dark/Light mode** theme system
+      - **Cross-platform support** (iOS, Android, Web)
+
+      The template uses file-based routing similar to Next.js. Files in the \`app/\` directory automatically become routes.
+
+      ## Directory Structure
+
+      \`\`\`
+      ${WORK_DIR}
+      ├── app
+      │   ├── _layout.tsx
+      │   ├── (tabs)
+      │   │   ├── _layout.tsx
+      │   │   ├── _layout.web.tsx
+      │   │   ├── index.tsx
+      │   │   └── settings.tsx
+      │   └── +not-found.tsx
+      ├── app.json
+      ├── assets
+      │   └── images
+      │       ├── icon.png
+      │       └── splash.png
+      ├── components
+      │   ├── auth
+      │   │   ├── apple.tsx
+      │   │   ├── auth.tsx
+      │   │   ├── email-otp.tsx
+      │   │   ├── google.tsx
+      │   │   ├── password.tsx
+      │   │   └── singout.tsx
+      │   └── ui
+      │       ├── accordion.tsx
+      │       ├── action-sheet.tsx
+      │       ├── alert-dialog.tsx
+      │       ├── alert.tsx
+      │       ├── audio-player.tsx
+      │       ├── audio-recorder.tsx
+      │       ├── audio-waveform.tsx
+      │       ├── avatar.tsx
+      │       ├── avoid-keyboard.tsx
+      │       ├── badge.tsx
+      │       ├── bottom-sheet.tsx
+      │       ├── button.tsx
+      │       ├── camera-preview.tsx
+      │       ├── camera.tsx
+      │       ├── card.tsx
+      │       ├── carousel.tsx
+      │       ├── checkbox.tsx
+      │       ├── collapsible.tsx
+      │       ├── color-picker.tsx
+      │       ├── combobox.tsx
+      │       ├── date-picker.tsx
+      │       ├── file-picker.tsx
+      │       ├── gallery.tsx
+      │       ├── hello-wave.tsx
+      │       ├── icon.tsx
+      │       ├── image.tsx
+      │       ├── input-otp.tsx
+      │       ├── input.tsx
+      │       ├── link.tsx
+      │       ├── media-picker.tsx
+      │       ├── mode-toggle.tsx
+      │       ├── onboarding.tsx
+      │       ├── parallax-scrollview.tsx
+      │       ├── picker.tsx
+      │       ├── popover.tsx
+      │       ├── progress.tsx
+      │       ├── radio.tsx
+      │       ├── scroll-view.tsx
+      │       ├── searchbar.tsx
+      │       ├── separator.tsx
+      │       ├── share.tsx
+      │       ├── sheet.tsx
+      │       ├── skeleton.tsx
+      │       ├── spinner.tsx
+      │       ├── switch.tsx
+      │       ├── table.tsx
+      │       ├── tabs.tsx
+      │       ├── text.tsx
+      │       ├── toast.tsx
+      │       ├── toggle.tsx
+      │       ├── video.tsx
+      │       └── view.tsx
+      ├── convex
+      │   ├── _generated
+      │   │   ├── api.d.ts
+      │   │   ├── api.js
+      │   │   ├── dataModel.d.ts
+      │   │   ├── server.d.ts
+      │   │   └── server.js
+      │   ├── auth.config.ts
+      │   ├── auth.ts
+      │   ├── http.ts
+      │   ├── passwordReset.ts
+      │   ├── resendOTP.ts
+      │   ├── resendPasswordOTP.ts
+      │   ├── router.ts
+      │   ├── schema.ts
+      │   ├── tsconfig.json
+      │   └── users.ts
+      ├── eslint.config.js
+      ├── expo-env.d.ts
+      ├── hooks
+      │   ├── useBottomTabOverflow.ts
+      │   ├── useColor.ts
+      │   ├── useColorScheme.ts
+      │   ├── useColorScheme.web.ts
+      │   ├── useKeyboardHeight.ts
+      │   └── useModeToggle.tsx
+      ├── package.json
+      ├── theme
+      │   ├── colors.ts              # Theme colors configuration
+      │   ├── globals.ts
+      │   └── theme-provider.tsx
+      └── tsconfig.json
+      \`\`\`
+
+      ## Important Rules
+
+      1. **All screens MUST be in \`app/(tabs)/\` directory**
+      2. **Use parentheses for groups**: \`(tabs)\`, \`(auth)\` - these don't show in URL
+      3. **Use square brackets for dynamic routes**: \`[id].tsx\`, \`[...slug].tsx\`
+      4. **_layout.tsx files define nested layouts**
+      5. **index.tsx is the default route for that directory**
+      6. **Use expo-router hooks**: \`useLocalSearchParams()\`, \`useRouter()\`
+      7. **Never create routes outside app/ directory**
+      8. **You MUST update BOTH \`_layout.tsx\` AND \`_layout.web.tsx\` files when adding tabs**
+      9. **Max number of Tabs is five no more**
+      10. **ALWAYS use useColor hook for colors - NEVER hardcode color values**
+      11. **Every new screen MUST set background color using useColor('background')**
+
+      ---
+
+      # Adding New Tabs to Expo React Native App
+
+      ## Step-by-Step Process
+
+      ### Step 1: Create the Screen Component
+      Create a new file in \`app/(tabs)/[screen-name].tsx\`:
+
+      \`\`\`typescript
+      // app/(tabs)/profile.tsx
+      import React from 'react';
+      import { View } from '@/components/ui/view';
+      import { Text } from '@/components/ui/text';
+      import { useColor } from '@/hooks/useColor';
+
+      export default function ProfileScreen() {
+        const background = useColor('background');
+        const foreground = useColor('foreground');
+        
+        return (
+          <View style={{ flex: 1, backgroundColor: background }}>
+            <Text style={{ color: foreground }}>Profile Screen</Text>
+          </View>
+        );
+      }
+      \`\`\`
+
+      ### Step 2: Update Web Layout (\`_layout.web.tsx\`)
+
+      Add the new tab to the web layout:
+
+      \`\`\`typescriptreact
+      // app/(tabs)/_layout.web.tsx
+
+      import React from 'react';
+      import { Tabs } from 'expo-router';
+      import { Home, Settings, User } from 'lucide-react-native'; // Import icon
+      import { Icon } from '@/components/ui/icon';
+      import { useColor } from '@/hooks/useColor';
+
+      export default function WebTabsLayout() {
+        const primary = useColor('primary');
+
+        return (
+          <Tabs
+            screenOptions={{
+              headerShown: false,
+              tabBarActiveTintColor: primary,
+            }}
+          >
+            <Tabs.Screen
+              name='index'
+              options={{
+                title: 'Home',
+                tabBarIcon: ({ color }) => (
+                  <Icon name={Home} size={24} color={color} />
+                ),
+              }}
+            />
+
+            <Tabs.Screen
+              name='settings'
+              options={{
+                title: 'Settings',
+                tabBarIcon: ({ color }) => (
+                  <Icon name={Settings} size={24} color={color} />
+                ),
+              }}
+            />
+
+            {/* NEW TAB - Add here */}
+            <Tabs.Screen
+              name='profile'
+              options={{
+                title: 'Profile',
+                tabBarIcon: ({ color }) => (
+                  <Icon name={User} size={24} color={color} />
+                ),
+              }}
+            />
+          </Tabs>
+        );
+      }
+      \`\`\`
+
+      ### Step 3: Update Native Layout (\`_layout.tsx\`)
+
+      Add the new tab to the native layout:
+
+      \`\`\`typescriptreact
+      // app/(tabs)/_layout.tsx
+
+      import { Platform } from 'react-native';
+      import {
+        Badge,
+        Icon,
+        Label,
+        NativeTabs,
+        VectorIcon,
+      } from 'expo-router/unstable-native-tabs';
+      import MaterialIcons from '@expo/vector-icons/Feather';
+
+      export default function TabsLayout() {
+        return (
+          <NativeTabs>
+            <NativeTabs.Trigger name='index'>
+              <Label>Home</Label>
+              {Platform.select({
+                ios: <Icon sf='house.fill' />,
+                android: (
+                  <Icon src={<VectorIcon family={MaterialIcons} name='home' />} />
+                ),
+              })}
+            </NativeTabs.Trigger>
+
+            <NativeTabs.Trigger name='settings' options={{ title: 'Settings' }}>
+              <Label>Settings</Label>
+              {Platform.select({
+                ios: <Icon sf='gear' />,
+                android: (
+                  <Icon src={<VectorIcon family={MaterialIcons} name='settings' />} />
+                ),
+              })}
+              <Badge>!</Badge>
+            </NativeTabs.Trigger>
+
+            {/* NEW TAB - Add here */}
+            <NativeTabs.Trigger name='profile' options={{ title: 'Profile' }}>
+              <Label>Profile</Label>
+              {Platform.select({
+                ios: <Icon sf='person.fill' />,
+                android: (
+                  <Icon src={<VectorIcon family={MaterialIcons} name='user' />} />
+                ),
+              })}
+            </NativeTabs.Trigger>
+          </NativeTabs>
+        );
+      }
+      \`\`\`
+
+      ## Key Points to Remember
+
+      ### Web Layout (\`_layout.web.tsx\`)
+      - Uses \`Tabs\` from \`expo-router\`
+      - Uses \`Tabs.Screen\` with \`name\` matching the filename
+      - Icons come from \`lucide-react-native\`
+      - Icons are passed through custom \`Icon\` component
+      - \`name\` property must match the filename (without \`.tsx\`)
+
+      ### Native Layout (\`_layout.tsx\`)
+      - Uses \`NativeTabs\` from \`expo-router/unstable-native-tabs\`
+      - Uses \`NativeTabs.Trigger\` with \`name\` matching the filename
+      - Requires platform-specific icons:
+        - iOS: SF Symbols via \`sf\` prop
+        - Android: Feather icons via \`VectorIcon\`
+      - Optional \`Badge\` component for notifications
+      - \`name\` property must match the filename (without \`.tsx\`)
+
+      ## Icon Reference
+
+      ### Web Icons (lucide-react-native)
+      Common icons: \`Home\`, \`Settings\`, \`User\`, \`Search\`, \`Bell\`, \`Calendar\`, \`Mail\`, \`Heart\`, \`Shield\`, \`Package\`, \`ShoppingCart\`, \`Camera\`, \`Image\`, \`File\`, \`Folder\`
+
+      ### Native Icons
+
+      **iOS (SF Symbols)**: 
+      - \`house.fill\`, \`gear\`, \`person.fill\`, \`magnifyingglass\`, \`bell.fill\`
+      - \`calendar\`, \`envelope.fill\`, \`heart.fill\`, \`shield.fill\`, \`shippingbox.fill\`
+      - \`cart.fill\`, \`camera.fill\`, \`photo.fill\`, \`doc.fill\`, \`folder.fill\`
+
+      **Android (Feather)**: 
+      - \`home\`, \`settings\`, \`user\`, \`search\`, \`bell\`
+      - \`calendar\`, \`mail\`, \`heart\`, \`shield\`, \`package\`
+      - \`shopping-cart\`, \`camera\`, \`image\`, \`file\`, \`folder\`
+
+      ## Complete Example: Adding a "Search" Tab
+
+      \`\`\`typescript
+      // 1. Create app/(tabs)/search.tsx
+      import React from 'react';
+      import { View } from '@/components/ui/view';
+      import { Text } from '@/components/ui/text';
+      import { useColor } from '@/hooks/useColor';
+
+      export default function SearchScreen() {
+        const background = useColor('background');
+        const foreground = useColor('foreground');
+        
+        return (
+          <View style={{ flex: 1, backgroundColor: background }}>
+            <Text style={{ color: foreground }}>Search Screen</Text>
+          </View>
+        );
+      }
+      \`\`\`
+
+      \`\`\`typescript
+      // 2. Update _layout.web.tsx
+      import { Search } from 'lucide-react-native'; // Add to imports
+
+      // ... add inside <Tabs>:
+      <Tabs.Screen
+        name='search'
+        options={{
+          title: 'Search',
+          tabBarIcon: ({ color }) => (
+            <Icon name={Search} size={24} color={color} />
+          ),
+        }}
+      />
+      \`\`\`
+
+      \`\`\`typescript
+      // 3. Update _layout.tsx
+      // ... add inside <NativeTabs>:
+      <NativeTabs.Trigger name='search' options={{ title: 'Search' }}>
+        <Label>Search</Label>
+        {Platform.select({
+          ios: <Icon sf='magnifyingglass' />,
+          android: (
+            <Icon src={<VectorIcon family={MaterialIcons} name='search' />} />
+          ),
+        })}
+      </NativeTabs.Trigger>
+      \`\`\`
+
+      # Customizing App Theme Colors
+
+      ## Theme System Overview
+
+      The template includes a comprehensive theming system located in \`theme/colors.ts\`. The theme supports both light and dark modes with semantic color tokens.
+
+      ## Modifying Theme Colors
+
+      ### Step 1: Edit \`theme/colors.ts\`
+
+      The color configuration is split into two schemes: \`lightColors\` and \`darkColors\`.
+
+      \`\`\`typescript
+      // theme/colors.ts
+
+      const lightColors = {
+        // Base colors - Background and text
+        background: '#FFFFFF',      // Main background
+        foreground: '#000000',      // Main text color
+
+        // Primary brand colors - Used for main actions, selected states
+        primary: '#18181b',         // Primary buttons, active tabs
+        primaryForeground: '#FFFFFF', // Text on primary elements
+
+        // Secondary colors - Used for secondary UI elements
+        secondary: '#F2F2F7',
+        secondaryForeground: '#18181b',
+
+        // Accent colors - Used for highlights and emphasis
+        accent: '#F2F2F7',
+        accentForeground: '#18181b',
+
+        // Card colors - Used for card components
+        card: '#F2F2F7',
+        cardForeground: '#000000',
+
+        // Muted colors - Used for disabled states and subtle elements
+        muted: '#78788033',
+        mutedForeground: '#71717a',
+
+        // Destructive colors - Used for delete/error actions
+        destructive: '#ef4444',
+        destructiveForeground: '#FFFFFF',
+
+        // Border colors
+        border: '#C6C6C8',
+        input: '#e4e4e7',
+        ring: '#a1a1aa',
+
+        // accent colors
+        blue: '#007AFF',
+        green: '#34C759',
+        red: '#FF3B30',
+        orange: '#FF9500',
+        yellow: '#FFCC00',
+        pink: '#FF2D92',
+        purple: '#AF52DE',
+        teal: '#5AC8FA',
+        indigo: '#5856D6',
+      };
+
+      const darkColors = {
+        // Same structure but with dark mode values
+        background: '#000000',
+        foreground: '#FFFFFF',
+        primary: '#e4e4e7',
+        primaryForeground: '#18181b',
+        // ... etc
+      };
+      \`\`\`
+
+      ### Step 2: Using Theme Colors in Components
+
+      **CRITICAL: ALWAYS use the useColor hook - NEVER hardcode colors**
+
+      \`\`\`typescript
+      import { useColor } from '@/hooks/useColor';
+      import { View } from '@/components/ui/view';
+      import { Text } from '@/components/ui/text';
+
+      export function MyComponent() {
+        const background = useColor('background');
+        const primary = useColor('primary');
+        const border = useColor('border');
+        const foreground = useColor('foreground');
+        
+        return (
+          <View style={{ 
+            flex: 1,
+            backgroundColor: background,
+            borderColor: border,
+            borderWidth: 1 
+          }}>
+            <Text style={{ color: foreground }}>Themed text</Text>
+            <Text style={{ color: primary }}>Primary colored text</Text>
+          </View>
+        );
+      }
+      \`\`\`
+
+      ### Step 3: Adding Custom Colors
+
+      If you need additional colors:
+
+      \`\`\`typescript
+      // 1. Add to theme/colors.ts
+      const lightColors = {
+        // ... existing colors
+        customBrand: '#FF6B6B',
+        customAccent: '#4ECDC4',
+      };
+
+      const darkColors = {
+        // ... existing colors
+        customBrand: '#FF8787',
+        customAccent: '#6FFFE9',
+      };
+      \`\`\`
+
+      \`\`\`typescript
+      // 2. Use in your component
+      import { useColor } from '@/hooks/useColor';
+
+      export function CustomComponent() {
+        const customBrand = useColor('customBrand');
+        const customAccent = useColor('customAccent');
+        
+        return (
+          <View style={{ backgroundColor: customBrand }}>
+            <Text style={{ color: customAccent }}>Custom themed content</Text>
+          </View>
+        );
+      }
+      \`\`\`
+
+      ## Color Usage Best Practices
+
+      ### DO:
+      - Always use \`useColor()\` hook for colors
+      - Set background color on every screen
+      - Add both light and dark variants when creating custom colors
+      - Use semantic color names (primary, secondary, muted, etc.)
+      - Test in both light and dark modes
+
+      ### DON'T:
+      - Never hardcode hex values: \`style={{ color: '#000000' }}\`
+      - Never hardcode rgb values: \`style={{ backgroundColor: 'rgb(255, 0, 0)' }}\`
+      - Never skip background color on screens
+      - Never use deprecated APIs like \`useBottomTabBarHeight()\`
+      - Never modify locked files (auth, ui components, root layout)
+
+      ## Complete Screen Template
+
+      **Use this template for every new screen:**
+
+      \`\`\`typescript
+      import React from 'react';
+      import { StyleSheet } from 'react-native';
+      import { View } from '@/components/ui/view';
+      import { Text } from '@/components/ui/text';
+      import { ScrollView } from '@/components/ui/scroll-view';
+      import { useColor } from '@/hooks/useColor';
+
+      export default function NewScreen() {
+        // Get theme colors
+        const background = useColor('background');
+        const foreground = useColor('foreground');
+        const primary = useColor('primary');
+        const border = useColor('border');
+        
+        return (
+          <View style={[styles.container, { backgroundColor: background }]}>
+            <ScrollView>
+              <Text style={{ color: foreground }}>Your content here</Text>
+              {/* More components */}
+            </ScrollView>
+          </View>
+        );
+      }
+
+      const styles = StyleSheet.create({
+        container: {
+          flex: 1,
+          padding: 16,
+        },
+      });
+      \`\`\`
+
+      ## Summary Checklist
+
+      When creating or modifying screens:
+      - Import \`useColor\` hook
+      - Get \`background\` color using \`useColor('background')\`
+      - Set \`backgroundColor\` on root View
+      - Use \`useColor()\` for all other colors
+      - Never hardcode hex/rgb values
+      - Update both \`_layout.tsx\` and \`_layout.web.tsx\` for new tabs
+      - Avoid deprecated APIs like \`useBottomTabBarHeight()\`
+      - Test in both light and dark modes
 
       ## CRITICAL: Theme and Styling Requirements
 
@@ -167,7 +734,7 @@ export const templateGuidelines = () => {
         <Button onClick={() => {}}>Click me</Button>  // ERROR: wrong props!
         \`\`\`
         
-        **✅ CORRECT - Always lookup first:**
+        ** CORRECT - Always lookup first:**
         \`\`\`typescript
         // Step 1: Lookup documentation FIRST
         // Call: lookupComponentsTool({ docs: ["ui:button"] })
@@ -444,579 +1011,6 @@ export const templateGuidelines = () => {
       Remember: This template is your starting point. Build upon it without modifying locked files (auth, UI components, root layout).
       **ALWAYS use useColor for colors and add background color to every new screen.**
     </template_info>
+  </solution_constraints>
   `;
 };
-
-function generateDirectoryStructure(): string {
-  return stripIndents`
-    # Expo Router File-Based Routing Guide
-
-    ## Getting Started
-
-    This is the provided Expo React Native template to start with. It includes:
-    - **Expo Router** for file-based navigation
-    - **TypeScript** for type safety
-    - **Pre-built UI components** with theming support
-    - **Authentication setup** with Convex
-    - **Dark/Light mode** theme system
-    - **Cross-platform support** (iOS, Android, Web)
-
-    The template uses file-based routing similar to Next.js. Files in the \`app/\` directory automatically become routes.
-
-    ## Directory Structure
-
-    \`\`\`
-    ${WORK_DIR}
-    ├── app
-    │   ├── _layout.tsx
-    │   ├── (tabs)
-    │   │   ├── _layout.tsx
-    │   │   ├── _layout.web.tsx
-    │   │   ├── index.tsx
-    │   │   └── settings.tsx
-    │   └── +not-found.tsx
-    ├── app.json
-    ├── assets
-    │   └── images
-    │       ├── icon.png
-    │       └── splash.png
-    ├── components
-    │   ├── auth
-    │   │   ├── apple.tsx
-    │   │   ├── auth.tsx
-    │   │   ├── email-otp.tsx
-    │   │   ├── google.tsx
-    │   │   ├── password.tsx
-    │   │   └── singout.tsx
-    │   └── ui
-    │       ├── accordion.tsx
-    │       ├── action-sheet.tsx
-    │       ├── alert-dialog.tsx
-    │       ├── alert.tsx
-    │       ├── audio-player.tsx
-    │       ├── audio-recorder.tsx
-    │       ├── audio-waveform.tsx
-    │       ├── avatar.tsx
-    │       ├── avoid-keyboard.tsx
-    │       ├── badge.tsx
-    │       ├── bottom-sheet.tsx
-    │       ├── button.tsx
-    │       ├── camera-preview.tsx
-    │       ├── camera.tsx
-    │       ├── card.tsx
-    │       ├── carousel.tsx
-    │       ├── checkbox.tsx
-    │       ├── collapsible.tsx
-    │       ├── color-picker.tsx
-    │       ├── combobox.tsx
-    │       ├── date-picker.tsx
-    │       ├── file-picker.tsx
-    │       ├── gallery.tsx
-    │       ├── hello-wave.tsx
-    │       ├── icon.tsx
-    │       ├── image.tsx
-    │       ├── input-otp.tsx
-    │       ├── input.tsx
-    │       ├── link.tsx
-    │       ├── media-picker.tsx
-    │       ├── mode-toggle.tsx
-    │       ├── onboarding.tsx
-    │       ├── parallax-scrollview.tsx
-    │       ├── picker.tsx
-    │       ├── popover.tsx
-    │       ├── progress.tsx
-    │       ├── radio.tsx
-    │       ├── scroll-view.tsx
-    │       ├── searchbar.tsx
-    │       ├── separator.tsx
-    │       ├── share.tsx
-    │       ├── sheet.tsx
-    │       ├── skeleton.tsx
-    │       ├── spinner.tsx
-    │       ├── switch.tsx
-    │       ├── table.tsx
-    │       ├── tabs.tsx
-    │       ├── text.tsx
-    │       ├── toast.tsx
-    │       ├── toggle.tsx
-    │       ├── video.tsx
-    │       └── view.tsx
-    ├── convex
-    │   ├── _generated
-    │   │   ├── api.d.ts
-    │   │   ├── api.js
-    │   │   ├── dataModel.d.ts
-    │   │   ├── server.d.ts
-    │   │   └── server.js
-    │   ├── auth.config.ts
-    │   ├── auth.ts
-    │   ├── http.ts
-    │   ├── passwordReset.ts
-    │   ├── resendOTP.ts
-    │   ├── resendPasswordOTP.ts
-    │   ├── router.ts
-    │   ├── schema.ts
-    │   ├── tsconfig.json
-    │   └── users.ts
-    ├── eslint.config.js
-    ├── expo-env.d.ts
-    ├── hooks
-    │   ├── useBottomTabOverflow.ts
-    │   ├── useColor.ts
-    │   ├── useColorScheme.ts
-    │   ├── useColorScheme.web.ts
-    │   ├── useKeyboardHeight.ts
-    │   └── useModeToggle.tsx
-    ├── package.json
-    ├── theme
-    │   ├── colors.ts              # Theme colors configuration
-    │   ├── globals.ts
-    │   └── theme-provider.tsx
-    └── tsconfig.json
-    \`\`\`
-
-    ## Important Rules
-
-    1. **All screens MUST be in \`app/(tabs)/\` directory**
-    2. **Use parentheses for groups**: \`(tabs)\`, \`(auth)\` - these don't show in URL
-    3. **Use square brackets for dynamic routes**: \`[id].tsx\`, \`[...slug].tsx\`
-    4. **_layout.tsx files define nested layouts**
-    5. **index.tsx is the default route for that directory**
-    6. **Use expo-router hooks**: \`useLocalSearchParams()\`, \`useRouter()\`
-    7. **Never create routes outside app/ directory**
-    8. **You MUST update BOTH \`_layout.tsx\` AND \`_layout.web.tsx\` files when adding tabs**
-    9. **Max number of Tabs is five no more**
-    10. **ALWAYS use useColor hook for colors - NEVER hardcode color values**
-    11. **Every new screen MUST set background color using useColor('background')**
-
-    ---
-
-    # Adding New Tabs to Expo React Native App
-
-    ## Step-by-Step Process
-
-    ### Step 1: Create the Screen Component
-    Create a new file in \`app/(tabs)/[screen-name].tsx\`:
-
-    \`\`\`typescript
-    // app/(tabs)/profile.tsx
-    import React from 'react';
-    import { View } from '@/components/ui/view';
-    import { Text } from '@/components/ui/text';
-    import { useColor } from '@/hooks/useColor';
-
-    export default function ProfileScreen() {
-      const background = useColor('background');
-      const foreground = useColor('foreground');
-      
-      return (
-        <View style={{ flex: 1, backgroundColor: background }}>
-          <Text style={{ color: foreground }}>Profile Screen</Text>
-        </View>
-      );
-    }
-    \`\`\`
-
-    ### Step 2: Update Web Layout (\`_layout.web.tsx\`)
-
-    Add the new tab to the web layout:
-
-    \`\`\`typescriptreact
-    // app/(tabs)/_layout.web.tsx
-
-    import React from 'react';
-    import { Tabs } from 'expo-router';
-    import { Home, Settings, User } from 'lucide-react-native'; // Import icon
-    import { Icon } from '@/components/ui/icon';
-    import { useColor } from '@/hooks/useColor';
-
-    export default function WebTabsLayout() {
-      const primary = useColor('primary');
-
-      return (
-        <Tabs
-          screenOptions={{
-            headerShown: false,
-            tabBarActiveTintColor: primary,
-          }}
-        >
-          <Tabs.Screen
-            name='index'
-            options={{
-              title: 'Home',
-              tabBarIcon: ({ color }) => (
-                <Icon name={Home} size={24} color={color} />
-              ),
-            }}
-          />
-
-          <Tabs.Screen
-            name='settings'
-            options={{
-              title: 'Settings',
-              tabBarIcon: ({ color }) => (
-                <Icon name={Settings} size={24} color={color} />
-              ),
-            }}
-          />
-
-          {/* NEW TAB - Add here */}
-          <Tabs.Screen
-            name='profile'
-            options={{
-              title: 'Profile',
-              tabBarIcon: ({ color }) => (
-                <Icon name={User} size={24} color={color} />
-              ),
-            }}
-          />
-        </Tabs>
-      );
-    }
-    \`\`\`
-
-    ### Step 3: Update Native Layout (\`_layout.tsx\`)
-
-    Add the new tab to the native layout:
-
-    \`\`\`typescriptreact
-    // app/(tabs)/_layout.tsx
-
-    import { Platform } from 'react-native';
-    import {
-      Badge,
-      Icon,
-      Label,
-      NativeTabs,
-      VectorIcon,
-    } from 'expo-router/unstable-native-tabs';
-    import MaterialIcons from '@expo/vector-icons/Feather';
-
-    export default function TabsLayout() {
-      return (
-        <NativeTabs>
-          <NativeTabs.Trigger name='index'>
-            <Label>Home</Label>
-            {Platform.select({
-              ios: <Icon sf='house.fill' />,
-              android: (
-                <Icon src={<VectorIcon family={MaterialIcons} name='home' />} />
-              ),
-            })}
-          </NativeTabs.Trigger>
-
-          <NativeTabs.Trigger name='settings' options={{ title: 'Settings' }}>
-            <Label>Settings</Label>
-            {Platform.select({
-              ios: <Icon sf='gear' />,
-              android: (
-                <Icon src={<VectorIcon family={MaterialIcons} name='settings' />} />
-              ),
-            })}
-            <Badge>!</Badge>
-          </NativeTabs.Trigger>
-
-          {/* NEW TAB - Add here */}
-          <NativeTabs.Trigger name='profile' options={{ title: 'Profile' }}>
-            <Label>Profile</Label>
-            {Platform.select({
-              ios: <Icon sf='person.fill' />,
-              android: (
-                <Icon src={<VectorIcon family={MaterialIcons} name='user' />} />
-              ),
-            })}
-          </NativeTabs.Trigger>
-        </NativeTabs>
-      );
-    }
-    \`\`\`
-
-    ## Key Points to Remember
-
-    ### Web Layout (\`_layout.web.tsx\`)
-    - Uses \`Tabs\` from \`expo-router\`
-    - Uses \`Tabs.Screen\` with \`name\` matching the filename
-    - Icons come from \`lucide-react-native\`
-    - Icons are passed through custom \`Icon\` component
-    - \`name\` property must match the filename (without \`.tsx\`)
-
-    ### Native Layout (\`_layout.tsx\`)
-    - Uses \`NativeTabs\` from \`expo-router/unstable-native-tabs\`
-    - Uses \`NativeTabs.Trigger\` with \`name\` matching the filename
-    - Requires platform-specific icons:
-      - iOS: SF Symbols via \`sf\` prop
-      - Android: Feather icons via \`VectorIcon\`
-    - Optional \`Badge\` component for notifications
-    - \`name\` property must match the filename (without \`.tsx\`)
-
-    ## Icon Reference
-
-    ### Web Icons (lucide-react-native)
-    Common icons: \`Home\`, \`Settings\`, \`User\`, \`Search\`, \`Bell\`, \`Calendar\`, \`Mail\`, \`Heart\`, \`Shield\`, \`Package\`, \`ShoppingCart\`, \`Camera\`, \`Image\`, \`File\`, \`Folder\`
-
-    ### Native Icons
-
-    **iOS (SF Symbols)**: 
-    - \`house.fill\`, \`gear\`, \`person.fill\`, \`magnifyingglass\`, \`bell.fill\`
-    - \`calendar\`, \`envelope.fill\`, \`heart.fill\`, \`shield.fill\`, \`shippingbox.fill\`
-    - \`cart.fill\`, \`camera.fill\`, \`photo.fill\`, \`doc.fill\`, \`folder.fill\`
-
-    **Android (Feather)**: 
-    - \`home\`, \`settings\`, \`user\`, \`search\`, \`bell\`
-    - \`calendar\`, \`mail\`, \`heart\`, \`shield\`, \`package\`
-    - \`shopping-cart\`, \`camera\`, \`image\`, \`file\`, \`folder\`
-
-    ## Complete Example: Adding a "Search" Tab
-
-    \`\`\`typescript
-    // 1. Create app/(tabs)/search.tsx
-    import React from 'react';
-    import { View } from '@/components/ui/view';
-    import { Text } from '@/components/ui/text';
-    import { useColor } from '@/hooks/useColor';
-
-    export default function SearchScreen() {
-      const background = useColor('background');
-      const foreground = useColor('foreground');
-      
-      return (
-        <View style={{ flex: 1, backgroundColor: background }}>
-          <Text style={{ color: foreground }}>Search Screen</Text>
-        </View>
-      );
-    }
-    \`\`\`
-
-    \`\`\`typescript
-    // 2. Update _layout.web.tsx
-    import { Search } from 'lucide-react-native'; // Add to imports
-
-    // ... add inside <Tabs>:
-    <Tabs.Screen
-      name='search'
-      options={{
-        title: 'Search',
-        tabBarIcon: ({ color }) => (
-          <Icon name={Search} size={24} color={color} />
-        ),
-      }}
-    />
-    \`\`\`
-
-    \`\`\`typescript
-    // 3. Update _layout.tsx
-    // ... add inside <NativeTabs>:
-    <NativeTabs.Trigger name='search' options={{ title: 'Search' }}>
-      <Label>Search</Label>
-      {Platform.select({
-        ios: <Icon sf='magnifyingglass' />,
-        android: (
-          <Icon src={<VectorIcon family={MaterialIcons} name='search' />} />
-        ),
-      })}
-    </NativeTabs.Trigger>
-    \`\`\`
-
-    ---
-
-    # Customizing App Theme Colors
-
-    ## Theme System Overview
-
-    The template includes a comprehensive theming system located in \`theme/colors.ts\`. The theme supports both light and dark modes with semantic color tokens.
-
-    ## Modifying Theme Colors
-
-    ### Step 1: Edit \`theme/colors.ts\`
-
-    The color configuration is split into two schemes: \`lightColors\` and \`darkColors\`.
-
-    \`\`\`typescript
-    // theme/colors.ts
-
-    const lightColors = {
-      // Base colors - Background and text
-      background: '#FFFFFF',      // Main background
-      foreground: '#000000',      // Main text color
-
-      // Primary brand colors - Used for main actions, selected states
-      primary: '#18181b',         // Primary buttons, active tabs
-      primaryForeground: '#FFFFFF', // Text on primary elements
-
-      // Secondary colors - Used for secondary UI elements
-      secondary: '#F2F2F7',
-      secondaryForeground: '#18181b',
-
-      // Accent colors - Used for highlights and emphasis
-      accent: '#F2F2F7',
-      accentForeground: '#18181b',
-
-      // Card colors - Used for card components
-      card: '#F2F2F7',
-      cardForeground: '#000000',
-
-      // Muted colors - Used for disabled states and subtle elements
-      muted: '#78788033',
-      mutedForeground: '#71717a',
-
-      // Destructive colors - Used for delete/error actions
-      destructive: '#ef4444',
-      destructiveForeground: '#FFFFFF',
-
-      // Border colors
-      border: '#C6C6C8',
-      input: '#e4e4e7',
-      ring: '#a1a1aa',
-
-      // accent colors
-      blue: '#007AFF',
-      green: '#34C759',
-      red: '#FF3B30',
-      orange: '#FF9500',
-      yellow: '#FFCC00',
-      pink: '#FF2D92',
-      purple: '#AF52DE',
-      teal: '#5AC8FA',
-      indigo: '#5856D6',
-    };
-
-    const darkColors = {
-      // Same structure but with dark mode values
-      background: '#000000',
-      foreground: '#FFFFFF',
-      primary: '#e4e4e7',
-      primaryForeground: '#18181b',
-      // ... etc
-    };
-    \`\`\`
-
-    ### Step 2: Using Theme Colors in Components
-
-    **CRITICAL: ALWAYS use the useColor hook - NEVER hardcode colors**
-
-    \`\`\`typescript
-    import { useColor } from '@/hooks/useColor';
-    import { View } from '@/components/ui/view';
-    import { Text } from '@/components/ui/text';
-
-    export function MyComponent() {
-      const background = useColor('background');
-      const primary = useColor('primary');
-      const border = useColor('border');
-      const foreground = useColor('foreground');
-      
-      return (
-        <View style={{ 
-          flex: 1,
-          backgroundColor: background,
-          borderColor: border,
-          borderWidth: 1 
-        }}>
-          <Text style={{ color: foreground }}>Themed text</Text>
-          <Text style={{ color: primary }}>Primary colored text</Text>
-        </View>
-      );
-    }
-    \`\`\`
-
-    ### Step 3: Adding Custom Colors
-
-    If you need additional colors:
-
-    \`\`\`typescript
-    // 1. Add to theme/colors.ts
-    const lightColors = {
-      // ... existing colors
-      customBrand: '#FF6B6B',
-      customAccent: '#4ECDC4',
-    };
-
-    const darkColors = {
-      // ... existing colors
-      customBrand: '#FF8787',
-      customAccent: '#6FFFE9',
-    };
-    \`\`\`
-
-    \`\`\`typescript
-    // 2. Use in your component
-    import { useColor } from '@/hooks/useColor';
-
-    export function CustomComponent() {
-      const customBrand = useColor('customBrand');
-      const customAccent = useColor('customAccent');
-      
-      return (
-        <View style={{ backgroundColor: customBrand }}>
-          <Text style={{ color: customAccent }}>Custom themed content</Text>
-        </View>
-      );
-    }
-    \`\`\`
-
-    ## Color Usage Best Practices
-
-    ### DO:
-    - Always use \`useColor()\` hook for colors
-    - Set background color on every screen
-    - Add both light and dark variants when creating custom colors
-    - Use semantic color names (primary, secondary, muted, etc.)
-    - Test in both light and dark modes
-
-    ### DON'T:
-    - Never hardcode hex values: \`style={{ color: '#000000' }}\`
-    - Never hardcode rgb values: \`style={{ backgroundColor: 'rgb(255, 0, 0)' }}\`
-    - Never skip background color on screens
-    - Never use deprecated APIs like \`useBottomTabBarHeight()\`
-    - Never modify locked files (auth, ui components, root layout)
-
-    ## Complete Screen Template
-
-    **Use this template for every new screen:**
-
-    \`\`\`typescript
-    import React from 'react';
-    import { StyleSheet } from 'react-native';
-    import { View } from '@/components/ui/view';
-    import { Text } from '@/components/ui/text';
-    import { ScrollView } from '@/components/ui/scroll-view';
-    import { useColor } from '@/hooks/useColor';
-
-    export default function NewScreen() {
-      // Get theme colors
-      const background = useColor('background');
-      const foreground = useColor('foreground');
-      const primary = useColor('primary');
-      const border = useColor('border');
-      
-      return (
-        <View style={[styles.container, { backgroundColor: background }]}>
-          <ScrollView>
-            <Text style={{ color: foreground }}>Your content here</Text>
-            {/* More components */}
-          </ScrollView>
-        </View>
-      );
-    }
-
-    const styles = StyleSheet.create({
-      container: {
-        flex: 1,
-        padding: 16,
-      },
-    });
-    \`\`\`
-
-    ## Summary Checklist
-
-    When creating or modifying screens:
-    - Import \`useColor\` hook
-    - Get \`background\` color using \`useColor('background')\`
-    - Set \`backgroundColor\` on root View
-    - Use \`useColor()\` for all other colors
-    - Never hardcode hex/rgb values
-    - Update both \`_layout.tsx\` and \`_layout.web.tsx\` for new tabs
-    - Avoid deprecated APIs like \`useBottomTabBarHeight()\`
-    - Test in both light and dark modes
-  `;
-}

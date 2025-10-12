@@ -1,6 +1,5 @@
 import { stripIndents } from '../utils/stripIndent.js';
 import type { SystemPromptOptions } from '../types.js';
-import { solutionConstraints } from './solutionConstraints.js';
 import { formattingInstructions } from './formattingInstructions.js';
 import { exampleDataInstructions } from './exampleDataInstructions.js';
 import { secretsInstructions } from './secretsInstructions.js';
@@ -9,6 +8,8 @@ import { openaiProxyGuidelines } from './openaiProxyGuidelines.js';
 import { resendProxyGuidelines } from './resendProxyGuidelines.js';
 import { openAi } from './openAi.js';
 import { google } from './google.js';
+import { templateGuidelines } from './templateGuidelines.js';
+import { convexGuidelines } from './convexGuidelines.js';
 
 // This is the very first part of the system prompt that tells the model what
 // role to play.
@@ -30,10 +31,11 @@ export function generalSystemPrompt(options: SystemPromptOptions) {
   // otherwise it will not be cached. We assume this string is the *last* message we want to cache.
   // See app/lib/.server/llm/provider.ts
   const result = stripIndents`${GENERAL_SYSTEM_PROMPT_PRELUDE}
-  ${solutionConstraints(options)}
-  ${formattingInstructions(options)}
+  ${templateGuidelines()}
+  ${convexGuidelines(options)}
   ${exampleDataInstructions(options)}
   ${secretsInstructions(options)}
+  ${formattingInstructions(options)}
   ${outputInstructions(options)}
   `;
 

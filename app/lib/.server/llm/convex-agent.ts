@@ -137,7 +137,7 @@ export async function convexAgent(args: {
   }
 
   const dataStream = createDataStream({
-    execute(dataStream) {
+    async execute(dataStream) {
       const result = streamText({
         model: provider.model,
         // maxTokens: provider.maxTokens,
@@ -145,8 +145,8 @@ export async function convexAgent(args: {
         messages: messagesForDataStream,
         tools,
         toolChoice: shouldDisableTools ? 'none' : 'auto',
-        onFinish: (result) => {
-          onFinishHandler({
+        onFinish: async (result) => {
+          await onFinishHandler({
             dataStream,
             messages,
             result,
@@ -252,121 +252,143 @@ async function onFinishHandler({
   _firstResponseTime: number | null;
   providerModel: string;
 }) {
-  const { providerMetadata } = result;
-  // This usage accumulates accross multiple /api/chat calls until finishReason of 'stop'.
-  const usage = {
-    completionTokens: normalizeUsage(result.usage.completionTokens),
-    promptTokens: normalizeUsage(result.usage.promptTokens),
-    totalTokens: normalizeUsage(result.usage.totalTokens),
-  };
-  console.log('Finished streaming', {
-    finishReason: result.finishReason,
-    usage,
-    providerMetadata,
-  });
-  console.log('Prompt character counts', promptCharacterCounts);
-  if (tracer) {
-    const span = tracer.startSpan('on-finish-handler');
-    span.setAttribute('chatInitialId', chatInitialId);
-    span.setAttribute('finishReason', result.finishReason);
-    span.setAttribute('usage.completionTokens', usage.completionTokens);
-    span.setAttribute('usage.promptTokens', usage.promptTokens);
-    span.setAttribute('usage.totalTokens', usage.totalTokens);
-    span.setAttribute('collapsedMessages', collapsedMessages);
-    span.setAttribute('model', providerModel);
+  try {
+    const { providerMetadata } = result;
+    const usage = {
+      completionTokens: normalizeUsage(result.usage.completionTokens),
+      promptTokens: normalizeUsage(result.usage.promptTokens),
+      totalTokens: normalizeUsage(result.usage.totalTokens),
+    };
 
-    if (promptCharacterCounts) {
-      span.setAttribute('promptCharacterCounts.messageHistoryChars', promptCharacterCounts.messageHistoryChars);
-      span.setAttribute('promptCharacterCounts.currentTurnChars', promptCharacterCounts.currentTurnChars);
-      span.setAttribute('promptCharacterCounts.totalPromptChars', promptCharacterCounts.totalPromptChars);
+    console.log('Finished streaming', {
+      finishReason: result.finishReason,
+      usage,
+      providerMetadata,
+    });
+    console.log('Prompt character counts', promptCharacterCounts);
+
+    if (tracer) {
+      const span = tracer.startSpan('on-finish-handler');
+      span.setAttribute('chatInitialId', chatInitialId);
+      span.setAttribute('finishReason', result.finishReason);
+      span.setAttribute('usage.completionTokens', usage.completionTokens);
+      span.setAttribute('usage.promptTokens', usage.promptTokens);
+      span.setAttribute('usage.totalTokens', usage.totalTokens);
+      span.setAttribute('collapsedMessages', collapsedMessages);
+      span.setAttribute('model', providerModel);
+
+      if (promptCharacterCounts) {
+        span.setAttribute('promptCharacterCounts.messageHistoryChars', promptCharacterCounts.messageHistoryChars);
+        span.setAttribute('promptCharacterCounts.currentTurnChars', promptCharacterCounts.currentTurnChars);
+        span.setAttribute('promptCharacterCounts.totalPromptChars', promptCharacterCounts.totalPromptChars);
+      }
+      if (providerMetadata) {
+        if (providerMetadata.anthropic) {
+          const anthropic: any = providerMetadata.anthropic;
+          span.setAttribute('providerMetadata.anthropic.cacheCreationInputTokens', anthropic.cacheCreationInputTokens);
+          span.setAttribute('providerMetadata.anthropic.cacheReadInputTokens', anthropic.cacheReadInputTokens);
+        }
+        if (providerMetadata.google) {
+          const google: any = providerMetadata.google;
+          span.setAttribute('providerMetadata.google.cachedContentTokenCount', google.cachedContentTokenCount ?? 0);
+        }
+        if (providerMetadata.openai) {
+          const openai: any = providerMetadata.openai;
+          span.setAttribute('providerMetadata.openai.cachedPromptTokens', openai.cachedPromptTokens ?? 0);
+        }
+        if (providerMetadata.bedrock) {
+          const bedrock: any = providerMetadata.bedrock;
+          span.setAttribute(
+            'providerMetadata.bedrock.cacheCreationInputTokens',
+            bedrock.usage?.cacheCreationInputTokens ?? 0,
+          );
+          span.setAttribute('providerMetadata.bedrock.cacheReadInputTokens', bedrock.usage?.cacheReadInputTokens ?? 0);
+        }
+      }
+      if (result.finishReason === 'stop' || result.finishReason === 'unknown' || result.finishReason === 'length') {
+        const lastMessage = messages[messages.length - 1];
+        if (lastMessage?.role === 'assistant') {
+          const toolCalls = lastMessage.toolInvocations?.filter((t) => t.toolName === 'deploy' && t.state === 'result');
+          const successfulDeploys =
+            toolCalls?.filter((t) => t.state === 'result' && !t.result.startsWith('Error:')).length ?? 0;
+          span.setAttribute('tools.successfulDeploys', successfulDeploys);
+          span.setAttribute('tools.failedDeploys', toolCalls ? toolCalls.length - successfulDeploys : 0);
+        }
+        span.setAttribute('tools.disabledFromRepeatedErrors', toolsDisabledFromRepeatedErrors ? 'true' : 'false');
+      }
+      span.end();
     }
-    if (providerMetadata) {
-      if (providerMetadata.anthropic) {
-        const anthropic: any = providerMetadata.anthropic;
-        span.setAttribute('providerMetadata.anthropic.cacheCreationInputTokens', anthropic.cacheCreationInputTokens);
-        span.setAttribute('providerMetadata.anthropic.cacheReadInputTokens', anthropic.cacheReadInputTokens);
-      }
-      if (providerMetadata.google) {
-        const google: any = providerMetadata.google;
-        span.setAttribute('providerMetadata.google.cachedContentTokenCount', google.cachedContentTokenCount ?? 0);
-      }
-      if (providerMetadata.openai) {
-        const openai: any = providerMetadata.openai;
-        span.setAttribute('providerMetadata.openai.cachedPromptTokens', openai.cachedPromptTokens ?? 0);
-      }
-      if (providerMetadata.bedrock) {
-        const bedrock: any = providerMetadata.bedrock;
-        span.setAttribute(
-          'providerMetadata.bedrock.cacheCreationInputTokens',
-          bedrock.usage?.cacheCreationInputTokens ?? 0,
-        );
-        span.setAttribute('providerMetadata.bedrock.cacheReadInputTokens', bedrock.usage?.cacheReadInputTokens ?? 0);
-      }
+
+    if (toolsDisabledFromRepeatedErrors) {
+      dataStream.writeMessageAnnotation({ type: 'failure', reason: REPEATED_ERROR_REASON });
     }
-    if (result.finishReason === 'stop' || result.finishReason === 'unknown') {
+
+    let toolCallId: { kind: 'tool-call'; toolCallId: string } | { kind: 'final' } | undefined;
+
+    // Handle all terminal finish reasons
+    if (result.finishReason === 'tool-calls') {
+      if (result.toolCalls.length === 1) {
+        toolCallId = { kind: 'tool-call', toolCallId: result.toolCalls[0].toolCallId };
+      } else {
+        logger.warn('Stopped with not exactly one tool call', {
+          toolCalls: result.toolCalls,
+        });
+      }
+    } else if (
+      result.finishReason === 'stop' ||
+      result.finishReason === 'length' ||
+      result.finishReason === 'content-filter' ||
+      result.finishReason === 'error' ||
+      result.finishReason === 'unknown'
+    ) {
+      // All of these should be treated as final (non-continuing) states
+      toolCallId = { kind: 'final' };
+    }
+
+    if (toolCallId) {
+      const annotation = encodeUsageAnnotation(toolCallId, usage, providerMetadata);
+      dataStream.writeMessageAnnotation({ type: 'usage', usage: annotation });
+      const modelAnnotation = encodeModelAnnotation(toolCallId, providerMetadata, modelChoice);
+      dataStream.writeMessageAnnotation({ type: 'model', ...modelAnnotation });
+    }
+
+    // Record usage for all terminal states, not just 'stop'
+    if (
+      result.finishReason === 'stop' ||
+      result.finishReason === 'length' ||
+      result.finishReason === 'content-filter' ||
+      result.finishReason === 'error' ||
+      result.finishReason === 'unknown'
+    ) {
       const lastMessage = messages[messages.length - 1];
-      if (lastMessage.role === 'assistant') {
-        // This field is deprecated, but for some reason, the new field "parts", does not contain all of the tool calls. This is likely a
-        // vercel bug. We do this at the end end the request because it's when we have the results from all of the tool calls.
-        const toolCalls = lastMessage.toolInvocations?.filter((t) => t.toolName === 'deploy' && t.state === 'result');
-        const successfulDeploys =
-          toolCalls?.filter((t) => t.state === 'result' && !t.result.startsWith('Error:')).length ?? 0;
-        span.setAttribute('tools.successfulDeploys', successfulDeploys);
-        span.setAttribute('tools.failedDeploys', toolCalls ? toolCalls.length - successfulDeploys : 0);
-      }
-      span.setAttribute('tools.disabledFromRepeatedErrors', toolsDisabledFromRepeatedErrors ? 'true' : 'false');
+      await recordUsageCb(lastMessage, { usage, providerMetadata });
     }
-    span.end();
-  }
 
-  if (toolsDisabledFromRepeatedErrors) {
-    dataStream.writeMessageAnnotation({ type: 'failure', reason: REPEATED_ERROR_REASON });
-  }
-
-  let toolCallId: { kind: 'tool-call'; toolCallId: string } | { kind: 'final' } | undefined;
-  // Always stash this part's usage as an annotation -- these are used for
-  // displaying usage info in the UI as well as calculating usage when the message
-  // finishes.
-  if (result.finishReason === 'tool-calls') {
-    if (result.toolCalls.length === 1) {
-      toolCallId = { kind: 'tool-call', toolCallId: result.toolCalls[0].toolCallId };
-    } else {
-      logger.warn('Stopped with not exactly one tool call', {
-        toolCalls: result.toolCalls,
-      });
+    if (recordRawPromptsForDebugging) {
+      const responseCoreMessages = result.response.messages as (CoreAssistantMessage | CoreToolMessage)[];
+      waitUntil(
+        storeDebugPrompt(
+          coreMessages,
+          chatInitialId,
+          responseCoreMessages,
+          result,
+          {
+            usage,
+            providerMetadata,
+          },
+          modelProvider,
+        ),
+      );
     }
-  } else if (result.finishReason === 'stop') {
-    toolCallId = { kind: 'final' };
-  }
-  if (toolCallId) {
-    const annotation = encodeUsageAnnotation(toolCallId, usage, providerMetadata);
-    dataStream.writeMessageAnnotation({ type: 'usage', usage: annotation });
-    const modelAnnotation = encodeModelAnnotation(toolCallId, providerMetadata, modelChoice);
-    dataStream.writeMessageAnnotation({ type: 'model', ...modelAnnotation });
-  }
 
-  // Record usage once we've generated the final part.
-  if (result.finishReason === 'stop') {
-    await recordUsageCb(messages[messages.length - 1], { usage, providerMetadata });
+    // Give time for all data stream writes to flush
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    console.log('onFinish handler completed for finishReason:', result.finishReason);
+  } catch (error) {
+    console.error('Error in onFinishHandler:', error);
+    captureException(error);
   }
-  if (recordRawPromptsForDebugging) {
-    const responseCoreMessages = result.response.messages as (CoreAssistantMessage | CoreToolMessage)[];
-    // don't block the request but keep the request alive in Vercel Lambdas
-    waitUntil(
-      storeDebugPrompt(
-        coreMessages,
-        chatInitialId,
-        responseCoreMessages,
-        result,
-        {
-          usage,
-          providerMetadata,
-        },
-        modelProvider,
-      ),
-    );
-  }
-  await new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 /* Convert Usage into something stable to store in Convex debug logs */
