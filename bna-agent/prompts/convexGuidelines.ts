@@ -8,7 +8,7 @@ export function convexGuidelines(options: SystemPromptOptions) {
       You MUST use Convex for the database, realtime, file storage, functions, scheduling, HTTP handlers,
       and search functionality. Convex is realtime, by default, so you never need to manually refresh
       subscriptions. Here are some guidelines, documentation, and best practices for using Convex effectively:
-      
+
       # Convex guidelines
 
       ## Function guidelines
@@ -409,7 +409,7 @@ export function convexGuidelines(options: SystemPromptOptions) {
       ## Full text search guidelines
 
       ### Defining a search index
-      To use full text search, you need to define a search index in the schema. 
+      To use full text search, you need to define a search index in the schema.
       Every search index definition consists of:
 
       1. A name.
@@ -612,8 +612,7 @@ export function convexGuidelines(options: SystemPromptOptions) {
           .index('userId', ['userId']),
       });
 
-
-      Add the media file to convex with functions 
+      Add the media file to convex with functions
 
       Path: \`convex/media.ts\`
       \`\`\`ts
@@ -630,7 +629,7 @@ export function convexGuidelines(options: SystemPromptOptions) {
           return Promise.all(
             media.map(async (file) => ({
               const url = await ctx.storage.getUrl(file.storageId);
-              
+
               return {
                 ...file,
                 url,
@@ -951,7 +950,6 @@ export function convexGuidelines(options: SystemPromptOptions) {
       });
       \`\`\`
 
-
       ### Using Convex React Hooks in Expo React Native
 
       Convex provides React hooks that connect your frontend to your backend functions.
@@ -1195,15 +1193,13 @@ export function convexGuidelines(options: SystemPromptOptions) {
         Always make sure your UIs work well with anonymous users.
 
         Always make sure the functions you are calling are defined in the \`convex/\` directory and use the \`api\` or \`internal\` object to call them.
-        
+
         Always make sure you are using the correct arguments for convex functions. If arguments are not optional, make sure they are not null.
       </client_guidelines>
     </convex_guidelines>
   </solution_constraints>
 `;
 }
-
-const resendComponent = `- \`resend\`: A component for sending emails.`;
 
 //  # Convex Components
 //   Convex Components package up code and data in a sandbox that allows you to confidently and quickly add new features to your backend.
@@ -1238,3 +1234,5 @@ const resendComponent = `- \`resend\`: A component for sending emails.`;
 //   - OSS stats
 //   - Rate limiter
 //   - Action cache
+
+// const resendComponent = `- \`resend\`: A component for sending emails.`;

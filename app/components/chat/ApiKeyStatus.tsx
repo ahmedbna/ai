@@ -113,12 +113,9 @@ export function ApiKeyStatus({ modelSelection, className = '', showTitle = true 
 function getModelNameForSelection(selection: ModelSelection): string {
   const modelNames: Record<ModelSelection, string> = {
     auto: 'Auto',
-    'claude-4-sonnet': 'Claude 4 Sonnet',
-    'claude-3-5-haiku': 'Claude 3.5 Haiku',
-    'gpt-4.1': 'GPT-4.1',
-    'gpt-4.1-mini': 'GPT-4.1 Mini',
     'gpt-5': 'GPT-5',
-    'grok-3-mini': 'Grok 3 Mini',
+    'claude-sonnet-4-5': 'Claude Sonnet 4.5',
+    'grok-code-fast-1': 'Grok Code Fast 1',
     'gemini-2.5-pro': 'Gemini 2.5 Pro',
   };
   return modelNames[selection] || selection;

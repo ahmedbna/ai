@@ -1,15 +1,15 @@
-import { stripIndents } from '../utils/stripIndent.js';
 import type { SystemPromptOptions } from '../types.js';
+import { stripIndents } from '../utils/stripIndent.js';
 import { formattingInstructions } from './formattingInstructions.js';
 import { exampleDataInstructions } from './exampleDataInstructions.js';
 import { secretsInstructions } from './secretsInstructions.js';
 import { outputInstructions } from './outputInstructions.js';
+import { templateGuidelines } from './templateGuidelines.js';
+import { convexGuidelines } from './convexGuidelines.js';
 import { openaiProxyGuidelines } from './openaiProxyGuidelines.js';
 import { resendProxyGuidelines } from './resendProxyGuidelines.js';
 import { openAi } from './openAi.js';
 import { google } from './google.js';
-import { templateGuidelines } from './templateGuidelines.js';
-import { convexGuidelines } from './convexGuidelines.js';
 
 // This is the very first part of the system prompt that tells the model what
 // role to play.
@@ -39,10 +39,10 @@ export function generalSystemPrompt(options: SystemPromptOptions) {
   ${outputInstructions(options)}
   `;
 
-  // ${openAi(options)} ❌
-  // ${google(options)} ❌
-  // ${openaiProxyGuidelines(options)} ❌
-  // ${resendProxyGuidelines(options)} ❌
+  // ${openAi(options)}
+  // ${google(options)}
+  // ${openaiProxyGuidelines(options)}
+  // ${resendProxyGuidelines(options)}
 
   return result;
 }

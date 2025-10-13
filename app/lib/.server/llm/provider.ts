@@ -49,9 +49,9 @@ export function modelForProvider(provider: ModelProvider, modelChoice: string | 
     case 'Bedrock':
       return getEnv('AMAZON_BEDROCK_MODEL') || 'us.anthropic.claude-3-5-sonnet-20241022-v2:0';
     case 'OpenAI':
-      return getEnv('OPENAI_MODEL') || 'gpt-4.1';
+      return getEnv('OPENAI_MODEL') || 'gpt-5';
     case 'XAI':
-      return getEnv('XAI_MODEL') || 'grok-3-mini';
+      return getEnv('XAI_MODEL') || 'grok-code-fast-1';
     case 'Google':
       return getEnv('GOOGLE_MODEL') || 'gemini-2.5-pro';
     default: {

@@ -5,7 +5,7 @@ export const templateGuidelines = () => {
   return stripIndents`
    <solution_constraints>
     <template_info>
-    
+
       ## Template Configuration
 
       The BNA WebContainer environment starts with a full-stack expo react native app template fully loaded at '/home/project',
@@ -18,7 +18,7 @@ export const templateGuidelines = () => {
       - Convex Auth for authentication.
 
       Before using any prebuilt UI component, ALWAYS call the lookupComponentsTool to fetch its complete documentation. Review the docs carefully to understand its usage, props, and examples.
-      
+
       # Expo Router File-Based Routing Guide
 
       ## Getting Started
@@ -178,7 +178,7 @@ export const templateGuidelines = () => {
       export default function ProfileScreen() {
         const background = useColor('background');
         const foreground = useColor('foreground');
-        
+
         return (
           <View style={{ flex: 1, backgroundColor: background }}>
             <Text style={{ color: foreground }}>Profile Screen</Text>
@@ -326,12 +326,12 @@ export const templateGuidelines = () => {
 
       ### Native Icons
 
-      **iOS (SF Symbols)**: 
+      **iOS (SF Symbols)**:
       - \`house.fill\`, \`gear\`, \`person.fill\`, \`magnifyingglass\`, \`bell.fill\`
       - \`calendar\`, \`envelope.fill\`, \`heart.fill\`, \`shield.fill\`, \`shippingbox.fill\`
       - \`cart.fill\`, \`camera.fill\`, \`photo.fill\`, \`doc.fill\`, \`folder.fill\`
 
-      **Android (Feather)**: 
+      **Android (Feather)**:
       - \`home\`, \`settings\`, \`user\`, \`search\`, \`bell\`
       - \`calendar\`, \`mail\`, \`heart\`, \`shield\`, \`package\`
       - \`shopping-cart\`, \`camera\`, \`image\`, \`file\`, \`folder\`
@@ -348,7 +348,7 @@ export const templateGuidelines = () => {
       export default function SearchScreen() {
         const background = useColor('background');
         const foreground = useColor('foreground');
-        
+
         return (
           <View style={{ flex: 1, backgroundColor: background }}>
             <Text style={{ color: foreground }}>Search Screen</Text>
@@ -472,13 +472,13 @@ export const templateGuidelines = () => {
         const primary = useColor('primary');
         const border = useColor('border');
         const foreground = useColor('foreground');
-        
+
         return (
-          <View style={{ 
+          <View style={{
             flex: 1,
             backgroundColor: background,
             borderColor: border,
-            borderWidth: 1 
+            borderWidth: 1
           }}>
             <Text style={{ color: foreground }}>Themed text</Text>
             <Text style={{ color: primary }}>Primary colored text</Text>
@@ -513,7 +513,7 @@ export const templateGuidelines = () => {
       export function CustomComponent() {
         const customBrand = useColor('customBrand');
         const customAccent = useColor('customAccent');
-        
+
         return (
           <View style={{ backgroundColor: customBrand }}>
             <Text style={{ color: customAccent }}>Custom themed content</Text>
@@ -556,7 +556,7 @@ export const templateGuidelines = () => {
         const foreground = useColor('foreground');
         const primary = useColor('primary');
         const border = useColor('border');
-        
+
         return (
           <View style={[styles.container, { backgroundColor: background }]}>
             <ScrollView>
@@ -600,7 +600,7 @@ export const templateGuidelines = () => {
           const background = useColor('background');
           const primary = useColor('primary');
           const border = useColor('border');
-          
+
           return (
             <View style={{ backgroundColor: background, borderColor: border }}>
               <Text style={{ color: primary }}>Themed text</Text>
@@ -646,7 +646,7 @@ export const templateGuidelines = () => {
 
         export default function NewScreen() {
           const background = useColor('background');
-          
+
           return (
             <View style={{ flex: 1, backgroundColor: background }}>
               {/* Your screen content */}
@@ -686,111 +686,111 @@ export const templateGuidelines = () => {
         // For bottom spacing - use useSafeAreaInsets if needed
         import { useSafeAreaInsets } from 'react-native-safe-area-context';
         const insets = useSafeAreaInsets();
-        // Use insets.bottom for bottom safe area padding or insets.top for top safe area padding 
+        // Use insets.bottom for bottom safe area padding or insets.top for top safe area padding
         <View style={{ paddingBottom: insets.bottom }} /> or <View style={{ paddingTop: insets.top }} />
-      
+
         \`\`\`
       </deprecated_apis>
 
       <ui_components_library>
         **CRITICAL WORKFLOW: You MUST follow this exact process for EVERY UI component**
-        
+
         ## Mandatory Component Usage Workflow
-        
+
         **BEFORE using ANY component from @/components/ui/, you MUST:**
-        
+
         1. **ALWAYS call lookupComponentsTool FIRST** - NO EXCEPTIONS
           - Example: lookupComponentsTool({ docs: ["ui:button", "ui:input"] })
           - This fetches complete documentation including props, types, and examples
-        
+
         2. **Read and understand the documentation** returned by the tool
           - Review ALL required props
           - Check prop types and valid values
           - Study the provided examples
-        
+
         3. **Only then use the component** with correct props from the documentation
-        
+
         **YOU WILL CAUSE ERRORS if you skip step 1 and assume how to use components**
-        
+
         ## Available Pre-built Components
-        
+
         These components are installed at @/components/ui/:
-        accordion, action-sheet, alert-dialog, alert, audio-player, audio-recorder, 
-        audio-waveform, avatar, avoid-keyboard, badge, bottom-sheet, button, 
-        camera-preview, camera, card, carousel, checkbox, collapsible, color-picker, 
-        combobox, date-picker, file-picker, gallery, hello-wave, icon, image, 
-        input-otp, input, link, media-picker, mode-toggle, onboarding, 
-        parallax-scrollview, picker, popover, progress, radio, scroll-view, 
-        searchbar, separator, share, sheet, skeleton, spinner, switch, table, 
+        accordion, action-sheet, alert-dialog, alert, audio-player, audio-recorder,
+        audio-waveform, avatar, avoid-keyboard, badge, bottom-sheet, button,
+        camera-preview, camera, card, carousel, checkbox, collapsible, color-picker,
+        combobox, date-picker, file-picker, gallery, hello-wave, icon, image,
+        input-otp, input, link, media-picker, mode-toggle, onboarding,
+        parallax-scrollview, picker, popover, progress, radio, scroll-view,
+        searchbar, separator, share, sheet, skeleton, spinner, switch, table,
         tabs, text, toast, toggle, video, view
-        
+
         ## Example: Correct Usage Pattern
-        
+
         ** WRONG - Causes Errors:**
         \`\`\`typescript
         Never do this - assuming props without checking docs
         import { Button } from '@/components/ui/button';
-        
+
         <Button onClick={() => {}}>Click me</Button>  // ERROR: wrong props!
         \`\`\`
-        
+
         ** CORRECT - Always lookup first:**
         \`\`\`typescript
         // Step 1: Lookup documentation FIRST
         // Call: lookupComponentsTool({ docs: ["ui:button"] })
-        
+
         // Step 2: Read the returned docs to learn:
         // - Button expects 'onPress' not 'onClick'
         // - Button has 'variant' and 'size' props
         // - See complete prop types and examples
-        
+
         // Step 3: Use correctly based on docs
         import { Button } from '@/components/ui/button';
-        
-        <Button 
-          onPress={() => {}} 
+
+        <Button
+          onPress={() => {}}
           variant="default"
           size="sm"
         >
           Click me
         </Button>
         \`\`\`
-        
+
         ## When to Use lookupComponentsTool
-        
+
         **You MUST call lookupComponentsTool when:**
         - Using a component for the first time in this conversation
         - You're unsure about any prop names, types, or values
         - The user asks to add a new UI element
         - You encounter an error with a component
         - You need to see usage examples
-        
+
         **You can skip the lookup ONLY if:**
         - You just looked up this exact component in the last 2 messages
         - The documentation is already visible in the conversation context
-        
+
         ## Tool Usage Syntax
-        
+
         \`\`\`typescript
         // Single component
         lookupComponentsTool({ docs: ["ui:button"] })
-        
+
         // Multiple components (efficient - lookup all at once)
         lookupComponentsTool({ docs: ["ui:button", "ui:input", "ui:card"] })
-        
+
         // Case insensitive
         lookupComponentsTool({ docs: ["ui:Avatar", "ui:avatar"] }) // both work
         \`\`\`
-        
+
         ## Critical Rules
-        
+
         1. **NEVER modify files in components/ui/** - they are locked
         2. **NEVER create custom versions** of existing components
         3. **ALWAYS use lookupComponentsTool** before first use
         4. **ALWAYS use exact props** from the documentation
         5. **NEVER assume prop names** - Button uses 'onPress', not 'onClick'
         6. **Check examples** in docs for correct usage patterns
-        
+
       </ui_components_library>
 
       ## Important Files and Directories
@@ -835,7 +835,7 @@ export const templateGuidelines = () => {
         - Auth component automatically shown for unauthenticated users
         - All authentication routing and state management is handled
         - Authenticated, Unauthenticated, and AuthLoading states
-        
+
         IMPORTANT: Do NOT modify the \`app/_layout.tsx\` file under any circumstances.
         For tab-specific changes, modify \`app/(tabs)/_layout.tsx\` and \`app/(tabs)/_layout.web.tsx\` instead.
 
@@ -877,7 +877,7 @@ export const templateGuidelines = () => {
         - Platform-specific icons (SF Symbols for iOS, Feather icons for Android)
         - Convex authentication to control access
         - Optional Badge components for notifications
-        
+
         When adding new tabs, you MUST also update \`app/(tabs)/_layout.web.tsx\`.
         Add new React components to their own files in the \`components/\` directory to keep the code organized.
       </file>
@@ -888,7 +888,7 @@ export const templateGuidelines = () => {
         - lucide-react-native icons
         - Custom Icon component from @/components/ui/icon
         - useColor hook for theme-aware colors
-        
+
         When adding new tabs, you MUST also update \`app/(tabs)/_layout.tsx\` for native platforms.
         Ensure the \`name\` prop matches exactly between both layout files and the screen filename.
       </file>
@@ -904,7 +904,7 @@ export const templateGuidelines = () => {
         - darkColors: Color palette for dark mode
         - semanticColors: Colors for success, warning, info, and error states
         - withOpacity: Utility function for adding transparency to colors
-        
+
         Modify this file to customize the app's visual identity and brand colors.
         Change primary, secondary, accent colors to match your app's design requirements.
         See the "Customizing App Theme Colors" section in the routing guide above for detailed instructions.
@@ -930,14 +930,14 @@ export const templateGuidelines = () => {
         - Handles sign out and navigation cleanup
         - Uses destructive variant with logout icon
         - No additional configuration needed
-        
+
         IMPORTANT: Do NOT modify, delete, or reorganize files in this directory unless explicitly requested.
         These components are critical for the authentication flow and integrate with ConvexAuthProvider.
       </directory>
 
       <directory path="components/ui/">
         The \`components/ui/\` directory contains pre-built, reusable UI components for the app: Text, View, ScrollView, Spinner, Icon, etc.
-        
+
         CRITICAL: Do NOT modify, delete, edit, or reorganize ANY files in this directory under ANY circumstances.
         These are pre-built, tested UI components that should remain untouched.
         If you need custom styling or behavior, create new components in other \`components/\` subdirectories that wrap or extend these components.
@@ -951,7 +951,7 @@ export const templateGuidelines = () => {
         - useModeToggle: Toggle between light and dark mode
         - useBottomTabOverflow: Handle bottom tab bar overflow on iOS
         - useKeyboardHeight: Track keyboard height for proper UI adjustments
-        
+
         Use these hooks in your components to access theme values and system states.
       </directory>
 

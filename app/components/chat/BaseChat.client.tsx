@@ -69,6 +69,9 @@ interface BaseChatProps {
   currentSubchatIndex?: number;
   totalSubchats?: number;
   subchats?: { subchatIndex: number; updatedAt: number; description?: string }[];
+
+  lastMessageTruncated?: boolean;
+  onContinue?: () => void;
 }
 
 export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
@@ -93,6 +96,9 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
       setModelSelection,
       onRewindToMessage,
       subchats,
+
+      lastMessageTruncated,
+      onContinue,
     },
     ref,
   ) => {
@@ -260,6 +266,8 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                           currentError={currentError}
                           resendMessage={resendMessage}
                           modelSelection={modelSelection}
+                          lastMessageTruncated={lastMessageTruncated}
+                          onContinue={onContinue}
                         />
                       )}
 

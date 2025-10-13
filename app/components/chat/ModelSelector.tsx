@@ -80,21 +80,9 @@ export const models: Partial<
     recommended: true,
     requireKey: true,
   },
-  'claude-4-sonnet': {
-    name: 'Claude 4 Sonnet',
+  'claude-sonnet-4-5': {
+    name: 'Claude Sonnet 4.5',
     provider: 'anthropic',
-    recommended: false,
-    requireKey: true,
-  },
-  'gemini-2.5-pro': {
-    name: 'Gemini 2.5 Pro',
-    provider: 'google',
-    recommended: false,
-    requireKey: true,
-  },
-  'gpt-4.1': {
-    name: 'GPT-4.1',
-    provider: 'openai',
     recommended: false,
     requireKey: true,
   },
@@ -104,21 +92,15 @@ export const models: Partial<
     recommended: false,
     requireKey: true,
   },
-  'grok-3-mini': {
-    name: 'Grok 3 Mini',
+  'gemini-2.5-pro': {
+    name: 'Gemini 2.5 Pro',
+    provider: 'google',
+    recommended: false,
+    requireKey: true,
+  },
+  'grok-code-fast-1': {
+    name: 'Grok Code Fast 1',
     provider: 'xai',
-    recommended: false,
-    requireKey: true,
-  },
-  'claude-3-5-haiku': {
-    name: 'Claude 3.5 Haiku',
-    provider: 'anthropic',
-    recommended: false,
-    requireKey: true,
-  },
-  'gpt-4.1-mini': {
-    name: 'GPT-4.1 Mini',
-    provider: 'openai',
     recommended: false,
     requireKey: true,
   },
@@ -140,9 +122,6 @@ export const ModelSelector = React.memo(function ModelSelector({
   }
 
   const availableModels = Object.entries(models).filter(([key]) => {
-    if (key === 'gpt-5') {
-      return enableGpt5;
-    }
     return true;
   });
 

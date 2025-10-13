@@ -30,6 +30,9 @@ interface StreamingIndicatorProps {
   currentError?: Error;
   resendMessage: () => void;
   modelSelection: ModelSelection;
+
+  lastMessageTruncated?: boolean;
+  onContinue?: () => void;
 }
 
 // Icon components
@@ -189,6 +192,15 @@ export default function StreamingIndicator(props: StreamingIndicatorProps) {
                         streamStatus={streamStatus}
                         modelSelection={props.modelSelection}
                       /> */}
+
+                      {/* Add Continue button for truncated messages */}
+                      {streamStatus === 'ready' && props.lastMessageTruncated && props.onContinue && (
+                        <Button size='sm' className='ml-2' onClick={props.onContinue}>
+                          <MessageSquareReply className='size-5' />
+                          Continue
+                        </Button>
+                      )}
+
                       {streamStatus === 'error' && (
                         <Button size='sm' className='ml-2' onClick={props.resendMessage}>
                           <MessageSquareReply className='size-5' />

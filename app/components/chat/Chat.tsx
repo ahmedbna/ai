@@ -238,13 +238,10 @@ export const Chat = memo(
             apiKeyField: 'value' | 'openai' | 'xai' | 'google';
           };
         } = {
-          'claude-4-sonnet': { providerName: 'anthropic', apiKeyField: 'value' },
-          'gpt-4.1': { providerName: 'openai', apiKeyField: 'openai' },
+          'claude-sonnet-4-5': { providerName: 'anthropic', apiKeyField: 'value' },
           'gpt-5': { providerName: 'openai', apiKeyField: 'openai' },
-          'grok-3-mini': { providerName: 'xai', apiKeyField: 'xai' },
+          'grok-code-fast-1': { providerName: 'xai', apiKeyField: 'xai' },
           'gemini-2.5-pro': { providerName: 'google', apiKeyField: 'google' },
-          'claude-3-5-haiku': { providerName: 'anthropic', apiKeyField: 'value' },
-          'gpt-4.1-mini': { providerName: 'openai', apiKeyField: 'openai' },
         };
 
         const providerInfo = MODEL_TO_PROVIDER_MAP[model];
@@ -297,6 +294,7 @@ export const Chat = memo(
       // Convex token usage, but keeping this for potential future use
     }, [modelSelection, checkApiKeyForCurrentModel, setDisableChatMessage]);
 
+    const [lastMessageTruncated, setLastMessageTruncated] = useState(false);
     const { messages, status, stop, append, setMessages, reload, error } = useChat({
       initialMessages,
       api: '/api/chat',
@@ -329,22 +327,14 @@ export const Chat = memo(
         }
 
         // Now use effectiveModelSelection instead of modelSelection
-        if (effectiveModelSelection === 'auto' || effectiveModelSelection === 'claude-4-sonnet') {
+        if (effectiveModelSelection === 'auto' || effectiveModelSelection === 'claude-sonnet-4-5') {
           const providers: ProviderType[] = anthropicProviders;
           modelProvider = providers[retries.numFailures % providers.length];
-          modelChoice = 'claude-sonnet-4-0';
-        } else if (effectiveModelSelection === 'claude-3-5-haiku') {
-          modelProvider = 'Anthropic';
-          modelChoice = 'claude-3-5-haiku-latest';
-        } else if (effectiveModelSelection === 'grok-3-mini') {
+          modelChoice = 'claude-sonnet-4-5';
+        } else if (effectiveModelSelection === 'grok-code-fast-1') {
           modelProvider = 'XAI';
         } else if (effectiveModelSelection === 'gemini-2.5-pro') {
           modelProvider = 'Google';
-        } else if (effectiveModelSelection === 'gpt-4.1-mini') {
-          modelProvider = 'OpenAI';
-          modelChoice = 'gpt-4.1-mini';
-        } else if (effectiveModelSelection === 'gpt-4.1') {
-          modelProvider = 'OpenAI';
         } else if (effectiveModelSelection === 'gpt-5') {
           modelProvider = 'OpenAI';
           modelChoice = 'gpt-5';
@@ -435,11 +425,16 @@ export const Chat = memo(
         if (usage) {
           console.debug('Token usage in response:', usage);
         }
-        if (response.finishReason == 'stop') {
+
+        // Track if message was truncated due to length
+        if (response.finishReason === 'length') {
+          setLastMessageTruncated(true);
+        } else if (response.finishReason === 'stop') {
+          setLastMessageTruncated(false);
           retryState.set({ numFailures: 0, nextRetry: Date.now() });
         }
-        logger.debug('Finished streaming');
 
+        logger.debug('Finished streaming');
         await checkTokenUsage();
       },
     });
@@ -680,6 +675,10 @@ export const Chat = memo(
       [checkApiKeyForCurrentModel, setModelSelection],
     );
 
+    const sendContinueMessage = useCallback(async () => {
+      await sendMessage('Continue');
+    }, [sendMessage]);
+
     return (
       <>
         <BaseChat
@@ -719,6 +718,8 @@ export const Chat = memo(
           setModelSelection={handleModelSelectionChange}
           onRewindToMessage={rewindToMessage}
           subchats={subchats}
+          lastMessageTruncated={lastMessageTruncated}
+          onContinue={sendContinueMessage}
         />
         <UsageDebugView />
       </>

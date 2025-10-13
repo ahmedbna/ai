@@ -23,14 +23,11 @@ export function hasApiKeySet(
     case 'auto':
       // For auto, check if we have any available API key
       return hasAnyApiKeySet(apiKey);
-    case 'claude-3-5-haiku':
-    case 'claude-4-sonnet':
+    case 'claude-sonnet-4-5':
       return !!apiKey.value?.trim();
-    case 'gpt-4.1':
-    case 'gpt-4.1-mini':
     case 'gpt-5':
       return !!apiKey.openai?.trim();
-    case 'grok-3-mini':
+    case 'grok-code-fast-1':
       return !!apiKey.xai?.trim();
     case 'gemini-2.5-pro':
       return !!apiKey.google?.trim();
@@ -126,7 +123,7 @@ export function selectBestAvailableProvider(
     return {
       provider: 'anthropic',
       displayName: 'Anthropic',
-      modelSelection: 'claude-4-sonnet',
+      modelSelection: 'claude-sonnet-4-5',
     };
   }
 
@@ -156,15 +153,15 @@ export function selectBestAvailableProvider(
 function getDefaultModelForProvider(provider: 'anthropic' | 'openai' | 'xai' | 'google'): ModelSelection {
   switch (provider) {
     case 'anthropic':
-      return 'claude-4-sonnet';
+      return 'claude-sonnet-4-5';
     case 'openai':
-      return 'gpt-4.1';
+      return 'gpt-5';
     case 'google':
       return 'gemini-2.5-pro';
     case 'xai':
-      return 'grok-3-mini';
+      return 'grok-code-fast-1';
     default:
-      return 'claude-4-sonnet';
+      return 'claude-sonnet-4-5';
   }
 }
 
@@ -182,14 +179,11 @@ export function getProviderForModel(
         return { providerName: 'google', displayName: 'Google' };
       }
       return { providerName: 'anthropic', displayName: 'Anthropic' };
-    case 'claude-3-5-haiku':
-    case 'claude-4-sonnet':
+    case 'claude-sonnet-4-5':
       return { providerName: 'anthropic', displayName: 'Anthropic' };
-    case 'gpt-4.1':
-    case 'gpt-4.1-mini':
     case 'gpt-5':
       return { providerName: 'openai', displayName: 'OpenAI' };
-    case 'grok-3-mini':
+    case 'grok-code-fast-1':
       return { providerName: 'xai', displayName: 'xAI' };
     case 'gemini-2.5-pro':
       return { providerName: 'google', displayName: 'Google' };
