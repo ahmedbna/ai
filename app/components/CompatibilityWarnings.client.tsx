@@ -73,7 +73,7 @@ export function CompatibilityWarnings({ setEnabled }: { setEnabled: (enabled: bo
                 >
                   WebContainers
                 </a>{' '}
-                in ways that require a browser that supports cross-origin isolation. Get cooking with desktop Chrome or
+                in ways that require a browser that supports cross-origin isolation. Get building with desktop Chrome or
                 Firefox!
               </p>
             </div>
@@ -128,7 +128,7 @@ export function CompatibilityWarnings({ setEnabled }: { setEnabled: (enabled: bo
               </>
             ) : experience === 'marketing-page-only-for-desktop-safari' ? (
               <>
-                <h3 className='text-xl font-bold'>You’re a few keystrokes away from cooking with BNA!</h3>
+                <h3 className='text-xl font-bold'>You’re a few keystrokes away from building with BNA!</h3>
                 <p className='my-2'>
                   BNA uses{' '}
                   <a
@@ -142,7 +142,7 @@ export function CompatibilityWarnings({ setEnabled }: { setEnabled: (enabled: bo
               </>
             ) : (
               <>
-                <h3 className='text-xl font-bold'>You’re a few keystrokes away from cooking with BNA!</h3>
+                <h3 className='text-xl font-bold'>You’re a few keystrokes away from building with BNA!</h3>
                 <p className='my-2'>
                   BNA uses{' '}
                   <a

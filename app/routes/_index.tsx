@@ -11,7 +11,7 @@ export const meta: MetaFunction = () => {
     { name: 'description', content: 'Idea to fullstack mobile apps in secondes with AI' },
     {
       property: 'og:image',
-      content: '/social_preview_index.png',
+      content: '/bna-header.png',
     },
   ];
 };

@@ -19,14 +19,14 @@ import { Sheet } from '@ui/Sheet';
 import { useAuth } from '@workos-inc/authkit-react';
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Cooked with BNA' },
+    { title: 'Built with BNA' },
     {
       name: 'description',
-      content: 'Someone shared with you a project cooked with BNA, the full-stack AI coding agent from Convex',
+      content: 'Someone shared with you a project Built with BNA, the full-stack AI coding agent from Convex',
     },
     {
       property: 'og:image',
-      content: 'https://chef.convex.dev/social_preview_share.png',
+      content: '/bna-header.png',
     },
   ];
 };

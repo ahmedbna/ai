@@ -42,29 +42,22 @@ const CheckIcon = () => <CheckCircle2 className='size-4' />;
 
 // Status messages
 export const STATUS_MESSAGES = {
-  cooking: 'Cooking...',
+  cooking: 'Building...',
   stopped: 'Generation stopped',
   error: 'The model hit an error. Try sending your message again.',
   generated: 'Response Generated',
 } as const;
 
 const COOKING_SPLINES_MESSAGES = [
-  'Simmering stock... ',
-  'Practicing mise-en-place...',
-  'Adjusting seasoning...',
-  'Adding a pinch of salt...',
-  'Reducing sauce...',
-  'Whisking vigorously...',
-  'Deglazing pan...',
-  'Letting the flavors mingle...',
-  'Browning butter...',
-  'Preheating oven...',
-  'Caramelizing onions...',
-  'Chiffonading herbs...',
-  'Massaging kale...',
-  'Adding a splash of flavor...',
-  'Julienning carrots...',
+  'Wiring components...',
+  'Assembling modules...',
+  'Configuring systems...',
+  'Reviewing code...',
+  'Tuning performance...',
+  'Patching bugs...',
+  'Optimizing flow...',
 ];
+
 const COOKING_SPLINES_PROBABILITY = 0.2;
 const COOKING_SPLINES_DURATION = 4000;
 

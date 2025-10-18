@@ -538,7 +538,7 @@ export const Chat = memo(
 
       // Continue with rate limiting logic if needed
       if (retries.numFailures >= MAX_RETRIES || now < retries.nextRetry) {
-        let message: string | ReactNode = 'Chef is too busy cooking right now. ';
+        let message: string | ReactNode = 'BNA is too busy building right now. ';
         if (retries.numFailures >= MAX_RETRIES) {
           message = (
             <>
@@ -562,7 +562,7 @@ export const Chat = memo(
 
       // Continue with rate limiting logic if needed
       if (retries.numFailures >= MAX_RETRIES || now < retries.nextRetry) {
-        let message: string | ReactNode = 'BNA is too busy cooking right now. ';
+        let message: string | ReactNode = 'BNA is too busy building right now. ';
         if (retries.numFailures >= MAX_RETRIES) {
           message = (
             <>

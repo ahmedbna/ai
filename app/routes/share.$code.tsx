@@ -18,7 +18,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const authorText = author ? `by ${author.username}` : '';
   const title = description ? `${description} ${authorText} | BNA` : `Shared Project ${authorText} | BNA`;
   const ogTitle = description || 'Shared Project';
-  const ogDesc = `Cooked with BNA ${authorText}`;
+  const ogDesc = `Built with BNA ${authorText}`;
 
   return [
     { title },
@@ -29,12 +29,12 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     { property: 'og:site_name', content: 'BNA' },
     {
       property: 'og:image',
-      content: thumbnailUrl || 'https://chef.convex.dev/social_preview_share.png',
+      content: thumbnailUrl || '/bna-header.png',
     },
     { property: 'twitter:card', content: 'summary_large_image' },
     {
       property: 'twitter:image',
-      content: thumbnailUrl || 'https://chef.convex.dev/social_preview_share.png',
+      content: thumbnailUrl || '/bna-header.png',
     },
     { property: 'twitter:title', content: ogTitle },
     { property: 'twitter:description', content: ogDesc },
