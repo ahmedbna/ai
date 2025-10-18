@@ -24,14 +24,19 @@ import { ErrorDisplay } from './components/ErrorComponent';
 import useVersionNotificationBanner from './components/VersionNotificationBanner';
 
 export async function loader() {
-  // These environment variables are available in the client (they aren't secret).
-  // eslint-disable-next-line local/no-direct-process-env
   const CONVEX_URL = process.env.VITE_CONVEX_URL || globalThis.process.env.CONVEX_URL!;
   const CONVEX_OAUTH_CLIENT_ID = globalThis.process.env.CONVEX_OAUTH_CLIENT_ID!;
+
   const WORKOS_REDIRECT_URI =
-    globalThis.process.env.VITE_WORKOS_REDIRECT_URI || globalThis.process.env.VERCEL_BRANCH_URL!;
+    globalThis.process.env.VITE_WORKOS_REDIRECT_URI ||
+    (globalThis.process.env.VERCEL_URL ? `https://${globalThis.process.env.VERCEL_URL}` : undefined);
+
   return json({
-    ENV: { CONVEX_URL, CONVEX_OAUTH_CLIENT_ID, WORKOS_REDIRECT_URI },
+    ENV: {
+      CONVEX_URL,
+      CONVEX_OAUTH_CLIENT_ID,
+      WORKOS_REDIRECT_URI,
+    },
   });
 }
 
@@ -86,24 +91,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const theme = useStore(themeStore);
   const loaderData = useRouteLoaderData<typeof loader>('root');
   const CONVEX_URL = import.meta.env.VITE_CONVEX_URL || (loaderData as any)?.ENV.CONVEX_URL;
+
+  const WORKOS_REDIRECT_URI = import.meta.env.VITE_WORKOS_REDIRECT_URI || (loaderData as any)?.ENV.WORKOS_REDIRECT_URI;
+
   if (!CONVEX_URL) {
     throw new Error(`Missing CONVEX_URL: ${CONVEX_URL}`);
   }
 
   const [convex] = useState(
     () =>
-      new ConvexReactClient(
-        CONVEX_URL,
-        // TODO: There's a potential issue in the convex client where the warning triggers
-        // even though in flight requests have completed
-        {
-          unsavedChangesWarning: false,
-          onServerDisconnectError: (message) => captureMessage(message),
-        },
-      ),
+      new ConvexReactClient(CONVEX_URL, {
+        unsavedChangesWarning: false,
+        onServerDisconnectError: (message) => captureMessage(message),
+      }),
   );
 
-  // TODO does it still make sense?
   useEffect(() => {
     document.querySelector('html')?.setAttribute('class', theme);
   }, [theme]);
@@ -140,7 +142,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <>
       <AuthKitProvider
         clientId={import.meta.env.VITE_WORKOS_CLIENT_ID}
-        redirectUri={globalThis.process.env.WORKOS_REDIRECT_URI}
+        redirectUri={WORKOS_REDIRECT_URI}
         apiHostname={import.meta.env.VITE_WORKOS_API_HOSTNAME}
       >
         <ClientOnly>
