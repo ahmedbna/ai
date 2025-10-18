@@ -1,16 +1,19 @@
 import { WORK_DIR } from '../constants.js';
 import { stripIndents } from '../utils/stripIndent.js';
+import { convexGuidelines } from './convexGuidelines.js';
 
 export const templateGuidelines = () => {
   return stripIndents`
   <solution_constraints>
     <template_info>
-      ## CRITICAL: 4 Core Rules
+      ## CRITICAL: 6 Core Rules
       1.  **Component Usage:** ALWAYS call \`lookupComponentsTool\` to get component docs (props, examples) BEFORE using any component from \`@/components/ui/\`. NO EXCEPTIONS.
       2.  **Styling:** ALWAYS use the \`useColor()\` hook for ALL colors. NEVER hardcode hex/rgb values. Every new screen MUST set its \`backgroundColor\` using \`useColor('background')\`.
       3.  **Tabs:** When adding a new tab screen, you MUST update BOTH \`app/(tabs)/_layout.tsx\` (Native) AND \`app/(tabs)/_layout.web.tsx\` (Web).
       4.  **Locked Files:** NEVER modify files in \`components/ui/\`, \`components/auth/\`, or the root \`app/_layout.tsx\`. Authentication is fully implemented and locked.
-
+      5.  **ALWAYS implement the Convex backend first. Before proceeding to the frontend, check convex_guidelines and call l\`ookupConvexDocsTool\` to retrieve any missing documentation or API references needed for proper backend setup and integration.
+      6.  **ALWAYS deploy with \`deploy\` tool after make changes or edits to files. NEVER under any circumstances end your turn without deploying the frontend and backend using a tool \`deploy\` call.
+      
       ## Template Overview
       The environment is a full-stack Expo React Native app at \`${WORK_DIR}\`. You MUST use this template.
       - **Tech Stack:** Expo, React Native, Convex (Database, Functions, Auth), TypeScript.
@@ -44,6 +47,9 @@ export const templateGuidelines = () => {
       │   └── constants.ts          # (Locked)
       └── package.json
       \`\`\`
+
+
+      ${convexGuidelines()}
 
       ## File-Based Routing Rules (Expo Router)
       1.  **Screens Location:** All new screens MUST be in the \`app/(tabs)/\` directory.

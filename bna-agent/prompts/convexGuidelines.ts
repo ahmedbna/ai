@@ -1,9 +1,7 @@
 import { stripIndents } from '../utils/stripIndent.js';
-import type { SystemPromptOptions } from '../types.js';
 
-export function convexGuidelines(options: SystemPromptOptions) {
+export function convexGuidelines() {
   return stripIndents`
-  <solution_constraints>
     <convex_guidelines>
       You MUST use Convex for the database, realtime, file storage, functions, scheduling, HTTP handlers,
       and search functionality. Convex is realtime by default, so you never need to manually refresh
@@ -287,6 +285,5 @@ export function convexGuidelines(options: SystemPromptOptions) {
       lookupConvexDocsTool({ topics: ["file-storage"] })
       \`\`\`
     </convex_guidelines>
-  </solution_constraints>
 `;
 }

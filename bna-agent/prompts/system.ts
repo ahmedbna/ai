@@ -32,7 +32,6 @@ export function generalSystemPrompt(options: SystemPromptOptions) {
   // See app/lib/.server/llm/provider.ts
   const result = stripIndents`${GENERAL_SYSTEM_PROMPT_PRELUDE}
   ${templateGuidelines()}
-  ${convexGuidelines(options)}
   ${exampleDataInstructions(options)}
   ${secretsInstructions(options)}
   ${formattingInstructions(options)}
