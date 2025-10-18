@@ -1,11 +1,11 @@
-import { useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
-import { View } from '@/components/ui/view';
-import { Text } from '@/components/ui/text';
-import { Spinner } from '@/components/ui/spinner';
 import { SignOutButton } from '@/components/auth/singout';
 import { ModeToggle } from '@/components/ui/mode-toggle';
+import { Spinner } from '@/components/ui/spinner';
+import { Text } from '@/components/ui/text';
+import { View } from '@/components/ui/view';
+import { api } from '@/convex/_generated/api';
 import { useColor } from '@/hooks/useColor';
+import { useQuery } from 'convex/react';
 
 export default function SettingsScreen() {
   const background = useColor('background');

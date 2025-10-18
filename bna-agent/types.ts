@@ -9,6 +9,7 @@ import type { z } from 'zod';
 import type { addEnvironmentVariablesParameters } from './tools/addEnvironmentVariables.js';
 import type { getConvexDeploymentNameParameters } from './tools/getConvexDeploymentName.js';
 import { lookupComponentsParameters } from './tools/lookupComponentsTool.js';
+import { lookupConvexDocsParameters } from './tools/lookupConvexDocsTool.js';
 
 export type ConvexProject = {
   token: string;
@@ -84,6 +85,7 @@ export type ConvexToolSet = {
   npmInstall: Tool<typeof npmInstallToolParameters, string>;
   lookupDocs: Tool<typeof lookupDocsParameters, string>;
   lookupComponentsTool: Tool<typeof lookupComponentsParameters, string>;
+  lookupConvexDocsTool: Tool<typeof lookupConvexDocsParameters, string>;
   addEnvironmentVariables?: Tool<typeof addEnvironmentVariablesParameters, void>;
   view?: Tool<typeof viewParameters, string>;
   edit?: Tool<typeof editToolParameters, string>;

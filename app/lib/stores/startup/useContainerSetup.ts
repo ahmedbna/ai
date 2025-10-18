@@ -137,13 +137,24 @@ async function initializeFileSystemBackup() {
 }
 
 async function setupConvexEnvVars(webcontainer: WebContainer, convexProject: ConvexProject) {
-  const { token } = convexProject;
+  const { token, deploymentUrl } = convexProject;
+
+  // Set CONVEX_DEPLOY_KEY
   await appendEnvVarIfNotSet({
     envFilePath: '.env.local',
     readFile: (path) => webcontainer.fs.readFile(path, 'utf-8'),
     writeFile: (path, content) => webcontainer.fs.writeFile(path, content),
     envVarName: 'CONVEX_DEPLOY_KEY',
     value: token,
+  });
+
+  // Set EXPO_PUBLIC_CONVEX_URL
+  await appendEnvVarIfNotSet({
+    envFilePath: '.env.local',
+    readFile: (path) => webcontainer.fs.readFile(path, 'utf-8'),
+    writeFile: (path, content) => webcontainer.fs.writeFile(path, content),
+    envVarName: 'EXPO_PUBLIC_CONVEX_URL',
+    value: deploymentUrl,
   });
 }
 

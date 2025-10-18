@@ -59,7 +59,7 @@ export function AudioRecorder({
 
   // Waveform data for real-time visualization
   const [waveformData, setWaveformData] = useState<number[]>(
-    Array.from({ length: 30 }, () => 0.2),
+    Array.from({ length: 30 }, () => 0.2)
   );
 
   // Theme colors
@@ -86,7 +86,7 @@ export function AudioRecorder({
           Alert.alert(
             'Permission Required',
             'Please grant microphone permission to record audio.',
-            [{ text: 'OK' }],
+            [{ text: 'OK' }]
           );
         }
       } catch (error) {
@@ -103,7 +103,7 @@ export function AudioRecorder({
       recordingPulse.value = withRepeat(
         withTiming(1.2, { duration: 600, easing: Easing.inOut(Easing.ease) }),
         -1, // Infinite loop
-        true, // Reverse the animation (yoyo effect)
+        true // Reverse the animation (yoyo effect)
       );
     } else {
       // Stop the animation and reset the scale
@@ -127,7 +127,6 @@ export function AudioRecorder({
   // Real-time waveform updates during recording
   useEffect(() => {
     if (isRecording) {
-      // @ts-ignore
       meteringInterval.current = setInterval(async () => {
         try {
           // Try to get metering data from recorder
@@ -190,7 +189,6 @@ export function AudioRecorder({
 
   const startDurationTimer = () => {
     setDuration(0);
-    // @ts-ignore
     durationInterval.current = setInterval(() => {
       setDuration((prev) => prev + 0.1);
     }, 100);
@@ -207,7 +205,7 @@ export function AudioRecorder({
     if (!permissionGranted) {
       Alert.alert(
         'Permission Required',
-        'Microphone permission is required to record audio.',
+        'Microphone permission is required to record audio.'
       );
       return;
     }
@@ -273,7 +271,7 @@ export function AudioRecorder({
             setDuration(0);
           },
         },
-      ],
+      ]
     );
   };
 

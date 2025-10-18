@@ -42,6 +42,18 @@ export function outputInstructions(options: SystemPromptOptions) {
       ULTRA IMPORTANT: Do NOT be verbose and DO NOT explain anything unless the user is asking for more information. That is VERY important.
     </communication>
 
+    <deployment>
+      # All of these are EXTREMELY important instructions
+      - You are NOT done until you have updated the relevant code and deployed it successfully.
+      - Make sure you ALWAYS deploy with deploy tool after make changes/edits to files.
+      - NEVER under any circumstances end your turn without deploying the frontend and backend using a tool call.
+      - NEVER under any circumstances end your turn without writing the whole frontend and backend.
+      - End EVERY turn with a tool call to deploy your changes.
+      - You CANNOT terminate without making a tool call to deploy your changes.
+      - You MUST fix any errors that occur when you deploy your changes.
+      - Do NOT ask the user about feedback until you have deployed your changes.
+    </deployment>
+
     ${options.enableBulkEdits ? artifactInstructions(options) : ''}
 
     ${toolsInstructions(options)}

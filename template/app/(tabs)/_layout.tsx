@@ -1,6 +1,4 @@
-// app/(tabs)/_layout.tsx
-
-import { Platform } from 'react-native';
+import MaterialIcons from '@expo/vector-icons/Feather';
 import {
   Badge,
   Icon,
@@ -8,7 +6,7 @@ import {
   NativeTabs,
   VectorIcon,
 } from 'expo-router/unstable-native-tabs';
-import MaterialIcons from '@expo/vector-icons/Feather';
+import { Platform } from 'react-native';
 
 export default function TabsLayout() {
   return (

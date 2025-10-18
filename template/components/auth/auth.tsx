@@ -54,18 +54,22 @@ export const Auth = () => {
           BNA
         </Text>
 
-        <Tabs defaultValue='oauth' enableSwipe={false} style={{ flex: 1 }}>
+        <Tabs defaultValue='password' enableSwipe={false} style={{ flex: 1 }}>
           <TabsList>
-            <TabsTrigger value='oauth' style={{ width: tabWidth }}>
-              OAuth
-            </TabsTrigger>
             <TabsTrigger value='password' style={{ width: tabWidth }}>
               Password
+            </TabsTrigger>
+            <TabsTrigger value='oauth' style={{ width: tabWidth }}>
+              OAuth
             </TabsTrigger>
             <TabsTrigger value='otp' style={{ width: tabWidth }}>
               OTP
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value='password'>
+            <Password />
+          </TabsContent>
 
           <TabsContent value='oauth'>
             <Card>
@@ -83,10 +87,6 @@ export const Auth = () => {
                 </View>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value='password'>
-            <Password />
           </TabsContent>
 
           <TabsContent value='otp'>

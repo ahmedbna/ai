@@ -1,10 +1,8 @@
-// app/(tabs)/_layout.web.tsx
-
 import React from 'react';
-import { Tabs } from 'expo-router';
-import { Home, Settings } from 'lucide-react-native';
 import { Icon } from '@/components/ui/icon';
 import { useColor } from '@/hooks/useColor';
+import { Tabs } from 'expo-router';
+import { Home, Settings } from 'lucide-react-native';
 
 export default function WebTabsLayout() {
   const primary = useColor('primary');

@@ -34,6 +34,7 @@ import { getEnv } from '@/lib/.server/env';
 import { calculateChefTokens, usageFromGeneration } from '@/lib/common/usage';
 import { lookupDocsTool } from 'bna-agent/tools/lookupDocs';
 import { lookupComponentsTool } from 'bna-agent/tools/lookupComponentsTool';
+import { lookupConvexDocsTool } from 'bna-agent/tools/lookupConvexDocsTool';
 import { addEnvironmentVariablesTool } from 'bna-agent/tools/addEnvironmentVariables';
 import { getConvexDeploymentNameTool } from 'bna-agent/tools/getConvexDeploymentName';
 import type { PromptCharacterCounts } from 'bna-agent/ChatContextManager';
@@ -98,6 +99,7 @@ export async function convexAgent(args: {
     npmInstall: npmInstallTool,
     lookupDocs: lookupDocsTool(),
     lookupComponentsTool: lookupComponentsTool(),
+    lookupConvexDocsTool: lookupConvexDocsTool(),
     getConvexDeploymentName: getConvexDeploymentNameTool,
   };
   tools.addEnvironmentVariables = addEnvironmentVariablesTool();

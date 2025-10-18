@@ -64,7 +64,7 @@ export const Button = forwardRef<View, ButtonProps>(
       textStyle,
       ...props
     },
-    ref,
+    ref
   ) => {
     const primaryColor = useColor('primary');
     const primaryForegroundColor = useColor('primaryForeground');
@@ -384,7 +384,7 @@ export const Button = forwardRef<View, ButtonProps>(
         )}
       </TouchableOpacity>
     );
-  },
+  }
 );
 
 // Add display name for better debugging
